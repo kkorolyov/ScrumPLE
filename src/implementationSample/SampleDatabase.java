@@ -39,7 +39,7 @@ public class SampleDatabase {
 			dbName = sc2.next();
 			sc2.close();
 			Statement s = conn.createStatement();
-			s.executeUpdate("CREATE DATABASE " + dbName);
+			s.execute("CREATE DATABASE " + dbName);
 			s.close();
 		} catch (SQLException e) {
 			System.out.println("Could not create database. Database might already exist");
