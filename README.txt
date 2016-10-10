@@ -17,8 +17,7 @@ PLANNED FEATURES
 ================================================================
 * Web-based client
 * Integrated user environment sandboxing with Docker
-* Integrated source code, business document version control with
-Git
+* Integrated source code, document version control with Git
 
 
 DEVELOPMENT ENVIRONMENT
@@ -28,7 +27,7 @@ official ScrumPLE development team
 
 Eclipse IDE - Java source editing, compiling, testing
 Vim - Python source editing
+GitHub - Remote hosting of ScrumPLE project
 Docker - Integrated sandboxing between users' projects
 Git - Integrated version control of users' project documents
-GitHub - Remote hosting of ScrumPLE project
 
