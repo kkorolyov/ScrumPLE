@@ -32,14 +32,14 @@ public class Database {
 		}
 	}
 
-	void createDB() {
+	void createDB(String dbName) {
 		try {
 			//Scanner sc2 = new Scanner(System.in);
-			System.out.print("Database Name:");
-			dbName = sc.next();
+			//System.out.print("Database Name:");
+			//dbName = sc.next();
 			//sc2.close();
 			Statement s = conn.createStatement();
-			s.execute("CREATE DATABASE " + dbName);
+			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
 			s.close();
 		} 
 		catch (SQLException e) {
@@ -55,9 +55,11 @@ public class Database {
 	
 	void createProjectSchema() {
 		try{
-			conn.setCatalog("sample");
+			conn.setCatalog("Project");
 			Statement s = conn.createStatement();
 			s.execute("CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
+			s.execute("CREATE TABLE IF NOT EXISTS Roles (id INT, name VARCHAR(64), PRIMARY KEY (id))");
+			s.execute("CREATE TABLE IF NOT EXISTS Users (id INT, credentials VARCHAR(128), name VARCHAR(64), role INT, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
 			s.close();
 		}
 		catch (SQLException e) {
@@ -69,7 +71,8 @@ public class Database {
 		
 		db.registerJDBC();
 		db.connect();
-		db.createDB();
+		db.createDB("System");
+		db.createDB("Project");
 		db.createProjectSchema();
 		try {
 			db.conn.close();
