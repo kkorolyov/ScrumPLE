@@ -1,6 +1,7 @@
 package ScrumPLEDB;
 
 import java.sql.*;
+import com.mysql.jdbc.jdbc2.optional.*;
 import java.util.Scanner;
 
 public class Database {
@@ -21,11 +22,16 @@ public class Database {
 	
 	void connect() {
 		try {
-			//Scanner sc = new Scanner(System.in);
+			com.mysql.jdbc.jdbc2.optional.MysqlDataSource ds = new com.mysql.jdbc.jdbc2.optional.MysqlDataSource();
+			ds.setServerName("localhost");
+			ds.setPortNumber(3306);
+			//ds.setDatabaseName("Project");
+			ds.setUser("root");
 			System.out.print("password:");
 			password = sc.next();
+			ds.setPassword(password);
+			conn = ds.getConnection();
 			
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/?user=root&password="+password);
 		} catch (SQLException e) {
 			System.out.println("Incorrect password");
 			System.exit(1);
@@ -34,10 +40,6 @@ public class Database {
 
 	void createDB(String dbName) {
 		try {
-			//Scanner sc2 = new Scanner(System.in);
-			//System.out.print("Database Name:");
-			//dbName = sc.next();
-			//sc2.close();
 			Statement s = conn.createStatement();
 			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
 			s.close();
@@ -58,8 +60,8 @@ public class Database {
 			conn.setCatalog("Project");
 			Statement s = conn.createStatement();
 			s.execute("CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
-			s.execute("CREATE TABLE IF NOT EXISTS Roles (id INT, name VARCHAR(64), PRIMARY KEY (id))");
-			s.execute("CREATE TABLE IF NOT EXISTS Users (id INT, credentials VARCHAR(128), name VARCHAR(64), role INT, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
+			s.execute("CREATE TABLE IF NOT EXISTS Roles (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL , PRIMARY KEY (id))");
+			s.execute("CREATE TABLE IF NOT EXISTS Users (id INT UNSIGNED AUTO_INCREMENT, credentials VARCHAR(128) NOT NULL, name VARCHAR(64) NOT NULL, role INT UNSIGNED, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
 			s.close();
 		}
 		catch (SQLException e) {
