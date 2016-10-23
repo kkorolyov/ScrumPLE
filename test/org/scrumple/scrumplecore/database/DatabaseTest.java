@@ -17,5 +17,6 @@ public class DatabaseTest {
 		db.createDB("System");
 		db.createDB("Project");
 		db.createProjectSchema();
+		db.createSystemSchema();
 	}
 }
