@@ -1,6 +1,7 @@
 package org.scrumple.scrumplecore.assets;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -24,15 +25,8 @@ public class Assets {
 		Sql.init();
 		
 		try {
-			File assetsLog = LogFiles.get(Assets.class);
-			if (!assetsLog.isFile()) {
-				File parent = assetsLog.getParentFile();
-				if (parent != null && !parent.exists()) {
-					parent.mkdirs();
-				}
-			}
-			log.addWriter(new PrintWriter(assetsLog));
-		} catch (Exception e) {
+			log.addWriter(new PrintWriter(LogFiles.get(Assets.class)));
+		} catch (FileNotFoundException e) {
 			log.exception(e);
 		}
 		log.debug("Initialized Assets");
@@ -51,6 +45,8 @@ public class Assets {
 		public static final String PROPFILES_FILE = "config/configs.ini";
 		public static final String 	PROPS_LOGGERS = "config/logging.ini",
 																PROPS_SQL = "config/sql.ini";
+		public static final String 	SYSTEM_SCHEMA = "System",
+																PROJECT_SCHEMA = "Project";
 		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
@@ -69,7 +65,8 @@ public class Assets {
 		private static Properties sql() {
 			log.debug("Building defaults for sql...");
 
-			return buildDefaults();	// No SQL defaults
+			return buildDefaults(	Sql.SYSTEM_SCHEMA,
+														Sql.PROJECT_SCHEMA);
 		}
 		
 		private static Properties buildDefaults(String... keys) {
@@ -128,18 +125,32 @@ public class Assets {
 			log.debug("Loaded LogFiles properties");
 		}
 		
-		/** @return log file for {@code classClass}, or {@code null} if a log file for the class is not specified */
+		/**
+		 * @return log file for {@code classClass}, or {@code null} if a log file for the class is not specified;
+		 * if a file is specified but does not exist,	it is created.
+		 */
 		public static File get(Class<?> classClass) {
 			String fileName = props.get(classClass.getName());
+			if (fileName == null)
+				return null;
 			
-			return fileName != null ? new File(fileName) : null;
+			File file = new File(fileName);
+			if (!file.isFile()) {
+				File parent = file.getParentFile();
+				if (parent != null && !parent.exists()) {
+					parent.mkdirs();
+				}
+			}
+			return file;
 		}
 	}
 	/**
-	 * Returns preset SQL statements.
+	 * Returns SQL properties and statements.
 	 */
-	@SuppressWarnings("synthetic-access")
+	@SuppressWarnings({"javadoc", "synthetic-access"})
 	public static class Sql {
+		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
+																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";
 		
 		private static Properties props;
@@ -151,7 +162,7 @@ public class Assets {
 			log.debug("Loaded SQL properties");
 		}
 		
-		/** @return SQL statement mapped to {@code key}, or {@code null} if no such statement */
+		/** @return SQL value mapped to {@code key}, or {@code null} if no such key */
 		public static String get(String key) {
 			return props.get(key);
 		}
