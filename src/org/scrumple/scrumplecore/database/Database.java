@@ -64,7 +64,7 @@ public class Database {
 			conn.setCatalog("Project");
 			
 			Statement s = conn.createStatement();
-			s.addBatch("CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
+			s.addBatch(Assets.Sql.get(Sql.PROJECT));
 			s.addBatch("CREATE TABLE IF NOT EXISTS Roles (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL , PRIMARY KEY (id))");
 			s.addBatch("CREATE TABLE IF NOT EXISTS Users (id INT UNSIGNED AUTO_INCREMENT, credentials VARCHAR(128) NOT NULL, name VARCHAR(64) NOT NULL, role INT UNSIGNED NOT NULL, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
 			s.addBatch("CREATE TABLE IF NOT EXISTS Labels (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
