@@ -165,6 +165,12 @@ public class Assets {
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";
 		public static final String PROJECT = "PROJECT";
+		public static final String ROLES = "ROLES";
+		public static final String USERS = "USERS";
+		public static final String LABELS = "LABELS";
+		public static final String TASKS = "TASKS";
+		public static final String SPRINTS = "SPRINTS";
+		public static final String ISSUES = "ISSUES";
 		
 		private static Properties props;
 		
@@ -173,6 +179,7 @@ public class Assets {
 			//We can either use props.put or manually write the ini file.  Which way is better?
 			props.put(RELEASES, "CREATE TABLE IF NOT EXISTS RELEASES (id INT UNSIGNED NOT NULL AUTO_INCREMENT, description VARCHAR(64) NOT NULL, start DATE NOT NULL, end DATE NOT NULL, PRIMARY KEY(id))");
 			props.put(PROJECT, "CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
+			
 			save(props);
 			
 			log.debug("Loaded SQL properties");
