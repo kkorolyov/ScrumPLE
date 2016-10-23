@@ -79,6 +79,29 @@ public class Database {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	void createSystemSchema(){
+		try{
+			conn.setAutoCommit(false);
+			conn.setCatalog("Project");
+			
+			Statement s =conn.createStatement();
+			s.addBatch(Assets.Sql.get(Sql.SYSTEM));
+			s.addBatch("CREATE TABLE IF NOT EXISTS Event_codes (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(128) NOT NULL, PRIMARY KEY (id))");
+			s.addBatch("CREATE TABLE IF NOT EXISTS Projects (id INT UNSIGNED AUTO_INCREMENT, schema VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
+			s.addBatch("CREATE TABLE IF NOT EXISTS Sessions (id BIGINT UNSIGNED AUTO_INCREMENT, source_4 CHAR(8) NULL, source_6 CHAR(32) NULL, start TIMESTAMP NOT NULL, project INT UNSIGNED NOT NULL, user INT UNSIGNED NOT NULL, active BIT(1) NOT NULL, PRIMARY KEY (id), INDEX `project_idx` (`project` ASC), INDEX `user_idx` (`user` ASC), FOREIGN KEY (project) REFERENCES Projects (id) ON DELETE NO ACTION ON UPDATE NO ACTION, FOREIGN KEY (user) REFERENCES Users (id) ON DELETE NO ACTION ON UPDATE NO ACTION)");
+			s.addBatch("CREATE TABLE IF NOT EXISTS Events (id BIGINT UNSIGNED AUTO_INCREMENT, time TIMESTAMP NOT NULL, event_code INT UNSIGNED NOT NULL, description VARCHAR(256) NULL, session BIGINT UNSIGNED NOT NULL, INDEX `event_idx` (`event_code` ASC), PRIMARY KEY (id), INDEX `session_idx` (`session` ASC), FOREIGN KEY (Event_code) REFERENCES Event_codes (id) ON DELETE NO ACTION ON UPDATE NO ACTION, FOREIGN KEY (Session) REFERENCES Sessions (id) ON DELETE NO ACTION ON UPDATE NO ACTION)");
+			int[] count = s.executeBatch();
+			conn.commit();
+			
+			s.close();
+			
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
 	public static void main(String[] args) {
 		Database db = new Database();
 		Assets.init();
@@ -87,6 +110,7 @@ public class Database {
 		db.createDB("System");
 		db.createDB("Project");
 		db.createProjectSchema();
+		db.createSystemSchema();
 		try {
 			db.conn.close();
 		} catch (SQLException e) {

@@ -142,6 +142,7 @@ public class Assets {
 	public static class Sql {
 		public static final String RELEASES = "RELEASES";
 		public static final String PROJECT = "PROJECT";
+		public static final String SYSTEM = "SYSTEM";
 		
 		private static Properties props;
 		
@@ -150,6 +151,7 @@ public class Assets {
 			//We can either use props.put or manually write the ini file.  Which way is better?
 			props.put(RELEASES, "CREATE TABLE IF NOT EXISTS RELEASES (id INT UNSIGNED NOT NULL AUTO_INCREMENT, description VARCHAR(64) NOT NULL, start DATE NOT NULL, end DATE NOT NULL, PRIMARY KEY(id))");
 			props.put(PROJECT, "CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
+			props.put(SYSTEM, "CREATE TABLE IF NOT EXISTS System " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
 			save(props);
 			
 			log.debug("Loaded SQL properties");
