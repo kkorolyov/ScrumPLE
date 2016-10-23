@@ -71,10 +71,8 @@ public class Database {
 			conn.setCatalog("Project");
 		} catch (SQLException e) {
 			log.exception(e);
-			
-			return null;
 		}
-		return executeBatch("CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))",
+		return executeBatch(Assets.Sql.get(Sql.PROJECT),
 												"CREATE TABLE IF NOT EXISTS Roles (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL , PRIMARY KEY (id))",
 												"CREATE TABLE IF NOT EXISTS Users (id INT UNSIGNED AUTO_INCREMENT, credentials VARCHAR(128) NOT NULL, name VARCHAR(64) NOT NULL, role INT UNSIGNED NOT NULL, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))",
 												"CREATE TABLE IF NOT EXISTS Labels (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL, PRIMARY KEY (id))",
