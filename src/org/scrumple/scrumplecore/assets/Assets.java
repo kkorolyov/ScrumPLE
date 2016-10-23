@@ -140,6 +140,8 @@ public class Assets {
 	 */
 	@SuppressWarnings("synthetic-access")
 	public static class Sql {
+		public static final String RELEASES = "RELEASES";
+		
 		private static Properties props;
 		
 		private static void init() {

@@ -1,6 +1,9 @@
 package org.scrumple.scruplecore.database;
 
 import java.sql.*;
+import org.scrumple.scrumplecore.assets.Assets;
+import org.scrumple.scrumplecore.assets.Assets.Sql;
+
 import com.mysql.jdbc.jdbc2.optional.*;
 import java.util.Scanner;
 
@@ -66,7 +69,7 @@ public class Database {
 			s.addBatch("CREATE TABLE IF NOT EXISTS Users (id INT UNSIGNED AUTO_INCREMENT, credentials VARCHAR(128) NOT NULL, name VARCHAR(64) NOT NULL, role INT UNSIGNED NOT NULL, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
 			s.addBatch("CREATE TABLE IF NOT EXISTS Labels (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
 			s.addBatch("CREATE TABLE IF NOT EXISTS Tasks (id INT UNSIGNED AUTO_INCREMENT, label INT UNSIGNED NOT NULL, description VARCHAR(256) NOT NULL, hours_left TINYINT NOT NULL, `release` INT, sprint INT, PRIMARY KEY (id), FOREIGN KEY (label) REFERENCES Labels (id))");
-
+			s.addBatch(Assets.Sql.get(Sql.RELEASES));
 			int[] count = s.executeBatch();
 			conn.commit();
 			
@@ -78,7 +81,7 @@ public class Database {
 	}
 	public static void main(String[] args) {
 		Database db = new Database();
-		
+		Assets.init();
 		db.registerJDBC();
 		db.connect();
 		db.createDB("System");
