@@ -19,5 +19,8 @@
 hs_err_pid*
 
 # Project Files
+config/*
+logs/*
+*.ini	
 *.log
-/logs/
+
