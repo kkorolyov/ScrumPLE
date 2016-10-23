@@ -1,11 +1,9 @@
--- Project schema name declared during runtime
-CREATE SCHEMA IF NOT EXISTS $project_name
-
+-- Project schema init
 CREATE TABLE IF NOT EXISTS roles (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	name VARCHAR(64) NOT NULL,
 	PRIMARY KEY (id))
-
+	
 CREATE TABLE IF NOT EXISTS users (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	credentials VARCHAR(128) NOT NULL,
@@ -18,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 		REFERENCES roles (id)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION)
-
+		
 CREATE TABLE IF NOT EXISTS labels (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	name VARCHAR(64) NOT NULL,
@@ -37,14 +35,14 @@ CREATE TABLE IF NOT EXISTS sprints (
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
 	PRIMARY KEY (id))
-
+	
 CREATE TABLE IF NOT EXISTS tasks (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	label INT UNSIGNED NOT NULL,
 	description VARCHAR(256) NOT NULL,
 	hours_left TINYINT NOT NULL,
-	release_num INT NULL,
-	sprint INT NULL,
+	release_num INT UNSIGNED NULL,
+	sprint INT UNSIGNED NULL,
 	PRIMARY KEY (id),
 	INDEX label_idx (label ASC),
 	INDEX release_idx (release_num ASC),
@@ -54,7 +52,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 		REFERENCES labels (id)
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION,
-	CONSTRAINT release
+	CONSTRAINT release_num
 		FOREIGN KEY (release_num)
 		REFERENCES releases (id)
 		ON DELETE NO ACTION

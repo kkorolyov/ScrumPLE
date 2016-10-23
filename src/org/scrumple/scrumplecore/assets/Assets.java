@@ -47,6 +47,8 @@ public class Assets {
 																PROPS_SQL = "config/sql.ini";
 		public static final String 	SYSTEM_SCHEMA = "System",
 																PROJECT_SCHEMA = "Project";
+		public static final String 	SYSTEM_SCHEMA_SCRIPT = "sql/create-system.sql",
+																PROJECT_SCHEMA_SCRIPT = "sql/create-project-instance.sql";
 		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
@@ -163,6 +165,10 @@ public class Assets {
 																SQL_PASSWORD = "SQL_PASSWORD";
 		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
+		public static final String	SYSTEM_SCHEMA_SCRIPT = "SYSTEM_SCHEMA_SCRIPT",
+																PROJECT_SCHEMA_SCRIPT = "PROJECT_SCHEMA_SCRIPT";
+		/*public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
+																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";
 		public static final String PROJECT = "PROJECT";
 		public static final String ROLES = "ROLES";
@@ -174,24 +180,25 @@ public class Assets {
 		public static final String EVENT_CODES = "EVENT_CODES";
 		public static final String PROJECTS = "PROJECTS";
 		public static final String SESSIONS = "SESSIONS";
-		public static final String EVENTS = "EVENTS";
+		public static final String EVENTS = "EVENTS";*/
 		
 		private static Properties props;
 		
 		private static void init() {
 			props = new Properties(PropFiles.get(PropFiles.PROPS_SQL), Defaults.sql());
-			//We can either use props.put or manually write the ini file.  Which way is better?
-			props.put(RELEASES, "CREATE TABLE IF NOT EXISTS RELEASES (id INT UNSIGNED NOT NULL AUTO_INCREMENT, description VARCHAR(64) NOT NULL, start DATE NOT NULL, end DATE NOT NULL, PRIMARY KEY(id))");
-			props.put(PROJECT, "CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
-			
 			save(props);
 			
 			log.debug("Loaded SQL properties");
 		}
 		
-		/** @return SQL value mapped to {@code key}, or {@code null} if no such key */
+		/** @return value mapped to {@code key}, or {@code null} if no such key */
 		public static String get(String key) {
 			return props.get(key);
+		}
+		/** @return file mapped to {@code key}, or {@code null} if no such key */
+		public static File getFile(String key) {
+			String fileName = props.get(key);
+			return fileName != null ? new File(fileName) : null;
 		}
 	}
 }

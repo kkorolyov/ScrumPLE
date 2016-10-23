@@ -40,7 +40,7 @@ public class SqlReader {
 		
 		try (Scanner in = new Scanner(sqlFile)) {
 			while (in.hasNextLine()) {
-				String line = in.nextLine();
+				String line = in.nextLine().trim();
 				
 				if (line.length() <= 0 || line.startsWith(COMMENT)) {	// Reached end of a statement
 					if (statementBuilder.length() > 0) {
@@ -49,11 +49,10 @@ public class SqlReader {
 						statementBuilder = new StringBuilder();	// Clear builder
 					}
 				} else {	// In start or middle of statement
-					String currentStatement = line.trim();
-					while (currentStatement.contains(VARIABLE) && paramsIterator != null && paramsIterator.hasNext())
-						currentStatement = currentStatement.replaceFirst(VARIABLE_REGEX, paramsIterator.next());
+					while (line.contains(VARIABLE) && paramsIterator != null && paramsIterator.hasNext())
+						line = line.replaceFirst(VARIABLE_REGEX, paramsIterator.next());
 					
-					statementBuilder.append(SPACE).append(currentStatement);
+					statementBuilder.append(SPACE).append(line);
 				}
 			}
 			if (statementBuilder.length() > 0)	// Check buffer at end of file

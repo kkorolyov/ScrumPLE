@@ -1,9 +1,12 @@
 package org.scrumple.scrumplecore.database;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
@@ -68,38 +71,49 @@ public class Database {
 	
 	public int[] createProjectSchema() {
 		try {
-			conn.setCatalog("Project");
-		} catch (SQLException e) {
+			conn.setCatalog(Sql.get(Sql.PROJECT_SCHEMA));
+			
+			return executeBatch(SqlReader.read(Sql.getFile(Sql.PROJECT_SCHEMA_SCRIPT)));
+		} catch (SQLException | FileNotFoundException e) {
 			log.exception(e);
 		}
-		return executeBatch(Assets.Sql.get(Sql.PROJECT),
+		/*return executeBatch(Assets.Sql.get(Sql.PROJECT),
 							Assets.Sql.get(Sql.ROLES),
 							Assets.Sql.get(Sql.USERS),
 							Assets.Sql.get(Sql.SPRINTS),
 							Assets.Sql.get(Sql.LABELS),
 							Assets.Sql.get(Sql.RELEASES),
 							Assets.Sql.get(Sql.TASKS),
-							Assets.Sql.get(Sql.ISSUES));
+							Assets.Sql.get(Sql.ISSUES));*/
+		return null;
 	}
 	
 	public int[] createSystemSchema() {
 		try {
-			conn.setCatalog("System");
-		} catch (SQLException e) {
+			conn.setCatalog(Sql.get(Sql.SYSTEM_SCHEMA));
+			
+			return executeBatch(SqlReader.read(Sql.getFile(Sql.SYSTEM_SCHEMA_SCRIPT)));
+		} catch (SQLException | FileNotFoundException e) {
 			log.exception(e);
 		}
-		return executeBatch(Assets.Sql.get(Sql.EVENT_CODES),
+		/*return executeBatch(Assets.Sql.get(Sql.EVENT_CODES),
 							Assets.Sql.get(Sql.PROJECTS),
 							Assets.Sql.get(Sql.SESSIONS),
-							Assets.Sql.get(Sql.EVENTS));
-							
+							Assets.Sql.get(Sql.EVENTS));*/
+		return null;
+	}
+	/**
+	 * Convenience method for @link {@link #executeBatch(List)}
+	 */
+	public int[] executeBatch(String... statements) {
+		return executeBatch(Arrays.asList(statements));
 	}
 	/**
 	 * Executes a batch of non-parameterized SQL statements.
 	 * @param statements statements to execute
 	 * @return array of update counts, or {@code null} if statement execution failed
 	 */
-	public int[] executeBatch(String... statements) {
+	public int[] executeBatch(List<String> statements) {
 		int[] result = null;
 		
 		try (Statement s = conn.createStatement()) {

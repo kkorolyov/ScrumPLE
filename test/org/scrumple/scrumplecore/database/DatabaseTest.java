@@ -14,9 +14,10 @@ public class DatabaseTest {
 		
 		Database db = new Database(Sql.get(Sql.SQL_HOST), Sql.get(Sql.SQL_PORT), Sql.get(Sql.SQL_USER), Sql.get(Sql.SQL_PASSWORD));
 		
-		db.createDB("System");
-		db.createDB("Project");
-		db.createProjectSchema();
+		db.createDB(Sql.get(Sql.SYSTEM_SCHEMA));
+		db.createDB(Sql.get(Sql.PROJECT_SCHEMA));
+		
 		db.createSystemSchema();
+		db.createProjectSchema();
 	}
 }
