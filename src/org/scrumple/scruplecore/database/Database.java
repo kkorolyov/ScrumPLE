@@ -1,4 +1,4 @@
-package ScrumPLEDB;
+package org.scrumple.scruplecore.database;
 
 import java.sql.*;
 import com.mysql.jdbc.jdbc2.optional.*;
