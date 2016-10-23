@@ -1,51 +1,59 @@
 package org.scrumple.scrumplecore.database;
 
-import java.sql.*;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
 
-import com.mysql.jdbc.jdbc2.optional.*;
-import java.util.Scanner;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import dev.kkorolyov.simplelogs.Logger;
+import dev.kkorolyov.simplelogs.Logger.Level;
 
 public class Database {
-	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	String password;
-	String dbName;
-	Connection conn;
-	Scanner sc = new Scanner(System.in);
-	void registerJDBC() {
+	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	
+	private final Connection conn;
+	
+	static {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			log.addWriter(new PrintWriter(Assets.LogFiles.get(Database.class)));
+		} catch (Exception e) {
+			log.severe("Unable to locate log file for this class");
 		}
-		catch(ClassNotFoundException ex) {
-			System.out.println("Error: unable to load driver class!");
-			System.exit(1);
-		}
+		log.debug("Initialized class");
 	}
 	
-	void connect() {
-		try {
-			com.mysql.jdbc.jdbc2.optional.MysqlDataSource ds = new com.mysql.jdbc.jdbc2.optional.MysqlDataSource();
-			ds.setServerName("localhost");
-			ds.setPortNumber(3306);
-			//ds.setDatabaseName("Project");
-			ds.setUser("root");
-			System.out.print("password:");
-			password = sc.next();
-			ds.setPassword(password);
-			conn = ds.getConnection();
-			
-		} catch (SQLException e) {
-			System.out.println("Incorrect password");
-			System.exit(1);
-		}
+	/**
+	 * Constructs a new database connection.
+	 * @param host host address
+	 * @param port database service port
+	 * @param user user
+	 * @param password password
+	 * @throws SQLException if a connection error occurs
+	 */
+	public Database(String host, String port, String user, String password) throws SQLException {
+		MysqlDataSource ds = new MysqlDataSource();
+		ds.setServerName(host);
+		ds.setPort(Integer.parseInt(port));
+		ds.setUser(user);
+		ds.setPassword(password);
+		
+		conn = ds.getConnection();
+		conn.setAutoCommit(false);
+		
+		log.info(	"Created new Database: " + System.lineSeparator()
+						+ "\tHost: " + host + System.lineSeparator()
+						+ "\tPort: " + port + System.lineSeparator()
+						+ "\tUser: " + user);
 	}
 
 	void createDB(String dbName) {
-		try {
-			Statement s = conn.createStatement();
+		try (Statement s = conn.createStatement()) {
 			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
-			s.close();
 		} 
 		catch (SQLException e) {
 		    if (e.getErrorCode() == 1007) {
@@ -58,66 +66,51 @@ public class Database {
 		}
 	}
 	
-	void createProjectSchema() {
-		try{
-			conn.setAutoCommit(false);
+	public int[] createProjectSchema() {
+		try {
 			conn.setCatalog("Project");
-			
-			Statement s = conn.createStatement();
-			s.addBatch(Assets.Sql.get(Sql.PROJECT));
-			s.addBatch("CREATE TABLE IF NOT EXISTS Roles (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL , PRIMARY KEY (id))");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Users (id INT UNSIGNED AUTO_INCREMENT, credentials VARCHAR(128) NOT NULL, name VARCHAR(64) NOT NULL, role INT UNSIGNED NOT NULL, PRIMARY KEY (id),FOREIGN KEY (role) REFERENCES Roles (id))");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Labels (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Tasks (id INT UNSIGNED AUTO_INCREMENT, label INT UNSIGNED NOT NULL, description VARCHAR(256) NOT NULL, hours_left TINYINT NOT NULL, `release` INT, sprint INT, PRIMARY KEY (id), FOREIGN KEY (label) REFERENCES Labels (id))");
-			s.addBatch(Assets.Sql.get(Sql.RELEASES));
-			int[] count = s.executeBatch();
-			conn.commit();
-			
-			s.close();
+		} catch (SQLException e) {
+			log.exception(e);
 		}
-		catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+		return executeBatch(Assets.Sql.get(Sql.PROJECT),
+							Assets.Sql.get(Sql.ROLES),
+							Assets.Sql.get(Sql.USERS),
+							Assets.Sql.get(Sql.SPRINTS),
+							Assets.Sql.get(Sql.LABELS),
+							Assets.Sql.get(Sql.RELEASES),
+							Assets.Sql.get(Sql.TASKS),
+							Assets.Sql.get(Sql.ISSUES));
 	}
 	
-	void createSystemSchema(){
-		try{
-			conn.setAutoCommit(false);
-			conn.setCatalog("Project");
-			
-			Statement s =conn.createStatement();
-			s.addBatch(Assets.Sql.get(Sql.SYSTEM));
-			s.addBatch("CREATE TABLE IF NOT EXISTS Event_codes (id INT UNSIGNED AUTO_INCREMENT, name VARCHAR(128) NOT NULL, PRIMARY KEY (id))");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Projects (id INT UNSIGNED AUTO_INCREMENT, schema VARCHAR(64) NOT NULL, PRIMARY KEY (id))");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Sessions (id BIGINT UNSIGNED AUTO_INCREMENT, source_4 CHAR(8) NULL, source_6 CHAR(32) NULL, start TIMESTAMP NOT NULL, project INT UNSIGNED NOT NULL, user INT UNSIGNED NOT NULL, active BIT(1) NOT NULL, PRIMARY KEY (id), INDEX `project_idx` (`project` ASC), INDEX `user_idx` (`user` ASC), FOREIGN KEY (project) REFERENCES Projects (id) ON DELETE NO ACTION ON UPDATE NO ACTION, FOREIGN KEY (user) REFERENCES Users (id) ON DELETE NO ACTION ON UPDATE NO ACTION)");
-			s.addBatch("CREATE TABLE IF NOT EXISTS Events (id BIGINT UNSIGNED AUTO_INCREMENT, time TIMESTAMP NOT NULL, event_code INT UNSIGNED NOT NULL, description VARCHAR(256) NULL, session BIGINT UNSIGNED NOT NULL, INDEX `event_idx` (`event_code` ASC), PRIMARY KEY (id), INDEX `session_idx` (`session` ASC), FOREIGN KEY (Event_code) REFERENCES Event_codes (id) ON DELETE NO ACTION ON UPDATE NO ACTION, FOREIGN KEY (Session) REFERENCES Sessions (id) ON DELETE NO ACTION ON UPDATE NO ACTION)");
-			int[] count = s.executeBatch();
-			conn.commit();
-			
-			s.close();
-			
-		}
-		catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		
-	}
-	public static void main(String[] args) {
-		Database db = new Database();
-		Assets.init();
-		db.registerJDBC();
-		db.connect();
-		db.createDB("System");
-		db.createDB("Project");
-		db.createProjectSchema();
-		db.createSystemSchema();
+	public int[] createSystemSchema() {
 		try {
-			db.conn.close();
+			conn.setCatalog("System");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.exception(e);
 		}
-
+		return executeBatch(Assets.Sql.get(Sql.EVENT_CODES),
+							Assets.Sql.get(Sql.PROJECTS),
+							Assets.Sql.get(Sql.SESSIONS),
+							Assets.Sql.get(Sql.EVENTS));
+							
 	}
-
+	/**
+	 * Executes a batch of non-parameterized SQL statements.
+	 * @param statements statements to execute
+	 * @return array of update counts, or {@code null} if statement execution failed
+	 */
+	public int[] executeBatch(String... statements) {
+		int[] result = null;
+		
+		try (Statement s = conn.createStatement()) {
+			for (String statement : statements)
+				s.addBatch(statement);
+			
+			result = s.executeBatch();
+			conn.commit();
+		} catch (SQLException e) {
+			log.exception(e);
+		}
+		return result;
+	}
 }

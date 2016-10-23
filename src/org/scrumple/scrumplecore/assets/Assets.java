@@ -3,6 +3,7 @@ package org.scrumple.scrumplecore.assets;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -24,16 +25,9 @@ public class Assets {
 		Sql.init();
 		
 		try {
-			File assetsLog = LogFiles.get(Assets.class);
-			if (!assetsLog.isFile()) {
-				File parent = assetsLog.getParentFile();
-				if (parent != null && !parent.exists()) {
-					parent.mkdirs();
-				}
-			}
-			log.addWriter(new PrintWriter(assetsLog));
+			log.addWriter(new PrintWriter(LogFiles.get(Assets.class)));
 		} catch (Exception e) {
-			log.exception(e);
+			log.severe("Unable to locate log file for this class");
 		}
 		log.debug("Initialized Assets");
 	}
@@ -51,12 +45,13 @@ public class Assets {
 		public static final String PROPFILES_FILE = "config/configs.ini";
 		public static final String 	PROPS_LOGGERS = "config/logging.ini",
 																PROPS_SQL = "config/sql.ini";
+		public static final String 	SYSTEM_SCHEMA = "System",
+																PROJECT_SCHEMA = "Project";
 		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
 
-			return buildDefaults(PropFiles.PROPS_LOGGERS,
-													PropFiles.PROPS_SQL);
+			return buildDefaultsForClass(PropFiles.class);
 		}
 		private static Properties logFiles() {
 			log.debug("Building defaults for LogFiles...");
@@ -69,9 +64,19 @@ public class Assets {
 		private static Properties sql() {
 			log.debug("Building defaults for sql...");
 
-			return buildDefaults();	// No SQL defaults
+			return buildDefaultsForClass(Sql.class);
 		}
 		
+		private static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
+			Field[] fields = c.getFields();
+			String[] fieldNames = new String[fields.length];
+			
+			int counter = 0;
+			for (Field field : fields)
+				fieldNames[counter++] = field.getName();
+			
+			return buildDefaults(fieldNames);
+		}
 		private static Properties buildDefaults(String... keys) {
 			Properties props = new Properties();
 			
@@ -96,7 +101,7 @@ public class Assets {
 	
 	@SuppressWarnings("synthetic-access")
 	private static class PropFiles {
-		private static final String PROPS_LOGGERS = "PROPS_LOGGERS",
+		public static final String 	PROPS_LOGGERS = "PROPS_LOGGERS",
 																PROPS_SQL = "PROPS_SQL";
 		
 		private static Properties props;
@@ -128,21 +133,48 @@ public class Assets {
 			log.debug("Loaded LogFiles properties");
 		}
 		
-		/** @return log file for {@code classClass}, or {@code null} if a log file for the class is not specified */
+		/**
+		 * @return log file for {@code classClass}, or {@code null} if a log file for the class is not specified;
+		 * if a file is specified but does not exist,	it is created.
+		 */
 		public static File get(Class<?> classClass) {
 			String fileName = props.get(classClass.getName());
+			if (fileName == null)
+				return null;
 			
-			return fileName != null ? new File(fileName) : null;
+			File file = new File(fileName);
+			if (!file.isFile()) {
+				File parent = file.getParentFile();
+				if (parent != null && !parent.exists()) {
+					parent.mkdirs();
+				}
+			}
+			return file;
 		}
 	}
 	/**
-	 * Returns preset SQL statements.
+	 * Returns SQL properties and statements.
 	 */
-	@SuppressWarnings("synthetic-access")
+	@SuppressWarnings({"javadoc", "synthetic-access"})
 	public static class Sql {
+		public static final String 	SQL_HOST = "SQL_HOST",
+																SQL_PORT = "SQL_PORT",
+																SQL_USER = "SQL_USER",
+																SQL_PASSWORD = "SQL_PASSWORD";
+		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
+																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";
 		public static final String PROJECT = "PROJECT";
-		public static final String SYSTEM = "SYSTEM";
+		public static final String ROLES = "ROLES";
+		public static final String USERS = "USERS";
+		public static final String LABELS = "LABELS";
+		public static final String TASKS = "TASKS";
+		public static final String SPRINTS = "SPRINTS";
+		public static final String ISSUES = "ISSUES";
+		public static final String EVENT_CODES = "EVENT_CODES";
+		public static final String PROJECTS = "PROJECTS";
+		public static final String SESSIONS = "SESSIONS";
+		public static final String EVENTS = "EVENTS";
 		
 		private static Properties props;
 		
@@ -151,13 +183,13 @@ public class Assets {
 			//We can either use props.put or manually write the ini file.  Which way is better?
 			props.put(RELEASES, "CREATE TABLE IF NOT EXISTS RELEASES (id INT UNSIGNED NOT NULL AUTO_INCREMENT, description VARCHAR(64) NOT NULL, start DATE NOT NULL, end DATE NOT NULL, PRIMARY KEY(id))");
 			props.put(PROJECT, "CREATE TABLE IF NOT EXISTS Project " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
-			props.put(SYSTEM, "CREATE TABLE IF NOT EXISTS System " + "(name VARCHAR(64), description VARCHAR(256), PRIMARY KEY (name))");
+			
 			save(props);
 			
 			log.debug("Loaded SQL properties");
 		}
 		
-		/** @return SQL statement mapped to {@code key}, or {@code null} if no such statement */
+		/** @return SQL value mapped to {@code key}, or {@code null} if no such key */
 		public static String get(String key) {
 			return props.get(key);
 		}
