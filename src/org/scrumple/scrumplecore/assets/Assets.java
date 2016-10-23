@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -51,8 +52,7 @@ public class Assets {
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
 
-			return buildDefaults(PropFiles.PROPS_LOGGERS,
-													PropFiles.PROPS_SQL);
+			return buildDefaultsForClass(PropFiles.class);
 		}
 		private static Properties logFiles() {
 			log.debug("Building defaults for LogFiles...");
@@ -65,10 +65,19 @@ public class Assets {
 		private static Properties sql() {
 			log.debug("Building defaults for sql...");
 
-			return buildDefaults(	Sql.SYSTEM_SCHEMA,
-														Sql.PROJECT_SCHEMA);
+			return buildDefaultsForClass(Sql.class);
 		}
 		
+		private static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
+			Field[] fields = c.getFields();
+			String[] fieldNames = new String[fields.length];
+			
+			int counter = 0;
+			for (Field field : fields)
+				fieldNames[counter++] = field.getName();
+			
+			return buildDefaults(fieldNames);
+		}
 		private static Properties buildDefaults(String... keys) {
 			Properties props = new Properties();
 			
@@ -93,7 +102,7 @@ public class Assets {
 	
 	@SuppressWarnings("synthetic-access")
 	private static class PropFiles {
-		private static final String PROPS_LOGGERS = "PROPS_LOGGERS",
+		public static final String 	PROPS_LOGGERS = "PROPS_LOGGERS",
 																PROPS_SQL = "PROPS_SQL";
 		
 		private static Properties props;
@@ -149,6 +158,10 @@ public class Assets {
 	 */
 	@SuppressWarnings({"javadoc", "synthetic-access"})
 	public static class Sql {
+		public static final String 	SQL_HOST = "SQL_HOST",
+																SQL_PORT = "SQL_PORT",
+																SQL_USER = "SQL_USER",
+																SQL_PASSWORD = "SQL_PASSWORD";
 		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";
