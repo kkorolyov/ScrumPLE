@@ -1,4 +1,4 @@
-package org.scrumple.scruplecore.database;
+package org.scrumple.scrumplecore.database;
 
 import java.sql.*;
 import org.scrumple.scrumplecore.assets.Assets;
