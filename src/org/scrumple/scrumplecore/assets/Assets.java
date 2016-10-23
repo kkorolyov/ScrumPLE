@@ -1,7 +1,6 @@
 package org.scrumple.scrumplecore.assets;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
@@ -27,8 +26,8 @@ public class Assets {
 		
 		try {
 			log.addWriter(new PrintWriter(LogFiles.get(Assets.class)));
-		} catch (FileNotFoundException e) {
-			log.exception(e);
+		} catch (Exception e) {
+			log.severe("Unable to locate log file for this class");
 		}
 		log.debug("Initialized Assets");
 	}
