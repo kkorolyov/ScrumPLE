@@ -20,5 +20,4 @@ hs_err_pid*
 
 # Project Files
 *.log
-/config/
 /logs/
