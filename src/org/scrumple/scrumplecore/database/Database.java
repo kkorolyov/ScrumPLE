@@ -33,26 +33,21 @@ public class Database {
 	
 	/**
 	 * Constructs a new database connection.
-	 * @param host host address
-	 * @param port database service port
+	 * @param url URL to database
 	 * @param user user
 	 * @param password password
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String host, String port, String user, String password) throws SQLException {
+	public Database(String url, String user, String password) throws SQLException {
 		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(host);
-		ds.setPort(Integer.parseInt(port));
+		ds.setUrl(url);
 		ds.setUser(user);
 		ds.setPassword(password);
 		
 		conn = ds.getConnection();
 		conn.setAutoCommit(false);
 		
-		log.info(	"Created new Database: " + System.lineSeparator()
-						+ "\tHost: " + host + System.lineSeparator()
-						+ "\tPort: " + port + System.lineSeparator()
-						+ "\tUser: " + user);
+		log.info("Created new Database: URL=" + url + ", user=" + user);
 	}
 
 	public Connection getConn(){
@@ -80,15 +75,19 @@ public class Database {
 	public boolean init() {
 		boolean result = false;
 		
-		int[] updates = executeBatch(SqlReader.read(Sql.getFile(Sql.INIT_DATABASE_SCRIPT)));
-		
-		if (updates != null) {
-			for (int update : updates) {
-				if (update > 0) {
-					result = true;
-					break;
+		try {
+			int[] updates = executeBatch(SqlReader.read(Sql.getFile(Sql.INIT_DATABASE_SCRIPT)));
+			
+			if (updates != null) {
+				for (int update : updates) {
+					if (update > 0) {
+						result = true;
+						break;
+					}
 				}
 			}
+		} catch (FileNotFoundException e) {
+			log.exception(e);
 		}
 		return result;
 	}

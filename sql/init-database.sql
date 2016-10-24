@@ -1,5 +1,5 @@
 -- System schema init
-CREATE SCHEMA System
+CREATE SCHEMA IF NOT EXISTS System
 
 CREATE TABLE IF NOT EXISTS System.event_codes (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS System.events (
 -- ----------------------------------------------------------------
 
 -- Project schema init
-CREATE SCHEMA Project
+CREATE SCHEMA IF NOT EXISTS Project
 
 CREATE TABLE IF NOT EXISTS Project.roles (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,

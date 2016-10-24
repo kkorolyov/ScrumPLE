@@ -12,6 +12,6 @@ public class DatabaseTest {
 	public void testDatabase() throws SQLException { // TODO Not a test
 		Assets.init();
 		
-		System.out.println(new Database(Sql.getHost(), Sql.getPort(), Sql.getUser(), Sql.getPassword()).init());
+		System.out.println(new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword()).init());
 	}
 }
