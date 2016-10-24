@@ -20,14 +20,14 @@ public class Assets {
 	 */
 	@SuppressWarnings("synthetic-access")
 	public static void init() {
-		PropFiles.init();
+		ConfigFiles.init();
 		LogFiles.init();
 		Sql.init();
 		
 		try {
 			log.addWriter(new PrintWriter(LogFiles.get(Assets.class)));
 		} catch (Exception e) {
-			log.severe("Unable to locate log file for this class");
+			log.severe(Strings.CANNOT_FIND_LOGFILE);
 		}
 		log.debug("Initialized Assets");
 	}
@@ -41,19 +41,20 @@ public class Assets {
 	}
 	
 	@SuppressWarnings({"unused", "synthetic-access"})
-	private static class Defaults {
-		public static final String PROPFILES_FILE = "config/configs.ini";
-		public static final String 	PROPS_LOGGERS = "config/logging.ini",
-																PROPS_SQL = "config/sql.ini";
-		public static final String 	SYSTEM_SCHEMA = "System",
-																PROJECT_SCHEMA = "Project";
-		public static final String 	SYSTEM_SCHEMA_SCRIPT = "sql/create-system.sql",
-																PROJECT_SCHEMA_SCRIPT = "sql/create-project-instance.sql";
-		public static final String CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
+	private static class Defaults {	// Creates config file defaults
+		public static final String	CONFIG_FILES_CONFIG = "config/configs.ini",	// PropFiles defaults
+																LOGGERS_CONFIG = "config/logging.ini",
+																SQL_CONFIG = "config/sql.ini";
+		public static final String 	SYSTEM_SCHEMA = "System",	// SQL defaults
+																PROJECT_SCHEMA = "Project",
+																SYSTEM_SCHEMA_SCRIPT = "sql/create-system.sql",
+																PROJECT_SCHEMA_SCRIPT = "sql/create-project-instance.sql",
+																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
+		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
 
-			return buildDefaultsForClass(PropFiles.class);
+			return buildDefaultsForClass(ConfigFiles.class);
 		}
 		private static Properties logFiles() {
 			log.debug("Building defaults for LogFiles...");
@@ -102,14 +103,14 @@ public class Assets {
 	}
 	
 	@SuppressWarnings("synthetic-access")
-	private static class PropFiles {
-		public static final String 	PROPS_LOGGERS = "PROPS_LOGGERS",
-																PROPS_SQL = "PROPS_SQL";
+	private static class ConfigFiles {	// Returns config file locations
+		public static final String 	LOGGERS_CONFIG = "LOGGERS_CONFIG",
+																SQL_CONFIG = "SQL_CONFIG";
 		
 		private static Properties props;
 		
 		private static void init() {
-			props = new Properties(new File(Defaults.PROPFILES_FILE), Defaults.propFiles());
+			props = new Properties(new File(Defaults.CONFIG_FILES_CONFIG), Defaults.propFiles());
 			save(props);
 			
 			log.debug("Loaded PropFiles properties");
@@ -121,6 +122,7 @@ public class Assets {
 			return fileName != null ? new File(fileName) : null;
 		}
 	}
+	
 	/**
 	 * Returns corresponding log files for classes. 
 	 */
@@ -129,7 +131,7 @@ public class Assets {
 		private static Properties props;
 		
 		private static void init() {
-			props = new Properties(PropFiles.get(PropFiles.PROPS_LOGGERS), Defaults.logFiles());
+			props = new Properties(ConfigFiles.get(ConfigFiles.LOGGERS_CONFIG), Defaults.logFiles());
 			save(props);
 			
 			log.debug("Loaded LogFiles properties");
@@ -154,39 +156,29 @@ public class Assets {
 			return file;
 		}
 	}
+	
 	/**
 	 * Returns SQL properties and statements.
 	 */
-	@SuppressWarnings({"javadoc", "synthetic-access"})
+	@SuppressWarnings("synthetic-access")
 	public static class Sql {
+		@SuppressWarnings("javadoc")
 		public static final String 	SQL_HOST = "SQL_HOST",
 																SQL_PORT = "SQL_PORT",
 																SQL_USER = "SQL_USER",
 																SQL_PASSWORD = "SQL_PASSWORD";
+		@SuppressWarnings("javadoc")
 		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
+		@SuppressWarnings("javadoc")
 		public static final String	SYSTEM_SCHEMA_SCRIPT = "SYSTEM_SCHEMA_SCRIPT",
 																PROJECT_SCHEMA_SCRIPT = "PROJECT_SCHEMA_SCRIPT",
 																CREATE_ROLES_SCRIPT = "CREATE_ROLES_SCRIPT";
-		/*public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
-																PROJECT_SCHEMA = "PROJECT_SCHEMA";
-		public static final String RELEASES = "RELEASES";
-		public static final String PROJECT = "PROJECT";
-		public static final String ROLES = "ROLES";
-		public static final String USERS = "USERS";
-		public static final String LABELS = "LABELS";
-		public static final String TASKS = "TASKS";
-		public static final String SPRINTS = "SPRINTS";
-		public static final String ISSUES = "ISSUES";
-		public static final String EVENT_CODES = "EVENT_CODES";
-		public static final String PROJECTS = "PROJECTS";
-		public static final String SESSIONS = "SESSIONS";
-		public static final String EVENTS = "EVENTS";*/
 		
 		private static Properties props;
 		
 		private static void init() {
-			props = new Properties(PropFiles.get(PropFiles.PROPS_SQL), Defaults.sql());
+			props = new Properties(ConfigFiles.get(ConfigFiles.SQL_CONFIG), Defaults.sql());
 			save(props);
 			
 			log.debug("Loaded SQL properties");
@@ -201,5 +193,30 @@ public class Assets {
 			String fileName = props.get(key);
 			return fileName != null ? new File(fileName) : null;
 		}
+		
+		/** @return configured SQL host */
+		public static String getHost() {
+			return get(SQL_HOST);
+		}
+		/** @return configured SQL port */
+		public static String getPort() {
+			return get(SQL_PORT);
+		}
+		/** @return configured SQL user */
+		public static String getUser() {
+			return get(SQL_USER);
+		}
+		/** @return configured SQL password */
+		public static String getPassword() {
+			return get(SQL_PASSWORD);
+		}
+	}
+	
+	/**
+	 * Returns pre-built strings.
+	 */
+	public static class Strings {
+		@SuppressWarnings("javadoc")
+		public static final String CANNOT_FIND_LOGFILE = "Unable to locate log file for this class";
 	}
 }

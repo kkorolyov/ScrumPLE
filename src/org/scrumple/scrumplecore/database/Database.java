@@ -8,8 +8,9 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
-import org.scrumple.scrumplecore.assets.Assets;
+import org.scrumple.scrumplecore.assets.Assets.LogFiles;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
+import org.scrumple.scrumplecore.assets.Assets.Strings;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -23,9 +24,9 @@ public class Database {
 	
 	static {
 		try {
-			log.addWriter(new PrintWriter(Assets.LogFiles.get(Database.class)));
+			log.addWriter(new PrintWriter(LogFiles.get(Database.class)));
 		} catch (Exception e) {
-			log.severe("Unable to locate log file for this class");
+			log.severe(Strings.CANNOT_FIND_LOGFILE);
 		}
 		log.debug("Initialized class");
 	}
