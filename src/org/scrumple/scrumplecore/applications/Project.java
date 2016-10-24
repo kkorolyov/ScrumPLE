@@ -11,7 +11,7 @@ public class Project {
 	private Scanner s = new Scanner(System.in);
 	private final Connection conn;
 	private static final String PROJECT_NAME = "Project Name: ";
-	private static final String DESCRIPTION = "Project Description";
+	private static final String DESCRIPTION = "Project Description: ";
 	
 	public Project(String host, String port, String user, String password) throws SQLException {
 		MysqlDataSource ds = new MysqlDataSource();
