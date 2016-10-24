@@ -49,7 +49,7 @@ public class Assets {
 																PROJECT_SCHEMA = "Project";
 		public static final String 	SYSTEM_SCHEMA_SCRIPT = "sql/create-system.sql",
 																PROJECT_SCHEMA_SCRIPT = "sql/create-project-instance.sql";
-		
+		public static final String CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
 
@@ -166,7 +166,8 @@ public class Assets {
 		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String	SYSTEM_SCHEMA_SCRIPT = "SYSTEM_SCHEMA_SCRIPT",
-																PROJECT_SCHEMA_SCRIPT = "PROJECT_SCHEMA_SCRIPT";
+																PROJECT_SCHEMA_SCRIPT = "PROJECT_SCHEMA_SCRIPT",
+																CREATE_ROLES_SCRIPT = "CREATE_ROLES_SCRIPT";
 		/*public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
 																PROJECT_SCHEMA = "PROJECT_SCHEMA";
 		public static final String RELEASES = "RELEASES";

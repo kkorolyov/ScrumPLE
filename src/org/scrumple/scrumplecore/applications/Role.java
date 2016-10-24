@@ -1,9 +1,12 @@
 package org.scrumple.scrumplecore.applications;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.scrumple.scrumplecore.assets.Assets.Sql;
 import org.scrumple.scrumplecore.database.Database;
+import org.scrumple.scrumplecore.database.SqlReader;
 
 
 public class Role {
@@ -22,13 +25,12 @@ public class Role {
 			System.out.println(e.getMessage());
 		}
 		try(Statement sql = db.getConn().createStatement()){
+			
+			db.executeBatch(SqlReader.read(Sql.getFile(Sql.CREATE_ROLES_SCRIPT)));
 
-			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Product Owner')");
-			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Scrum Master')");
-			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Team Member')");
 			db.getConn().commit();
 		} 
-		catch (SQLException e) {
+		catch (SQLException | FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());		
 		}
