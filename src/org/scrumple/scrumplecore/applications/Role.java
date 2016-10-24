@@ -1,41 +1,32 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Scanner;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.scrumple.scrumplecore.database.Database;
+
 
 public class Role {
-	
-	private Scanner s = new Scanner(System.in);
-	private final Connection conn;
-	
+
+	Database db;
 	public Role(String host, String port, String user, String password) throws SQLException {
-		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(host);
-		ds.setPort(Integer.parseInt(port));
-		ds.setUser(user);
-		ds.setPassword(password);
-		
-		conn = ds.getConnection();
-		conn.setAutoCommit(false);
+		db = new Database(host, port, user, password);
+
 	}
 	
 	public void createDefaultRoles(){
 		try {
-			conn.setCatalog("Project");
+			db.getConn().setCatalog("Project");
 		} 
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		try(Statement sql = conn.createStatement()){
+		try(Statement sql = db.getConn().createStatement()){
 
 			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Product Owner')");
 			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Scrum Master')");
 			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('Team Member')");
-			conn.commit();
+			db.getConn().commit();
 		} 
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -45,16 +36,16 @@ public class Role {
 	
 	public void addRole(String name) {
 		try {
-			conn.setCatalog("Project");
+			db.getConn().setCatalog("Project");
 		} 
 		catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		try(Statement sql = conn.createStatement()){
+		try(Statement sql = db.getConn().createStatement()){
 
 			sql.executeUpdate("INSERT INTO Roles (name) VALUES ('"+name+"')");
 	
-			conn.commit();
+			db.getConn().commit();
 		} 
 		catch (SQLException e) {
 			// TODO Auto-generated catch block

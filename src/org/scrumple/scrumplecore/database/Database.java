@@ -54,6 +54,9 @@ public class Database {
 						+ "\tUser: " + user);
 	}
 
+	public Connection getConn(){
+		return conn;
+	}
 	void createDB(String dbName) {
 		try (Statement s = conn.createStatement()) {
 			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
