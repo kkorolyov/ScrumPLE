@@ -1,24 +1,23 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Scanner;
-
-import org.scrumple.scrumplecore.database.Database;
-
 public class Project {
-	private Scanner s = new Scanner(System.in);
-
-	private static final String PROJECT_NAME = "Project Name: ";
-	private static final String DESCRIPTION = "Project Description: ";
-	private Database db;
+	private String projectName;
+	private String projDescription;
 	
-	public Project(String host, String port, String user, String password) throws SQLException {
-		db = new Database(host, port, user, password);
+	public Project(String name, String description) {
+		this.projectName = name;
+		this.projDescription = description;
 
 	}
 	
-	public void createProject(){
+	public String getName() {
+		return this.projectName;
+	}
+	
+	public String getDescription() {
+		return this.projDescription;
+	}
+	/*public void createProject(){
 		try {
 			db.getConn().setCatalog("Project");
 		} 
@@ -35,7 +34,7 @@ public class Project {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());		}
-	}
+	}*/
 
 
 }

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
+import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -105,5 +106,17 @@ public class Database {
 			log.exception(e);
 		}
 		return result;
+	}
+	
+	public void addProject(Project p) {
+		try {
+			conn.setCatalog("Project");
+			Statement s = conn.createStatement();
+			s.executeUpdate("INSERT INTO Project (name, description) VALUES ('"+p.getName()+"', '" +p.getDescription() + "')");
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
