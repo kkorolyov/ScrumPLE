@@ -22,26 +22,21 @@ public class Database {
 	
 	/**
 	 * Constructs a new database connection.
-	 * @param host host address
-	 * @param port database service port
+	 * @param url URL to database
 	 * @param user user
 	 * @param password password
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String host, String port, String user, String password) throws SQLException {
+	public Database(String url, String user, String password) throws SQLException {
 		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(host);
-		ds.setPort(Integer.parseInt(port));
+		ds.setUrl(url);
 		ds.setUser(user);
 		ds.setPassword(password);
 		
 		conn = ds.getConnection();
 		conn.setAutoCommit(false);
 		
-		log.info(	"Created new Database: " + System.lineSeparator()
-						+ "\tHost: " + host + System.lineSeparator()
-						+ "\tPort: " + port + System.lineSeparator()
-						+ "\tUser: " + user);
+		log.info("Created new Database: URL=" + url + ", user=" + user);
 	}
 
 	public Connection getConn(){
@@ -62,39 +57,30 @@ public class Database {
 		}
 	}
 	
-	public int[] createProjectSchema() {
+	/**
+	 * Initializes the system database.
+	 * @return {@code true} if initialization made at least 1 change to the system database
+	 */
+	public boolean init() {
+		boolean result = false;
+		
 		try {
-			conn.setCatalog(Sql.get(Sql.PROJECT_SCHEMA));
+			int[] updates = executeBatch(SqlReader.read(Sql.getFile(Sql.INIT_DATABASE_SCRIPT)));
 			
-			return executeBatch(SqlReader.read(Sql.getFile(Sql.PROJECT_SCHEMA_SCRIPT)));
-		} catch (SQLException | FileNotFoundException e) {
+			if (updates != null) {
+				for (int update : updates) {
+					if (update > 0) {
+						result = true;
+						break;
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
 			log.exception(e);
 		}
-		/*return executeBatch(Assets.Sql.get(Sql.PROJECT),
-							Assets.Sql.get(Sql.ROLES),
-							Assets.Sql.get(Sql.USERS),
-							Assets.Sql.get(Sql.SPRINTS),
-							Assets.Sql.get(Sql.LABELS),
-							Assets.Sql.get(Sql.RELEASES),
-							Assets.Sql.get(Sql.TASKS),
-							Assets.Sql.get(Sql.ISSUES));*/
-		return null;
+		return result;
 	}
 	
-	public int[] createSystemSchema() {
-		try {
-			conn.setCatalog(Sql.get(Sql.SYSTEM_SCHEMA));
-			
-			return executeBatch(SqlReader.read(Sql.getFile(Sql.SYSTEM_SCHEMA_SCRIPT)));
-		} catch (SQLException | FileNotFoundException e) {
-			log.exception(e);
-		}
-		/*return executeBatch(Assets.Sql.get(Sql.EVENT_CODES),
-							Assets.Sql.get(Sql.PROJECTS),
-							Assets.Sql.get(Sql.SESSIONS),
-							Assets.Sql.get(Sql.EVENTS));*/
-		return null;
-	}
 	/**
 	 * Convenience method for @link {@link #executeBatch(List)}
 	 */

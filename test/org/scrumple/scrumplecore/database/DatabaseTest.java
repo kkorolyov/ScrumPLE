@@ -12,12 +12,6 @@ public class DatabaseTest {
 	public void testDatabase() throws SQLException { // TODO Not a test
 		Assets.init();
 		
-		Database db = new Database(Sql.getHost(), Sql.getPort(), Sql.getUser(), Sql.getPassword());
-		
-		db.createDB(Sql.get(Sql.SYSTEM_SCHEMA));
-		db.createDB(Sql.get(Sql.PROJECT_SCHEMA));
-		
-		db.createSystemSchema();
-		db.createProjectSchema();
+		System.out.println(new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword()).init());
 	}
 }

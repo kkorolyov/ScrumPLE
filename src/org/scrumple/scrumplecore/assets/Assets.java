@@ -39,13 +39,10 @@ public class Assets {
 	
 	@SuppressWarnings({"unused", "synthetic-access"})
 	private static class Defaults {	// Creates config file defaults
-		public static final String	CONFIG_FILES_CONFIG = "config/configs.ini",	// PropFiles defaults
+		public static final String	CONFIG_FILES_CONFIG = "config/configs.ini",	// ConfigFiles defaults
 																LOGGERS_CONFIG = "config/logging.ini",
 																SQL_CONFIG = "config/sql.ini";
-		public static final String 	SYSTEM_SCHEMA = "System",	// SQL defaults
-																PROJECT_SCHEMA = "Project",
-																SYSTEM_SCHEMA_SCRIPT = "sql/create-system.sql",
-																PROJECT_SCHEMA_SCRIPT = "sql/create-project-instance.sql",
+		public static final String 	INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
 																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
 		
 		private static Properties propFiles() {
@@ -173,16 +170,11 @@ public class Assets {
 	@SuppressWarnings("synthetic-access")
 	public static class Sql {
 		@SuppressWarnings("javadoc")
-		public static final String 	SQL_HOST = "SQL_HOST",
-																SQL_PORT = "SQL_PORT",
+		public static final String 	SQL_URL = "SQL_URL",
 																SQL_USER = "SQL_USER",
 																SQL_PASSWORD = "SQL_PASSWORD";
 		@SuppressWarnings("javadoc")
-		public static final String 	SYSTEM_SCHEMA = "SYSTEM_SCHEMA",
-																PROJECT_SCHEMA = "PROJECT_SCHEMA";
-		@SuppressWarnings("javadoc")
-		public static final String	SYSTEM_SCHEMA_SCRIPT = "SYSTEM_SCHEMA_SCRIPT",
-																PROJECT_SCHEMA_SCRIPT = "PROJECT_SCHEMA_SCRIPT",
+		public static final String 	INIT_DATABASE_SCRIPT = "INIT_DATABASE_SCRIPT",
 																CREATE_ROLES_SCRIPT = "CREATE_ROLES_SCRIPT";
 		
 		private static Properties props;
@@ -204,13 +196,9 @@ public class Assets {
 			return fileName != null ? new File(fileName) : null;
 		}
 		
-		/** @return configured SQL host */
-		public static String getHost() {
-			return get(SQL_HOST);
-		}
-		/** @return configured SQL port */
-		public static String getPort() {
-			return get(SQL_PORT);
+		/** @return configured SQL URL */
+		public static String getUrl() {
+			return get(SQL_URL);
 		}
 		/** @return configured SQL user */
 		public static String getUser() {
