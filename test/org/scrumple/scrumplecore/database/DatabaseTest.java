@@ -14,4 +14,21 @@ public class DatabaseTest {
 		
 		System.out.println(new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword()).init());
 	}
+	
+	@Test
+	@SuppressWarnings("synthetic-access")
+	public void testSave() throws SQLException {
+		Assets.init();
+		Database db = new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword());
+		db.init();
+		
+		System.out.println(db.save(new StubSaveable()));
+	}
+	
+	private class StubSaveable implements Saveable {
+		@Override
+		public Object[] toData() {
+			return new Object[]{"Yay", 1, 1.0, 'c'};
+		}
+	}
 }

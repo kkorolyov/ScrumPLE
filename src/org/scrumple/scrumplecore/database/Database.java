@@ -2,12 +2,10 @@ package org.scrumple.scrumplecore.database;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
@@ -107,6 +105,49 @@ public class Database {
 			log.exception(e);
 		}
 		return result;
+	}
+	
+	/**
+	 * Saves an object.
+	 * @param toSave object to save
+	 * @return {@code true} if {@code toSave} saved successfully
+	 */
+	public boolean save(Saveable toSave) {
+		boolean result = false;
+		
+		if (toSave == null)
+			throw new IllegalArgumentException("Cannot save a null object");
+		
+		try (PreparedStatement s = buildInsert(toSave)) {
+			result = s.executeUpdate() > 0;
+			conn.commit();
+		} catch (SQLException | IllegalArgumentException e) {
+			log.exception(e);
+		}
+		return result;
+	}
+	private PreparedStatement buildInsert(Saveable saveable) throws SQLException {
+		List<String> saveStatement = Sql.getSaveStatement(saveable.getClass().getSimpleName());
+		if (saveStatement == null)
+			throw new IllegalArgumentException("Save statement cannot be null");	// TODO Icky
+		
+		Object[] data = saveable.toData();
+		String[] paramTypes = saveStatement.get(0).split(Pattern.quote(","));	// TODO Propertize delimiter
+		String statementString = saveStatement.get(1);
+		
+		PreparedStatement s = conn.prepareStatement(statementString);
+		
+		for (int i = 0; i < paramTypes.length; i++)
+			s.setObject(i + 1, data[i], toTypeCode(paramTypes[i].trim()));
+
+		return s;
+	}
+	private static final int toTypeCode(String typeName) {
+		try {
+			return Types.class.getField(typeName).getInt(null);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			throw new IllegalArgumentException("Invalid type name: " + typeName);
+		}
 	}
 	
 	public void save(Project toSave) {

@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import org.scrumple.scrumplecore.database.SqlReader;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -43,7 +46,8 @@ public class Assets {
 																LOGGERS_CONFIG = "config/logging.ini",
 																SQL_CONFIG = "config/sql.ini";
 		public static final String 	INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
-																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
+																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql",
+																PARAMETER_MARKER = "?";
 		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
@@ -176,6 +180,9 @@ public class Assets {
 		@SuppressWarnings("javadoc")
 		public static final String 	INIT_DATABASE_SCRIPT = "INIT_DATABASE_SCRIPT",
 																CREATE_ROLES_SCRIPT = "CREATE_ROLES_SCRIPT";
+		@SuppressWarnings("javadoc")
+		public static final String PARAMETER_MARKER = "PARAMETER_MARKER";
+		private static final String SAVE_FILE_TEMPLATE = "sql/save/save" + PARAMETER_MARKER + ".sql";	// TODO Make save statement locations configurable
 		
 		private static Properties props;
 		
@@ -207,6 +214,21 @@ public class Assets {
 		/** @return configured SQL password */
 		public static String getPassword() {
 			return get(SQL_PASSWORD);
+		}
+		
+		/**
+		 * Returns the SQL types and statement associated with saving a particular type.
+		 * @param toSaveName name of type to save
+		 * @return appropriate SQL types (index 0), and statement (index 1), or {@code null} if no such statement
+		 */
+		public static List<String> getSaveStatement(String toSaveName) {
+			try {
+				System.out.println(SAVE_FILE_TEMPLATE.replaceFirst(Pattern.quote(PARAMETER_MARKER), toSaveName));
+				return SqlReader.read(new File(SAVE_FILE_TEMPLATE.replaceFirst(Pattern.quote(PARAMETER_MARKER), toSaveName)));
+			} catch (FileNotFoundException e) {
+				log.exception(e);
+			}
+			return null;
 		}
 	}
 	
