@@ -1,9 +1,11 @@
 package org.scrumple.scrumplecore.assets;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.regex.Pattern;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -24,11 +26,6 @@ public class Assets {
 		LogFiles.init();
 		Sql.init();
 		
-		try {
-			log.addWriter(new PrintWriter(LogFiles.get(Assets.class)));
-		} catch (Exception e) {
-			log.severe(Strings.CANNOT_FIND_LOGFILE);
-		}
 		log.debug("Initialized Assets");
 	}
 	
@@ -59,10 +56,7 @@ public class Assets {
 		private static Properties logFiles() {
 			log.debug("Building defaults for LogFiles...");
 			
-			Properties props = new Properties();
-			props.put(Assets.class.getName(), "logs/Assets.log");
-			
-			return props;
+			return buildDefaultsForClass(LogFiles.class);
 		}
 		private static Properties sql() {
 			log.debug("Building defaults for sql...");
@@ -123,37 +117,53 @@ public class Assets {
 		}
 	}
 	
-	/**
-	 * Returns corresponding log files for classes. 
-	 */
 	@SuppressWarnings("synthetic-access")
-	public static class LogFiles {
+	private static class LogFiles {
+		private static final String CONFIG_DELIMITER = Pattern.quote(",");
+		private static final String GLOBAL_LOGGER = "GLOBAL";
+		private static final Level DEFAULT_LEVEL = Level.INFO;
+		
 		private static Properties props;
 		
 		private static void init() {
 			props = new Properties(ConfigFiles.get(ConfigFiles.LOGGERS_CONFIG), Defaults.logFiles());
 			save(props);
 			
-			log.debug("Loaded LogFiles properties");
+			applyLoggers();
+			
+			log.debug("Loaded LogFiles");
 		}
 		
-		/**
-		 * @return log file for {@code classClass}, or {@code null} if a log file for the class is not specified;
-		 * if a file is specified but does not exist,	it is created.
-		 */
-		public static File get(Class<?> classClass) {
-			String fileName = props.get(classClass.getName());
-			if (fileName == null)
-				return null;
-			
-			File file = new File(fileName);
-			if (!file.isFile()) {
-				File parent = file.getParentFile();
-				if (parent != null && !parent.exists()) {
-					parent.mkdirs();
+		private static void applyLoggers() {
+			for (String logger : props.keys()) {
+				try {
+					String[] config = props.get(logger).split(CONFIG_DELIMITER);
+					File file = new File(config[0].trim());
+					if (!file.isFile()) {	// Create filepath if needed
+						File parent = file.getParentFile();
+						if (parent != null && !parent.exists())
+							parent.mkdirs();
+					}
+					Level level = config.length > 1 ? parseLevel(config[1].trim()) : DEFAULT_LEVEL;
+					PrintWriter writer = new PrintWriter(file);
+					
+					Logger.getLogger(logger.equals(GLOBAL_LOGGER) ? "" : logger, level, writer);
+					
+					log.debug("Loaded Logger: name=" + logger + ", file=" + file + ", level=" + level);
+				} catch (FileNotFoundException e) {	// Should not happen
+					log.exception(e);
 				}
 			}
-			return file;
+		}
+		
+		private static Level parseLevel(String levelName) {
+			if (levelName != null) {
+				for (Level level : Level.values()) {
+					if (level.name().equals(levelName.toUpperCase()))
+						return level;
+				}
+			}
+			return null;
 		}
 	}
 	

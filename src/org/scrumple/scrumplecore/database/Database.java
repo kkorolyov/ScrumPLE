@@ -8,9 +8,7 @@ import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
-import org.scrumple.scrumplecore.assets.Assets.LogFiles;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
-import org.scrumple.scrumplecore.assets.Assets.Strings;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -21,15 +19,6 @@ public class Database {
 	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
 	
 	private final Connection conn;
-	
-	static {
-		try {
-			log.addWriter(new PrintWriter(LogFiles.get(Database.class)));
-		} catch (Exception e) {
-			log.severe(Strings.CANNOT_FIND_LOGFILE);
-		}
-		log.debug("Initialized class");
-	}
 	
 	/**
 	 * Constructs a new database connection.
