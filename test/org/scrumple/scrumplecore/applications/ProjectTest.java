@@ -18,6 +18,6 @@ public class ProjectTest {
 		Project p = new Project("Test Project", "This is a test");
 		Database db = new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword());
 		
-		db.addProject(p);
+		db.saveProject(p);
 	}
 }

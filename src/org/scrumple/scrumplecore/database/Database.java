@@ -3,6 +3,7 @@ package org.scrumple.scrumplecore.database;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
@@ -108,15 +109,15 @@ public class Database {
 		return result;
 	}
 	
-	public void addProject(Project p) {
+	public void saveProject(Project toSave) {
 		try {
-			conn.setCatalog("Project");
-			Statement s = conn.createStatement();
-			s.executeUpdate("INSERT INTO Project (name, description) VALUES ('"+p.getName()+"', '" +p.getDescription() + "')");
+			String sql = "INSERT INTO Project.project (name, description) VALUES ('"+toSave.getName()+"', '" +toSave.getDescription() + "')";
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.exception(e);;
 		}
 	}
 }
