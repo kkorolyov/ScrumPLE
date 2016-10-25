@@ -111,8 +111,10 @@ public class Database {
 	
 	public void save(Project toSave) {
 		try {
-			String sql = "INSERT INTO Project.project (name, description) VALUES ('"+toSave.getName()+"', '" +toSave.getDescription() + "')";
+			String sql = "INSERT INTO Project.project (name, description) VALUES (?, ?)";
 			PreparedStatement s = conn.prepareStatement(sql);
+			s.setString(1, toSave.getName());
+			s.setString(2, toSave.getDescription());
 			s.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
