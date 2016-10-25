@@ -109,7 +109,7 @@ public class Database {
 		return result;
 	}
 	
-	public void saveProject(Project toSave) {
+	public void save(Project toSave) {
 		try {
 			String sql = "INSERT INTO Project.project (name, description) VALUES ('"+toSave.getName()+"', '" +toSave.getDescription() + "')";
 			PreparedStatement s = conn.prepareStatement(sql);
