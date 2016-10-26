@@ -1,12 +1,17 @@
 package org.scrumple.scrumplecore.applications;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Project {
 	private String projectName;
 	private String projDescription;
+	private List<User> users;
 	
 	public Project(String name, String description) {
 		this.projectName = name;
 		this.projDescription = description;
+		users = new ArrayList<User>();
 
 	}
 	
@@ -16,6 +21,14 @@ public class Project {
 	
 	public String getDescription() {
 		return this.projDescription;
+	}
+	
+	public void addUser(User user) {
+		users.add(user);
+	}
+	
+	public List<User> getUsers() {
+		return users;
 	}
 	/*public void createProject(){
 		try {

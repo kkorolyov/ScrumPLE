@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.scrumple.scrumplecore.applications.Project;
+import org.scrumple.scrumplecore.applications.User;
 import org.scrumple.scrumplecore.assets.Assets.Sql;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -109,17 +110,61 @@ public class Database {
 		return result;
 	}
 	
+	
+	public void createDefaultRoles() {
+		try {
+			String sql = "INSERT INTO Project.roles (name) VALUES (?)";
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setString(1, "Product Owner");
+			s.addBatch();
+			s.setString(1,  "Scrum Master");
+			s.addBatch();
+			s.setString(1, "Team Member");
+			s.addBatch();
+			s.executeBatch();
+			conn.commit();
+
+		} catch (SQLException  e) {
+			// TODO Auto-generated catch block
+			log.exception(e);
+			
+		}
+	}
 	public void save(Project toSave) {
 		try {
 			String sql = "INSERT INTO Project.project (name, description) VALUES (?, ?)";
 			PreparedStatement s = conn.prepareStatement(sql);
 			s.setString(1, toSave.getName());
 			s.setString(2, toSave.getDescription());
+
 			s.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			log.exception(e);;
+			log.exception(e);
 		}
+	}
+	
+	public void save(List<User> toSave) {
+		String sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";
+
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			for(User user : toSave)
+			{
+				s.setString(1, user.getCredentials());
+				s.setString(2, user.getName());
+				s.setInt(3, user.getRole());
+				s.addBatch();
+			}
+			s.executeBatch();
+			conn.commit();
+		} catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 }

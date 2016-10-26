@@ -11,6 +11,11 @@ import org.scrumple.scrumplecore.database.SqlReader;
 
 public class Role {
 
+	private String name;
+	
+	public Role(String name) {
+		
+	}
 	Database db;
 	public Role(String host, String port, String user, String password) throws SQLException {
 		db = new Database(host, port, user, password);
