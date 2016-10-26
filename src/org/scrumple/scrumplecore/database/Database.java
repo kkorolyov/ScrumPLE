@@ -2,12 +2,11 @@ package org.scrumple.scrumplecore.database;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.User;
@@ -20,6 +19,10 @@ import dev.kkorolyov.simplelogs.Logger.Level;
 
 public class Database {
 	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final String DELIMITER = ",",
+															PARAM_MARKER = "?",
+															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
+															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")";
 	
 	private final Connection conn;
 	
@@ -110,7 +113,6 @@ public class Database {
 		return result;
 	}
 	
-	
 	public void createDefaultRoles() {
 		try {
 			String sql = "INSERT INTO Project.roles (name) VALUES (?)";
@@ -130,6 +132,79 @@ public class Database {
 			
 		}
 	}
+
+	/**
+	 * Saves an object.
+	 * @param toSave object to save
+	 * @return {@code true} if {@code toSave} saved successfully
+	 */
+	public boolean save(Saveable toSave) {
+		boolean result = false;
+		
+		if (toSave == null)
+			throw new IllegalArgumentException("Cannot save a null object");
+		
+		try (PreparedStatement s = buildInsert(toSave)) {
+			result = s.executeUpdate() > 0;
+			conn.commit();
+		} catch (SQLException | IllegalArgumentException e) {
+			log.exception(e);
+		}
+		return result;
+	}
+	@SuppressWarnings("synthetic-access")
+	private PreparedStatement buildInsert(Saveable saveable) throws SQLException {
+		List<Column> columns = getColumns(saveable);
+		List<Object> data = saveable.toData();
+		
+		if (columns.size() != data.size())
+			throw new IllegalArgumentException("Saveable data does not match corresponding table columns; data= " + data.size() + ", columns= " + columns.size());
+		
+		PreparedStatement s = conn.prepareStatement(buildInsertBase(saveable.getClass().getSimpleName(), columns));
+		
+		for (int i = 0; i < columns.size(); i++)
+			s.setObject(i + 1, data.get(i), columns.get(i).type);
+
+		return s;
+	}
+	@SuppressWarnings("synthetic-access")
+	private static String buildInsertBase(String table, List<Column> columns) throws SQLException {
+		StringBuilder columnsBuilder = new StringBuilder(),
+									valuesBuilder = new StringBuilder();
+		
+		int counter = 0;
+		for (Column column : columns) {
+			columnsBuilder.append(column.name);
+			valuesBuilder.append(PARAM_MARKER);
+			
+			if (++counter < columns.size()) {
+				columnsBuilder.append(DELIMITER);
+				valuesBuilder.append(DELIMITER);
+			}
+		}
+		String 	replace = Pattern.quote(PARAM_MARKER),
+						statement = INSERT_TEMPLATE.replaceFirst(replace, table).replaceFirst(replace, columnsBuilder.toString()).replaceFirst(replace, valuesBuilder.toString());
+		
+		log.debug("Built INSERT base statement: " + statement);
+		
+		return statement;
+	}
+	
+	@SuppressWarnings("synthetic-access")
+	private List<Column> getColumns(Saveable saveable) throws SQLException {
+		List<Column> columns = new ArrayList<>();
+		
+		try (ResultSet rs = conn.createStatement().executeQuery(GET_COLUMNS_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), saveable.getClass().getSimpleName()))) {
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+				if (!rsmd.isAutoIncrement(i))	// Ignore auto-incrementing columns
+					columns.add(new Column(rsmd.getColumnName(i), rsmd.getColumnType(i)));
+			}
+		}
+		return columns;
+	}
+	
 	public void save(Project toSave) {
 		try {
 			String sql = "INSERT INTO Project.project (name, description) VALUES (?, ?)";
@@ -176,7 +251,15 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+	}
 		
+	private class Column {
+		private final String name;
+		private final int type;
+		
+		private Column(String name, int type) {
+			this.name = name;
+			this.type = type;
+		}
 	}
 }

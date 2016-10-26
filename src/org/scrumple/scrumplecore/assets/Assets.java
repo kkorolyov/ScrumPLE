@@ -43,7 +43,8 @@ public class Assets {
 																LOGGERS_CONFIG = "config/logging.ini",
 																SQL_CONFIG = "config/sql.ini";
 		public static final String 	INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
-																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql";
+																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql",
+																PARAMETER_MARKER = "?";
 		
 		private static Properties propFiles() {
 			log.debug("Building defaults for PropFiles...");
