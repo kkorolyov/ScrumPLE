@@ -11,7 +11,7 @@ import org.scrumple.scrumplecore.session.action.Request;
 public class Session {
 	private final long id;
 	private final SessionLog log;
-	private final SessionPool manager;
+	private final SessionManager manager;
 
 	/**
 	 * Constructs a new session.
@@ -19,7 +19,7 @@ public class Session {
 	 * @param log logged actions
 	 * @param manager pool managing this session
 	 */
-	public Session(long id, SessionLog log, SessionPool manager) {
+	public Session(long id, SessionLog log, SessionManager manager) {
 		this.id = id;
 		
 		this.log = log;
