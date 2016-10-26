@@ -23,6 +23,6 @@ public class ProjectTest {
 		p.addUser(u2);
 		Database db = new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword());
 		db.save(p);
-		db.save(p.getUsers());
+		//db.save(p.getUsers());
 	}
 }

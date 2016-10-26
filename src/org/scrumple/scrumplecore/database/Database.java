@@ -138,6 +138,18 @@ public class Database {
 			s.setString(2, toSave.getDescription());
 
 			s.executeUpdate();
+			sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";
+			
+			s = conn.prepareStatement(sql);
+			for(User user : toSave.getUsers())
+			{
+				s.setString(1, user.getCredentials());
+				s.setString(2, user.getName());
+				s.setInt(3, user.getRole());
+				s.addBatch();
+			}
+			s.executeBatch();
+			
 			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
