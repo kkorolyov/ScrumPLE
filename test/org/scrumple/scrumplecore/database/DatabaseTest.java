@@ -1,6 +1,8 @@
 package org.scrumple.scrumplecore.database;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.scrumple.scrumplecore.assets.Assets;
@@ -27,8 +29,8 @@ public class DatabaseTest {
 	
 	private class StubSaveable implements Saveable {
 		@Override
-		public Object[] toData() {
-			return new Object[]{"Yay", 1, 1.0, 'c'};
+		public List<Object> toData() {
+			return Arrays.asList(new Object[]{null, 1, null, 'c'});
 		}
 	}
 }
