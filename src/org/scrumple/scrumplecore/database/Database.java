@@ -19,6 +19,7 @@ import dev.kkorolyov.simplelogs.Logger.Level;
 
 public class Database {
 	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private  String DB_NAME;
 	private static final String DELIMITER = ",",
 															PARAM_MARKER = "?",
 															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
@@ -33,21 +34,18 @@ public class Database {
 	 * @param password password
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String url, String user, String password) throws SQLException {
+	public Database(String url, String dbName, String user, String password) throws SQLException {
 		MysqlDataSource ds = new MysqlDataSource();
 		ds.setUrl(url);
 		ds.setUser(user);
 		ds.setPassword(password);
-		
+		this.DB_NAME = dbName;
 		conn = ds.getConnection();
 		conn.setAutoCommit(false);
 		
 		log.info("Created new Database: URL=" + url + ", user=" + user);
 	}
 
-	public Connection getConn(){
-		return conn;
-	}
 	void createDB(String dbName) {
 		try (Statement s = conn.createStatement()) {
 			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
@@ -144,6 +142,13 @@ public class Database {
 		if (toSave == null)
 			throw new IllegalArgumentException("Cannot save a null object");
 		
+		try {
+			conn.setCatalog(DB_NAME);
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			log.exception(e1);;
+		}
+
 		try (PreparedStatement s = buildInsert(toSave)) {
 			result = s.executeUpdate() > 0;
 			conn.commit();
@@ -156,7 +161,7 @@ public class Database {
 	private PreparedStatement buildInsert(Saveable saveable) throws SQLException {
 		List<Column> columns = getColumns(saveable);
 		List<Object> data = saveable.toData();
-		
+
 		if (columns.size() != data.size())
 			throw new IllegalArgumentException("Saveable data does not match corresponding table columns; data= " + data.size() + ", columns= " + columns.size());
 		
@@ -182,6 +187,7 @@ public class Database {
 				valuesBuilder.append(DELIMITER);
 			}
 		}
+		
 		String 	replace = Pattern.quote(PARAM_MARKER),
 						statement = INSERT_TEMPLATE.replaceFirst(replace, table).replaceFirst(replace, columnsBuilder.toString()).replaceFirst(replace, valuesBuilder.toString());
 		
@@ -205,7 +211,7 @@ public class Database {
 		return columns;
 	}
 	
-	public void save(Project toSave) {
+	/*public void save(Project toSave) {
 		try {
 			String sql = "INSERT INTO Project.project (name, description) VALUES (?, ?)";
 			PreparedStatement s = conn.prepareStatement(sql);
@@ -230,7 +236,7 @@ public class Database {
 			// TODO Auto-generated catch block
 			log.exception(e);
 		}
-	}
+	}*/
 	
 	public void save(List<User> toSave) {
 		String sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";

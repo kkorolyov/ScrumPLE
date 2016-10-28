@@ -1,6 +1,7 @@
 package org.scrumple.scrumplecore.applications;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.scrumple.scrumplecore.database.Saveable;
@@ -62,7 +63,7 @@ public class Project implements Saveable {
 	@Override
 	public List<Object> toData() {
 		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(new Object[]{getName(), getDescription()});
 	}
 
 
