@@ -252,6 +252,24 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public Project load(String toLoad, Project p) {
+		String sql = "Select * FROM Project.project WHERE name = ?";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setString(1, toLoad);
+			ResultSet rs = s.executeQuery();
+			while (rs.next()){
+				p.setName(rs.getString("name"));
+				p.setDescription(rs.getString("description"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			log.exception(e);;
+		}
+		return p;
+	}
 		
 	private class Column {
 		private final String name;

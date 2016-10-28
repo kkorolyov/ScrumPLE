@@ -3,7 +3,9 @@ package org.scrumple.scrumplecore.applications;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Project {
+import org.scrumple.scrumplecore.database.Saveable;
+
+public class Project implements Saveable {
 	private String projectName;
 	private String projDescription;
 	private List<User> users;
@@ -19,8 +21,16 @@ public class Project {
 		return this.projectName;
 	}
 	
+	public void setName(String name) {
+		this.projectName = name;
+	}
+	
 	public String getDescription() {
 		return this.projDescription;
+	}
+	
+	public void setDescription(String description) {
+		this.projDescription = description;
 	}
 	
 	public void addUser(User user) {
@@ -48,6 +58,12 @@ public class Project {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());		}
 	}*/
+
+	@Override
+	public List<Object> toData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 }

@@ -23,6 +23,9 @@ public class ProjectTest {
 		p.addUser(u2);
 		Database db = new Database(Sql.getUrl(), Sql.getUser(), Sql.getPassword());
 		db.save(p);
+		
+		Project alpha = db.load("Test Project", new Project("Null", "Null"));
+		System.out.println(alpha.getDescription());
 		//db.save(p.getUsers());
 	}
 }
