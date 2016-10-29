@@ -1,6 +1,11 @@
 package org.scrumple.scrumplecore.applications;
 
-public class User {
+import java.util.Arrays;
+import java.util.List;
+
+import org.scrumple.scrumplecore.database.Saveable;
+
+public class User implements Saveable {
 	private String credentials;
 	private String name;
 	private int role;
@@ -21,5 +26,10 @@ public class User {
 	
 	public int getRole() {
 		return this.role;
+	}
+
+	@Override
+	public List<Object> toData() {
+		return Arrays.asList(new Object[]{getName(), getCredentials(), getRole()});
 	}
 }
