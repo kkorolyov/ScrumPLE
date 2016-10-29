@@ -171,7 +171,8 @@ public class Assets {
 	@SuppressWarnings("synthetic-access")
 	public static class Sql {
 		@SuppressWarnings("javadoc")
-		public static final String 	SQL_URL = "SQL_URL",
+		public static final String 	SQL_HOST = "SQL_HOST",
+																SQL_PORT = "SQL_PORT",
 																SQL_USER = "SQL_USER",
 																SQL_PASSWORD = "SQL_PASSWORD";
 		@SuppressWarnings("javadoc")
@@ -197,9 +198,13 @@ public class Assets {
 			return fileName != null ? new File(fileName) : null;
 		}
 		
-		/** @return configured SQL URL */
-		public static String getUrl() {
-			return get(SQL_URL);
+		/** @return configured SQL server address */
+		public static String getServer() {
+			return get(SQL_HOST);
+		}
+		/** @return configured SQL server port */
+		public static int getPort() {
+			return Integer.parseInt(get(SQL_PORT));
 		}
 		/** @return configured SQL user */
 		public static String getUser() {

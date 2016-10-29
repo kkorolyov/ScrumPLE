@@ -1,6 +1,5 @@
 package org.scrumple.scrumplecore.database;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
@@ -8,85 +7,63 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.assets.Assets.Sql;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 
+/**
+ * A connection to a single database.
+ */
 public class Database {
 	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
-	private  String DB_NAME;
 	private static final String DELIMITER = ",",
-															PARAM_MARKER = "?",
+															PARAM_MARKER = "?";
+	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,
 															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
 															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")";
 	
 	private final Connection conn;
+	private final String name;
+	
+	/**
+	 * Creates a new database.
+	 * @param name name of new database
+	 */
+	public static void createDatabase(String name) {
+		try {
+			DataSource ds = DataSourcePool.get("");
+			ds.getConnection().createStatement().executeUpdate(CREATE_DATABASE_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), name));
+			
+			log.info("Created new database=" + name);
+		} catch (SQLException e) {
+			log.exception(e);
+		}
+	}
 	
 	/**
 	 * Constructs a new database connection.
-	 * @param url URL to database
-	 * @param user user
-	 * @param password password
+	 * @param databaseName name of database to connect to
+	 * @throws NamingException if a name lookup error occurs
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String url, String dbName, String user, String password) throws SQLException {
-		MysqlDataSource ds = new MysqlDataSource();
-		ds.setUrl(url);
-		ds.setUser(user);
-		ds.setPassword(password);
-		this.DB_NAME = dbName;
+	public Database(String databaseName) throws NamingException, SQLException {
+		this.name = databaseName;
+		
+		DataSource ds = DataSourcePool.get(this.name);
+		
 		conn = ds.getConnection();
 		conn.setAutoCommit(false);
 		
-		log.info("Created new Database: URL=" + url + ", user=" + user);
-	}
-
-	void createDB(String dbName) {
-		try (Statement s = conn.createStatement()) {
-			s.execute("CREATE DATABASE IF NOT EXISTS " + dbName);
-		} 
-		catch (SQLException e) {
-		    if (e.getErrorCode() == 1007) {
-		        // Database already exists error
-		        System.out.println(e.getMessage());
-		    } else {
-		        // Some other problems, e.g. Server down, no permission, etc
-		        e.printStackTrace();
-		    }
-		}
+		log.info("Created new Database: " + this.name);
 	}
 	
 	/**
-	 * Initializes the system database.
-	 * @return {@code true} if initialization made at least 1 change to the system database
-	 */
-	public boolean init() {
-		boolean result = false;
-		
-		try {
-			int[] updates = executeBatch(SqlReader.read(Sql.getFile(Sql.INIT_DATABASE_SCRIPT)));
-			
-			if (updates != null) {
-				for (int update : updates) {
-					if (update > 0) {
-						result = true;
-						break;
-					}
-				}
-			}
-		} catch (FileNotFoundException e) {
-			log.exception(e);
-		}
-		return result;
-	}
-	
-	/**
-	 * Convenience method for @link {@link #executeBatch(List)}
+	 * Convenience method for {@link #executeBatch(List)}
 	 */
 	public int[] executeBatch(String... statements) {
 		return executeBatch(Arrays.asList(statements));
@@ -111,7 +88,7 @@ public class Database {
 		return result;
 	}
 	
-	public void createDefaultRoles() {
+	public void createDefaultRoles() {	// TODO Extract to external script?
 		try {
 			String sql = "INSERT INTO Project.roles (name) VALUES (?)";
 			PreparedStatement s = conn.prepareStatement(sql);
@@ -125,7 +102,6 @@ public class Database {
 			conn.commit();
 
 		} catch (SQLException  e) {
-			// TODO Auto-generated catch block
 			log.exception(e);
 			
 		}
@@ -142,16 +118,11 @@ public class Database {
 		if (toSave == null)
 			throw new IllegalArgumentException("Cannot save a null object");
 		
-		try {
-			conn.setCatalog(DB_NAME);
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			log.exception(e1);;
-		}
-
 		try (PreparedStatement s = buildInsert(toSave)) {
 			result = s.executeUpdate() > 0;
 			conn.commit();
+			
+			log.debug("Saved to database=" + name + ": " + toSave);
 		} catch (SQLException | IllegalArgumentException e) {
 			log.exception(e);
 		}
