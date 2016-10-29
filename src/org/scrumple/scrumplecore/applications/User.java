@@ -30,10 +30,8 @@ public class User implements Saveable {
 
 	@Override
 	public List<Object> toData() {
-<<<<<<< HEAD
-		return Arrays.asList(new Object[]{getName(), getCredentials(), getRole()});
-=======
+
 		return Arrays.asList(new Object[]{credentials, name, role});
->>>>>>> origin/dev
+
 	}
 }
