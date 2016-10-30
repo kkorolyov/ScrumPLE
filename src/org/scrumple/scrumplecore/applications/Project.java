@@ -63,7 +63,7 @@ public class Project implements Saveable {
 	@Override
 	public List<Object> toData() {
 		// TODO Auto-generated method stub
-		return Arrays.asList(new Object[]{getName(), getDescription()});
+		return Arrays.asList(new Object[]{projectName, projDescription});
 	}
 
 

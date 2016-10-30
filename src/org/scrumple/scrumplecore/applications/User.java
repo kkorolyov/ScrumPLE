@@ -19,13 +19,24 @@ public class User implements Saveable {
 	public String getName() {
 		return this.name;
 	}
+	public void setName(String aName) {
+		this.name = aName;
+	}
 	
 	public String getCredentials() {
 		return this.credentials;
 	}
 	
+	public void setCredentials(String aCred) {
+		this.credentials = aCred;
+	}
+	
 	public int getRole() {
 		return this.role;
+	}
+	
+	public void setRole(int roleIDX) {
+		this.role = roleIDX;
 	}
 
 	@Override

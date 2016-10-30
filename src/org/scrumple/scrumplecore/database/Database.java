@@ -182,33 +182,6 @@ public class Database {
 		return columns;
 	}
 	
-	/*public void save(Project toSave) {
-		try {
-			String sql = "INSERT INTO Project.project (name, description) VALUES (?, ?)";
-			PreparedStatement s = conn.prepareStatement(sql);
-			s.setString(1, toSave.getName());
-			s.setString(2, toSave.getDescription());
-
-			s.executeUpdate();
-			sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";
-			
-			s = conn.prepareStatement(sql);
-			for(User user : toSave.getUsers())
-			{
-				s.setString(1, user.getCredentials());
-				s.setString(2, user.getName());
-				s.setInt(3, user.getRole());
-				s.addBatch();
-			}
-			s.executeBatch();
-			
-			conn.commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			log.exception(e);
-		}
-	}*/
-	
 	public void save(List<User> toSave) {
 		String sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";
 
@@ -246,6 +219,26 @@ public class Database {
 			log.exception(e);;
 		}
 		return p;
+	}
+	
+	public User load(String toLoad, User u) {
+		String sql = "Select * FROM Project.users WHERE name = ?";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setString(1,  toLoad);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()){
+				u.setName(rs.getString("name"));
+				u.setCredentials(rs.getString("credentials"));
+				u.setRole(rs.getInt("role"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			log.exception(e);
+		}
+		return u;
+		
 	}
 		
 	private class Column {
