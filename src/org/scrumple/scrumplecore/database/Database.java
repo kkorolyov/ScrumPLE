@@ -34,8 +34,9 @@ public class Database {
 															GET_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " WHERE " + ID + "=" + PARAM_MARKER,
 															GET_ID_TEMPLATE = "SELECT " + ID + " FROM " + PARAM_MARKER + " WHERE " + PARAM_MARKER + " LIMIT 1";
 	
-	private final Connection conn;
 	private final String name;
+	private final ColumnFilter columnFilter;
+	private final Connection conn;
 	
 	/**
 	 * Creates a new database.
@@ -53,13 +54,22 @@ public class Database {
 	}
 	
 	/**
+	 * Constructs a new database with a default column filter.
+	 * @see #Database(String, ColumnFilter)
+	 */
+	public Database(String databaseName) throws NamingException, SQLException {
+		this(databaseName, (rsmd, i) -> !rsmd.isAutoIncrement(i));
+	}
+	/**
 	 * Constructs a new database connection.
 	 * @param databaseName name of database to connect to
+	 * @param columnFilter filtering scheme for columns used in ORM functions
 	 * @throws NamingException if a name lookup error occurs
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String databaseName) throws NamingException, SQLException {
+	public Database(String databaseName, ColumnFilter columnFilter) throws NamingException, SQLException {
 		this.name = databaseName;
+		this.columnFilter = columnFilter;
 		
 		DataSource ds = DataSourcePool.get(this.name);
 		
@@ -116,35 +126,48 @@ public class Database {
 
 	/**
 	 * Saves an object.
+	 * If an equivalent object is already saved, returns the id of the saved object
 	 * @param toSave object to save
 	 * @return id of saved object, or {@code -1} if failed to save
+	 * @throws SQLException if a database error occurs
+	 * @throws IllegalArgumentException if {@code toSave} is {@code null}
 	 */
-	@SuppressWarnings("synthetic-access")
-	public long save(Saveable toSave) {	// TODO Modularize, deal with all these try's
+	public long save(Saveable toSave) throws SQLException {
 		long result = -1;
 		
 		if (toSave == null)
 			throw new IllegalArgumentException("Cannot save a null object");
 		
 		String table = toSave.getClass().getSimpleName();
-		List<Column> columns = getColumns(toSave);
+		List<Column> columns = getColumns(table);
 		List<Object> data = toSave.toData();
 
 		if (columns.size() != data.size())
-			throw new IllegalArgumentException("Saveable data does not match corresponding table columns: table=" + table + ", data.size= " + data.size() + ", columns.size= " + columns.size());
+			throw new IllegalArgumentException("Saveable data does not match corresponding table columns for " + fullName(name, table) + ": data= " + data.size() + ", columns= " + columns.size());
 		
+		if ((result = getId(table, columns, data)) < 0) {	// Not yet saved
+			save(table, columns, data);
+			log.debug("Saved " + fullName(name, table) + ": " + toSave);
+			
+			if ((result = getId(table, columns, data)) >= 0)	// Found id of newly-saved object
+				log.debug("Found id for saved " + fullName(name, table) + ": " + result);
+			else
+				log.severe("Failed to locate id for saved " + fullName(name, table) + ": " + toSave);
+		}
+		return result;
+	}
+	private void save(String table, List<Column> columns, List<Object> data) throws SQLException {
 		try (PreparedStatement s = conn.prepareStatement(buildInsertBase(table, columns))) {
 			for (int i = 0; i < columns.size(); i++)
 				s.setObject(i + 1, data.get(i) instanceof Saveable ? save((Saveable) data.get(i)) : data.get(i), columns.get(i).type);
 		
 			s.executeUpdate();
 			conn.commit();
-			
-			log.debug("Saved to database=" + name + ": " + toSave);
-		} catch (SQLException | IllegalArgumentException e) {
-			log.severe("Failed to save to database=" + name + ": " + toSave);
-			log.exception(e);
 		}
+	}
+	private long getId(String table, List<Column> columns, List<Object> data) throws SQLException {
+		long result = -1;
+		
 		try (PreparedStatement s = conn.prepareStatement(buildGetIdBase(table, columns))) {
 			for (int i = 0; i < columns.size(); i++)
 				s.setObject(i + 1, data.get(i), columns.get(i).type);
@@ -152,49 +175,64 @@ public class Database {
 			ResultSet rs = s.executeQuery();
 			if (rs.next())
 				result = rs.getLong(1);
-		} catch (SQLException e) {
-			log.severe("Failed to get id for " + table + " in database=" + name);
-			log.exception(e);
 		}
 		return result;
 	}
+	
 	/**
 	 * Loads an object
 	 * @param c object type
 	 * @param id id of instance to load
 	 * @return appropriate object, or {@code null} if no such object
 	 * @throws SQLException if a database error occurs
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
+	 * @throws InstantiationException if {@code c} does not have a nullary constructor or cannot be instantiated for some other reason 
+	 * @throws IllegalAccessException if (@code c) or its nullary constructor is inaccessible
 	 */
-	@SuppressWarnings("unchecked")
-	public <T extends Saveable> T load(Class<T> c, long id) throws SQLException, InstantiationException, IllegalAccessException {	// TODO Get objects from FKs
+	public <T extends Saveable> T load(Class<T> c, long id) throws SQLException, InstantiationException, IllegalAccessException {
 		T result = null;
-		
 		String table = c.getSimpleName();
+		
+		List<Object> data = load(table, id);
+		if (data != null) {
+			result = c.newInstance();
+			result.fromData(data);
+
+			log.debug("Loaded from " + fullName(name, table) + " with id=" + id + ": " + result);
+		}
+		return result;
+	}
+	private List<Object> load(String table, long id) throws SQLException, InstantiationException, IllegalAccessException {
+		List<Object> data = null;
+		
 		try (PreparedStatement s = conn.prepareStatement(buildGetBase(table))) {
 			s.setLong(1, id);
 			ResultSet rs = s.executeQuery();
 			
-			if (rs.next()) {
-				List<Object> data = new ArrayList<>();
+			if (rs.next()) {	// Found saved data
+				data = new ArrayList<>();
 				ResultSetMetaData rsmd = rs.getMetaData();
 				
 				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-					String column = rsmd.getColumnName(i);
-					
-					if (!rsmd.isAutoIncrement(i))	// Ignore auto-incrementing columns
-						data.add(isForeignKey(table, column) ? load((Class<T>) Class.forName(column), rs.getLong(i)) : rs.getObject(i));	// If foreign key, get referenced object
+					if (columnFilter.filter(rsmd, i)) {	// Ignore auto-incrementing columns
+						String column = rsmd.getColumnName(i);
+						Object value = rs.getObject(i);
+						
+						if (isForeignKey(table, column)) {
+							try {
+								value = load((Class<? extends Saveable>) Class.forName(column), (long) value);
+							} catch (ClassNotFoundException e) {
+								log.severe("This should not happen");
+								log.exception(e);
+							} catch (ClassCastException e) {
+								throw new IllegalArgumentException(column + " field of " + table + " is not Saveable");
+							}
+						}
+						data.add(isForeignKey(table, column) ? load(column, rs.getLong(i)) : rs.getObject(i));	// If foreign key, get referenced object
+					}
 				}
-				result = c.newInstance();
-				result.fromData(data);
 			}
-		} catch (ClassNotFoundException e) {	// Should not happen
-			log.exception(e);
 		}
-		log.debug("Loaded from database=" + name + ": " + c.getSimpleName() + " id=" + id);
-		
-		return result;
+		return data;
 	}
 	
 	private boolean isForeignKey(String table, String column) throws SQLException {
@@ -207,24 +245,20 @@ public class Database {
 		return false;
 	}
 	
-	@SuppressWarnings("synthetic-access")
-	private List<Column> getColumns(Saveable saveable) {
+	private List<Column> getColumns(String table) throws SQLException {
 		List<Column> columns = new ArrayList<>();
 		
-		try (ResultSet rs = conn.createStatement().executeQuery(GET_COLUMNS_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), saveable.getClass().getSimpleName()))) {
+		try (ResultSet rs = conn.createStatement().executeQuery(GET_COLUMNS_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), table))) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-				if (!rsmd.isAutoIncrement(i))	// Ignore auto-incrementing columns
+				if (columnFilter.filter(rsmd, i))	// Ignore auto-incrementing columns
 					columns.add(new Column(rsmd.getColumnName(i), rsmd.getColumnType(i)));
 			}
-		} catch (SQLException e) {
-			log.exception(e);
 		}
 		return columns;
 	}
 	
-	@SuppressWarnings("synthetic-access")
 	private static String buildInsertBase(String table, List<Column> columns) throws SQLException {
 		StringBuilder columnsBuilder = new StringBuilder(),
 									valuesBuilder = new StringBuilder();
@@ -253,7 +287,6 @@ public class Database {
 		
 		return statement;
 	}
-	@SuppressWarnings("synthetic-access")
 	private static String buildGetIdBase(String table, List<Column> columns) {
 		StringBuilder whereBuilder = new StringBuilder();
 		
@@ -329,12 +362,21 @@ public class Database {
 		return u;
 		
 	}
+	
+	private static final String fullName(String database, String table) {
+		return database + "." + table;
+	}
+	
+	/**	Filters columns to use in ORM functions. */
+	public static interface ColumnFilter {
+		boolean filter(ResultSetMetaData rsmd, int column) throws SQLException;
+	}
 		
 	private class Column {
-		private final String name;
-		private final int type;
+		final String name;
+		final int type;
 		
-		private Column(String name, int type) {
+		Column(String name, int type) {
 			this.name = name;
 			this.type = type;
 		}
