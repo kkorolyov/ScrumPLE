@@ -9,8 +9,7 @@ public class Sprint {
 	private Set<Task> tasks;
 	private Backlog backlog;
 	private Period timeLeft;
-	private LocalDate start;
-	private LocalDate end;
+	private LocalDate start, end, current;
 	
 	public Sprint (Backlog sprintBacklog, int year, int month, int dayOfMonth) {
 		this.backlog = sprintBacklog;
@@ -32,7 +31,8 @@ public class Sprint {
 	}
 	
 	public void timeLeft() {
-		timeLeft = Period.between(start, end);
+		current = LocalDate.now();
+		timeLeft = Period.between(current, end);
 	}
 
 }
