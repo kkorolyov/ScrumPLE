@@ -164,10 +164,12 @@ public class Database {
 	 * @param id id of instance to load
 	 * @return appropriate object, or {@code null} if no such object
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends Saveable> T load(Class<T> c, long id) {	// TODO Get objects from FKs
 		T result = null;
 		
-		try (PreparedStatement s = conn.prepareStatement(buildGetBase(c.getSimpleName()))) {
+		String table = c.getSimpleName();
+		try (PreparedStatement s = conn.prepareStatement(buildGetBase(table))) {
 			s.setLong(1, id);
 			ResultSet rs = s.executeQuery();
 			
@@ -175,14 +177,28 @@ public class Database {
 				List<Object> data = new ArrayList<>();
 				ResultSetMetaData rsmd = rs.getMetaData();
 				
-				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-					if (!rsmd.isAutoIncrement(i))	// Ignore auto-incrementing columns
-						data.add(rs.getObject(i));
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {	// TODO Beware, ugly shit past this point
+					DatabaseMetaData dbmd = conn.getMetaData();
+					ResultSet dbrs = dbmd.getExportedKeys(null, null, table);
+					ResultSetMetaData dbrsmd = dbrs.getMetaData();
+					
+					boolean hasFK = dbrs.next(); 
+					
+					if (!rsmd.isAutoIncrement(i)) {	// Ignore auto-incrementing columns
+						boolean isFK = false;
+						if (hasFK) {
+							for (int j = 1; j <= dbrsmd.getColumnCount(); j++) {
+								if (isFK = dbrsmd.getColumnName(j).equals(rsmd.getColumnName(i)))	// Current column is FK
+									break;
+							}
+						}
+						data.add(isFK ? load((Class<T>) Class.forName(rsmd.getColumnName(i)), rs.getLong(i)) : rs.getObject(i));
+					}
 				}
 				result = c.newInstance();
 				result.fromData(data);
 			}
-		} catch (SQLException | InstantiationException | IllegalAccessException e) {
+		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			log.severe("Failed to load from database=" + name + ": " + c.getSimpleName() + " id=" + id);
 			log.exception(e);
 		}

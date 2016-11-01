@@ -73,7 +73,7 @@ public class DatabaseTest {
 		
 		@Override
 		public List<Object> toData() {
-			return Arrays.asList(new Object[]{"test", 1, .5, 'c'});
+			return Arrays.asList(new Object[]{v, i, r, c});
 		}
 
 		@Override
@@ -84,6 +84,33 @@ public class DatabaseTest {
 			i = (int) it.next();
 			r = (double) it.next();
 			c = ((String) it.next()).charAt(0);
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			
+			if (obj == null)
+				return false;
+			
+			if (!(obj instanceof StubSaveable))
+				return false;
+			
+			StubSaveable o = (StubSaveable) obj;
+			if (v == null) {
+				if (o.v != null)
+					return false;
+			} else if (!v.equals(o.v))
+				return false;
+			if (i != o.i)
+				return false;
+			if (r != o.r)
+				return false;
+			if (c != o.c)
+				return false;
+			
+			return true;
 		}
 	}
 }
