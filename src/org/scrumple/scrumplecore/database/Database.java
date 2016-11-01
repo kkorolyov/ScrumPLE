@@ -163,9 +163,12 @@ public class Database {
 	 * @param c object type
 	 * @param id id of instance to load
 	 * @return appropriate object, or {@code null} if no such object
+	 * @throws SQLException if a database error occurs
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Saveable> T load(Class<T> c, long id) {	// TODO Get objects from FKs
+	public <T extends Saveable> T load(Class<T> c, long id) throws SQLException, InstantiationException, IllegalAccessException {	// TODO Get objects from FKs
 		T result = null;
 		
 		String table = c.getSimpleName();
@@ -177,34 +180,31 @@ public class Database {
 				List<Object> data = new ArrayList<>();
 				ResultSetMetaData rsmd = rs.getMetaData();
 				
-				for (int i = 1; i <= rsmd.getColumnCount(); i++) {	// TODO Beware, ugly shit past this point
-					DatabaseMetaData dbmd = conn.getMetaData();
-					ResultSet dbrs = dbmd.getExportedKeys(null, null, table);
-					ResultSetMetaData dbrsmd = dbrs.getMetaData();
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					String column = rsmd.getColumnName(i);
 					
-					boolean hasFK = dbrs.next(); 
-					
-					if (!rsmd.isAutoIncrement(i)) {	// Ignore auto-incrementing columns
-						boolean isFK = false;
-						if (hasFK) {
-							for (int j = 1; j <= dbrsmd.getColumnCount(); j++) {
-								if (isFK = dbrsmd.getColumnName(j).equals(rsmd.getColumnName(i)))	// Current column is FK
-									break;
-							}
-						}
-						data.add(isFK ? load((Class<T>) Class.forName(rsmd.getColumnName(i)), rs.getLong(i)) : rs.getObject(i));
-					}
+					if (!rsmd.isAutoIncrement(i))	// Ignore auto-incrementing columns
+						data.add(isForeignKey(table, column) ? load((Class<T>) Class.forName(column), rs.getLong(i)) : rs.getObject(i));	// If foreign key, get referenced object
 				}
 				result = c.newInstance();
 				result.fromData(data);
 			}
-		} catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			log.severe("Failed to load from database=" + name + ": " + c.getSimpleName() + " id=" + id);
+		} catch (ClassNotFoundException e) {	// Should not happen
 			log.exception(e);
 		}
 		log.debug("Loaded from database=" + name + ": " + c.getSimpleName() + " id=" + id);
 		
 		return result;
+	}
+	
+	private boolean isForeignKey(String table, String column) throws SQLException {
+		ResultSetMetaData rsmd = conn.getMetaData().getExportedKeys(null, null, table).getMetaData();
+		
+		for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+			if (rsmd.getColumnName(i).equals(column))
+				return true;
+		}
+		return false;
 	}
 	
 	@SuppressWarnings("synthetic-access")
