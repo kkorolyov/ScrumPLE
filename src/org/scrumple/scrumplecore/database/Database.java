@@ -1,11 +1,9 @@
 package org.scrumple.scrumplecore.database;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
@@ -143,23 +141,24 @@ public class Database {
 		List<Object> data = toSave.toData();
 
 		if (columns.size() != data.size())
-			throw new IllegalArgumentException("Saveable data does not match corresponding table columns for " + fullName(name, table) + ": data= " + data.size() + ", columns= " + columns.size());
+			throw new IllegalArgumentException("Saveable data does not match corresponding table columns for " + fullName(table) + ": data= " + data.size() + ", columns= " + columns.size());
 		
 		if ((result = getId(table, columns, data)) < 0) {	// Not yet saved
 			save(table, columns, data);
-			log.debug("Saved " + fullName(name, table) + ": " + toSave);
+			log.debug("Saved " + fullName(table) + ": " + toSave);
 			
 			if ((result = getId(table, columns, data)) >= 0)	// Found id of newly-saved object
-				log.debug("Found id for saved " + fullName(name, table) + ": " + result);
+				log.debug("Found id for newly-saved " + fullName(table) + " '" + toSave + "': " + result);
 			else
-				log.severe("Failed to locate id for saved " + fullName(name, table) + ": " + toSave);
-		}
+				log.severe("Failed to locate id for saved " + fullName(table) + ": " + toSave);
+		} else
+			log.debug("Found id for already-saved " + fullName(table) + " '" + toSave + "': " + result);
 		return result;
 	}
 	private void save(String table, List<Column> columns, List<Object> data) throws SQLException {
 		try (PreparedStatement s = conn.prepareStatement(buildInsertBase(table, columns))) {
 			for (int i = 0; i < columns.size(); i++)
-				s.setObject(i + 1, data.get(i) instanceof Saveable ? save((Saveable) data.get(i)) : data.get(i), columns.get(i).type);
+				s.setObject(i + 1, (data.get(i) instanceof Saveable ? save((Saveable) data.get(i)) : data.get(i)), columns.get(i).type);	// Recursively save Saveable fields
 		
 			s.executeUpdate();
 			conn.commit();
@@ -170,7 +169,7 @@ public class Database {
 		
 		try (PreparedStatement s = conn.prepareStatement(buildGetIdBase(table, columns))) {
 			for (int i = 0; i < columns.size(); i++)
-				s.setObject(i + 1, data.get(i), columns.get(i).type);
+				s.setObject(i + 1, (data.get(i) instanceof Saveable ? save((Saveable) data.get(i)) : data.get(i)), columns.get(i).type);	// TODO Repeat of code in #save() above
 			
 			ResultSet rs = s.executeQuery();
 			if (rs.next())
@@ -187,24 +186,26 @@ public class Database {
 	 * @throws SQLException if a database error occurs
 	 * @throws InstantiationException if {@code c} does not have a nullary constructor or cannot be instantiated for some other reason 
 	 * @throws IllegalAccessException if (@code c) or its nullary constructor is inaccessible
+	 * @throws IllegalStateException if {@code c} has a foreign key which is not mapped to a {@code Saveable} field
 	 */
 	public <T extends Saveable> T load(Class<T> c, long id) throws SQLException, InstantiationException, IllegalAccessException {
 		T result = null;
 		String table = c.getSimpleName();
 		
-		List<Object> data = load(table, id);
+		List<Object> data = load(table, id, c);
 		if (data != null) {
 			result = c.newInstance();
 			result.fromData(data);
 
-			log.debug("Loaded from " + fullName(name, table) + " with id=" + id + ": " + result);
+			log.debug("Loaded from " + fullName(table) + " where id=" + id + ": " + result);
 		}
 		return result;
 	}
-	private List<Object> load(String table, long id) throws SQLException, InstantiationException, IllegalAccessException {
+	@SuppressWarnings("unchecked")
+	private List<Object> load(String table, long id, Class<? extends Saveable> c) throws SQLException, InstantiationException, IllegalAccessException {
 		List<Object> data = null;
 		
-		try (PreparedStatement s = conn.prepareStatement(buildGetBase(table))) {
+		try (PreparedStatement s = conn.prepareStatement(GET_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), table))) {
 			s.setLong(1, id);
 			ResultSet rs = s.executeQuery();
 			
@@ -213,38 +214,42 @@ public class Database {
 				ResultSetMetaData rsmd = rs.getMetaData();
 				
 				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-					if (columnFilter.filter(rsmd, i)) {	// Ignore auto-incrementing columns
+					if (columnFilter.filter(rsmd, i)) {
 						String column = rsmd.getColumnName(i);
 						Object value = rs.getObject(i);
 						
-						if (isForeignKey(table, column)) {
+						String referencedTable = getReferencedTable(table, column);	// Check if foreign key
+						if (referencedTable != null) {
+							System.out.println("yo");
 							try {
-								value = load((Class<? extends Saveable>) Class.forName(column), (long) value);
-							} catch (ClassNotFoundException e) {
-								log.severe("This should not happen");
+								value = load((Class<? extends Saveable>) c.getDeclaredField(column).getDeclaringClass(), (long) value);
+							} catch (NoSuchFieldException | SecurityException e) {
 								log.exception(e);
-							} catch (ClassCastException e) {
-								throw new IllegalArgumentException(column + " field of " + table + " is not Saveable");
+								throw new IllegalStateException(fullName(table) + "." + column + " is not mapped to a Saveable object");
 							}
 						}
-						data.add(isForeignKey(table, column) ? load(column, rs.getLong(i)) : rs.getObject(i));	// If foreign key, get referenced object
+						data.add(value);
 					}
 				}
 			}
 		}
 		return data;
 	}
-	
-	private boolean isForeignKey(String table, String column) throws SQLException {
-		ResultSetMetaData rsmd = conn.getMetaData().getExportedKeys(null, null, table).getMetaData();
-		
-		for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-			if (rsmd.getColumnName(i).equals(column))
-				return true;
+	private String getReferencedTable(String table, String column) throws SQLException {	// TODO Cache foreign keys per-table, boosts performance?
+		System.out.println("Checking for foreign keyness: " + fullName(table) + "." + column);
+		try (ResultSet rs = conn.getMetaData().getImportedKeys(null, null, table)) {
+			while (rs.next()) {
+				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+					String current = rs.getString(i);
+					System.out.println(rs.getMetaData().getColumnName(i) + ", " + current);
+					if (current != null && current.equals(column))
+						return rs.getString(i - 1);	// Previous column contains name of referenced table
+				}
+			}
 		}
-		return false;
+		return null;
 	}
-	
+
 	private List<Column> getColumns(String table) throws SQLException {
 		List<Column> columns = new ArrayList<>();
 		
@@ -252,7 +257,7 @@ public class Database {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-				if (columnFilter.filter(rsmd, i))	// Ignore auto-incrementing columns
+				if (columnFilter.filter(rsmd, i))
 					columns.add(new Column(rsmd.getColumnName(i), rsmd.getColumnType(i)));
 			}
 		}
@@ -277,13 +282,6 @@ public class Database {
 						statement = INSERT_TEMPLATE.replaceFirst(replace, table).replaceFirst(replace, columnsBuilder.toString()).replaceFirst(replace, valuesBuilder.toString());
 		
 		log.debug("Built INSERT base statement for " + table + ": " + statement);
-		
-		return statement;
-	}
-	private static String buildGetBase(String table) {
-		String statement = GET_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), table);
-		
-		log.debug("Built SELECT statement for + " + table + ": " + statement);
 		
 		return statement;
 	}
@@ -363,8 +361,8 @@ public class Database {
 		
 	}
 	
-	private static final String fullName(String database, String table) {
-		return database + "." + table;
+	private String fullName(String table) {
+		return name + "." + table;
 	}
 	
 	/**	Filters columns to use in ORM functions. */

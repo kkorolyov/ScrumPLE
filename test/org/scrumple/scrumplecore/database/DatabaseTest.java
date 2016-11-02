@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.naming.NamingException;
 
@@ -18,8 +19,10 @@ import org.scrumple.scrumplecore.assets.Assets;
 @SuppressWarnings("javadoc")
 public class DatabaseTest {
 	private static final String PROJECT_DB = "Project";
+	private static final String PARAM = "?",
+															DROP_TABLE = "DROP TABLE IF EXISTS " + PARAM;
 	private static final String CREATE_STUB_TABLE = "CREATE TABLE IF NOT EXISTS StubSaveable (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, v VARCHAR(64), i INT, r REAL, c CHAR(1), PRIMARY KEY (id))",
-															DROP_STUB_TABLE = "DROP TABLE IF EXISTS StubSaveable";
+															CREATE_COMPLEX_STUB_TABLE = "CREATE TABLE IF NOT EXISTS ComplexStubSaveable (id INT UNSIGNED AUTO_INCREMENT, i INT, stub BIGINT UNSIGNED, PRIMARY KEY (id), FOREIGN KEY (stub) REFERENCES StubSaveable (id))";
 	
 	private Database db;
 	
@@ -39,20 +42,26 @@ public class DatabaseTest {
 	}
 	
 	@Test
-	public void testSave() throws SQLException {
-		StubSaveable s = new StubSaveable("STRING", 54, 45.6, 't');
+	public void testSave() throws SQLException, InstantiationException, IllegalAccessException {
+		Saveable 	simpleS = new StubSaveable("STRING", 54, 45.6, 't'),
+							complexS = new ComplexStubSaveable(15, (StubSaveable) simpleS);
 
-		db.executeBatch(DROP_STUB_TABLE);
+		db.executeBatch(drop(	complexS.getClass().getSimpleName()),
+													drop(simpleS.getClass().getSimpleName()));
+		db.executeBatch(CREATE_STUB_TABLE,
+										CREATE_COMPLEX_STUB_TABLE);
 		
-		//assertEquals(-1, db.save(s));
-		db.executeBatch(CREATE_STUB_TABLE);
+		long simpleId = db.save(simpleS);
+		assertNotEquals(-1, simpleId);
+		assertEquals(simpleS, db.load(simpleS.getClass(), simpleId));
 		
-		long saved = db.save(s);
-		assertNotEquals(-1, saved);
-		
-		assertEquals(s, db.load(s.getClass(), saved));
-		
-		System.out.println(saved);
+		long complexId = db.save(complexS);
+		assertNotEquals(-1, complexId);
+		assertEquals(complexS, db.load(complexS.getClass(), complexId));
+	}
+	
+	private static String drop(String table) {
+		return DROP_TABLE.replaceFirst(Pattern.quote(PARAM), table);
 	}
 	
 	public static class StubSaveable implements Saveable {
@@ -108,6 +117,53 @@ public class DatabaseTest {
 			if (r != o.r)
 				return false;
 			if (c != o.c)
+				return false;
+			
+			return true;
+		}
+	}
+	public static class ComplexStubSaveable implements Saveable {
+		private int eent;
+		private StubSaveable stubby;
+		
+		public ComplexStubSaveable() {
+			// No-arg
+		}
+		public ComplexStubSaveable(int i, StubSaveable stub) {
+			this.eent = i;
+			this.stubby = stub;
+		}
+
+		@Override
+		public List<Object> toData() {
+			return Arrays.asList(new Object[]{eent, stubby});
+		}
+		@Override
+		public void fromData(List<Object> data) {
+			Iterator<Object> it = data.iterator();
+			
+			eent = (int) it.next();
+			stubby = (StubSaveable) it.next();
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			
+			if (obj == null)
+				return false;
+			
+			if (!(obj instanceof ComplexStubSaveable))
+				return false;
+			
+			ComplexStubSaveable o = (ComplexStubSaveable) obj;
+			if (eent != o.eent)
+				return false;
+			if (stubby == null) {
+				if (o.stubby != null)
+					return false;
+			} else if (!stubby.equals(o.stubby))
 				return false;
 			
 			return true;
