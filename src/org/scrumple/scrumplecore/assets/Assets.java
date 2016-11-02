@@ -40,7 +40,7 @@ public class Assets {
 	private static class Defaults {	// Creates config file defaults
 		private static final String INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
 																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql",
-																PARAMETER_MARKER = "?";
+																SAVEABLES = "config/saveables.ini";
 		
 		static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
 			Properties defaults = new Properties();
@@ -68,15 +68,15 @@ public class Assets {
 	/**
 	 * Provides access to application configuration parameters.
 	 */
+	@SuppressWarnings("javadoc")
 	public static class Config {
-		@SuppressWarnings("javadoc")
 		public static final String 	DB_HOST = "databaseHost",
 																DB_PORT = "databasePort",
 																DB_USER = "databaseUser",
 																DB_PASSWORD = "databasePassword";
-		@SuppressWarnings("javadoc")
 		public static final String 	INIT_DATABASE_SCRIPT = "databaseInitScript",
 																CREATE_ROLES_SCRIPT = "createRolesScript";	// TODO Does not seem like a global config parameter
+		public static final String SAVEABLES = "saveables";
 		
 		private static final File file = new File("config/scrumple.ini");
 		private static Properties props;
@@ -123,7 +123,7 @@ public class Assets {
 		private static final String GLOBAL_LOGGER = "GLOBAL";
 		private static final Level DEFAULT_LEVEL = Level.INFO;
 		
-		private static final File file = new File("config/loggers.ini");
+		private static final File file = new File("config/logging.ini");
 		private static Properties props;
 		
 		private static void init() {

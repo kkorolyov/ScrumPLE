@@ -24,6 +24,7 @@ public class Database {
 															AND = " AND ",
 															ID = "id",
 															PARAM_MARKER = "?";
+	private static final String REFERENCED_TABLE_COLUMN = "PKTABLE_NAME";
 	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,
 															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
 															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")",
@@ -232,9 +233,8 @@ public class Database {
 						
 						String referencedTable = getReferencedTable(table, column);	// Check if foreign key
 						if (referencedTable != null) {
-							System.out.println("yo");
 							try {
-								value = load((Class<? extends Saveable>) Class.forName(saveables.get(referencedTable)), (long) value);
+								value = load((Class<? extends Saveable>) Class.forName(saveables.get(referencedTable)), rs.getLong(i));
 							} catch (ClassNotFoundException e) {
 								log.exception(e);
 								throw new IllegalStateException(fullName(table) + "." + column + " is not mapped to a Saveable object");
@@ -248,14 +248,12 @@ public class Database {
 		return data;
 	}
 	private String getReferencedTable(String table, String column) throws SQLException {	// TODO Cache foreign keys per-table, boosts performance?
-		System.out.println("Checking for foreign keyness: " + fullName(table) + "." + column);
 		try (ResultSet rs = conn.getMetaData().getImportedKeys(null, null, table)) {
 			while (rs.next()) {
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
 					String current = rs.getString(i);
-					System.out.println(rs.getMetaData().getColumnName(i) + ", " + current);
 					if (current != null && current.equals(column))
-						return rs.getString(i - 1);	// Previous column contains name of referenced table
+						return rs.getString(REFERENCED_TABLE_COLUMN);
 				}
 			}
 		}

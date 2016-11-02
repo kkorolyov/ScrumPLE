@@ -15,14 +15,19 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.scrumple.scrumplecore.assets.Assets;
+import org.scrumple.scrumplecore.assets.Assets.Config;
+
+import dev.kkorolyov.simpleprops.Properties;
 
 @SuppressWarnings("javadoc")
 public class DatabaseTest {
 	private static final String PROJECT_DB = "Project";
 	private static final String PARAM = "?",
 															DROP_TABLE = "DROP TABLE IF EXISTS " + PARAM;
-	private static final String CREATE_STUB_TABLE = "CREATE TABLE IF NOT EXISTS StubSaveable (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, v VARCHAR(64), i INT, r REAL, c CHAR(1), PRIMARY KEY (id))",
-															CREATE_COMPLEX_STUB_TABLE = "CREATE TABLE IF NOT EXISTS ComplexStubSaveable (id INT UNSIGNED AUTO_INCREMENT, i INT, stub BIGINT UNSIGNED, PRIMARY KEY (id), FOREIGN KEY (stub) REFERENCES StubSaveable (id))";
+	private static final String SIMPLE_STUB_TABLE = "stub1",
+															COMPLEX_STUB_TABLE = "stub2";
+	private static final String CREATE_STUB_TABLE = "CREATE TABLE IF NOT EXISTS " + SIMPLE_STUB_TABLE + " (id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, v VARCHAR(64), i INT, r REAL, c CHAR(1), PRIMARY KEY (id))",
+															CREATE_COMPLEX_STUB_TABLE = "CREATE TABLE IF NOT EXISTS " + COMPLEX_STUB_TABLE + " (id INT UNSIGNED AUTO_INCREMENT, i INT, stub BIGINT UNSIGNED, PRIMARY KEY (id), FOREIGN KEY (stub) REFERENCES " + SIMPLE_STUB_TABLE + " (id))";
 	
 	private Database db;
 	
@@ -33,7 +38,7 @@ public class DatabaseTest {
 	
 	@Before
 	public void setUp() throws NamingException, SQLException {
-		db = new Database(PROJECT_DB);
+		db = new Database(PROJECT_DB, buildStubSaveablesProperties());
 	}
 	
 	@Test
@@ -46,8 +51,8 @@ public class DatabaseTest {
 		Saveable 	simpleS = new StubSaveable("STRING", 54, 45.6, 't'),
 							complexS = new ComplexStubSaveable(15, (StubSaveable) simpleS);
 
-		db.executeBatch(drop(	complexS.getClass().getSimpleName()),
-													drop(simpleS.getClass().getSimpleName()));
+		db.executeBatch(drop(COMPLEX_STUB_TABLE),
+										drop(SIMPLE_STUB_TABLE));
 		db.executeBatch(CREATE_STUB_TABLE,
 										CREATE_COMPLEX_STUB_TABLE);
 		
@@ -62,6 +67,15 @@ public class DatabaseTest {
 	
 	private static String drop(String table) {
 		return DROP_TABLE.replaceFirst(Pattern.quote(PARAM), table);
+	}
+	
+	private static Properties buildStubSaveablesProperties() {
+		Properties props = new Properties();
+		
+		props.put(SIMPLE_STUB_TABLE, StubSaveable.class.getName());
+		props.put(ComplexStubSaveable.class.getName(), COMPLEX_STUB_TABLE);
+		
+		return props;
 	}
 	
 	public static class StubSaveable implements Saveable {
