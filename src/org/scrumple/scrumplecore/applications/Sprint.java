@@ -13,7 +13,6 @@ public class Sprint {
 	private LocalDate start, end, current;
 	private Date convertedStartDate, convertedEndDate;
 	
-	@SuppressWarnings("deprecation")
 	public Sprint (Backlog sprintBacklog, int year, int month, int dayOfMonth) {
 		this.backlog = sprintBacklog;
 		tasks = new HashSet<Task>();
