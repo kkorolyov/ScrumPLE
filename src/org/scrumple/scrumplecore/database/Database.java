@@ -1,7 +1,6 @@
 package org.scrumple.scrumplecore.database;
 
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -11,9 +10,9 @@ import javax.sql.DataSource;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.User;
-
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simpleprops.Properties;
 
 /**
  * A connection to a single database.
@@ -23,7 +22,6 @@ public class Database {
 	private static final String DELIMITER = ",",
 															EQUALS = "=",
 															AND = " AND ",
-															OR = " OR ",
 															ID = "id",
 															PARAM_MARKER = "?";
 	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,
@@ -34,13 +32,14 @@ public class Database {
 	
 	private final String name;
 	private final ColumnFilter columnFilter;
+	private final Map<String, String> saveables;
 	private final Connection conn;
 	
 	/**
 	 * Creates a new database.
 	 * @param name name of new database
 	 */
-	public static void createDatabase(String name) {
+	public static void createDatabase(String name) {	// TODO Slightly icky
 		try {
 			DataSource ds = DataSourcePool.get("");
 			ds.getConnection().createStatement().executeUpdate(CREATE_DATABASE_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), name));
@@ -53,21 +52,23 @@ public class Database {
 	
 	/**
 	 * Constructs a new database with a default column filter.
-	 * @see #Database(String, ColumnFilter)
+	 * @see #Database(String, ColumnFilter, Properties)
 	 */
-	public Database(String databaseName) throws NamingException, SQLException {
-		this(databaseName, (rsmd, i) -> !rsmd.isAutoIncrement(i));
+	public Database(String databaseName, Properties props) throws NamingException, SQLException {
+		this(databaseName, (rsmd, i) -> !rsmd.isAutoIncrement(i), props);
 	}
 	/**
 	 * Constructs a new database connection.
 	 * @param databaseName name of database to connect to
 	 * @param columnFilter filtering scheme for columns used in ORM functions
+	 * @param saveables properties specifying mappings between Java and database types
 	 * @throws NamingException if a name lookup error occurs
 	 * @throws SQLException if a connection error occurs
 	 */
-	public Database(String databaseName, ColumnFilter columnFilter) throws NamingException, SQLException {
+	public Database(String databaseName, ColumnFilter columnFilter, Properties saveables) throws NamingException, SQLException {
 		this.name = databaseName;
 		this.columnFilter = columnFilter;
+		this.saveables = buildSaveables(saveables);
 		
 		DataSource ds = DataSourcePool.get(this.name);
 		
@@ -75,6 +76,15 @@ public class Database {
 		conn.setAutoCommit(false);
 		
 		log.info("Created new Database: " + this.name);
+	}
+	private static final Map<String, String> buildSaveables(Properties props) {
+		Map<String, String> saveables = new HashMap<>();
+		
+		for (String key : props.keys()) {
+			saveables.put(key, props.get(key));
+			saveables.put(props.get(key), key);	// Mirror to get both class->table and table->class
+		}
+		return saveables;
 	}
 	
 	/**
@@ -128,7 +138,7 @@ public class Database {
 	 * @param toSave object to save
 	 * @return id of saved object, or {@code -1} if failed to save
 	 * @throws SQLException if a database error occurs
-	 * @throws IllegalArgumentException if {@code toSave} is {@code null}
+	 * @throws IllegalArgumentException if {@code toSave} is {@code null} or {@code toSave}'s type is not mapped to a database type
 	 */
 	public long save(Saveable toSave) throws SQLException {
 		long result = -1;
@@ -136,7 +146,8 @@ public class Database {
 		if (toSave == null)
 			throw new IllegalArgumentException("Cannot save a null object");
 		
-		String table = toSave.getClass().getSimpleName();
+		String table = dbType(toSave.getClass());	// Ensures that not null
+		
 		List<Column> columns = getColumns(table);
 		List<Object> data = toSave.toData();
 
@@ -184,15 +195,16 @@ public class Database {
 	 * @param id id of instance to load
 	 * @return appropriate object, or {@code null} if no such object
 	 * @throws SQLException if a database error occurs
+	 * @throws IllegalArgumentException if {@code c} is not mapped to a database type
 	 * @throws InstantiationException if {@code c} does not have a nullary constructor or cannot be instantiated for some other reason 
 	 * @throws IllegalAccessException if (@code c) or its nullary constructor is inaccessible
 	 * @throws IllegalStateException if {@code c} has a foreign key which is not mapped to a {@code Saveable} field
 	 */
 	public <T extends Saveable> T load(Class<T> c, long id) throws SQLException, InstantiationException, IllegalAccessException {
 		T result = null;
-		String table = c.getSimpleName();
+		String table = dbType(c);	// Ensures that not null
 		
-		List<Object> data = load(table, id, c);
+		List<Object> data = load(table, id);
 		if (data != null) {
 			result = c.newInstance();
 			result.fromData(data);
@@ -202,7 +214,7 @@ public class Database {
 		return result;
 	}
 	@SuppressWarnings("unchecked")
-	private List<Object> load(String table, long id, Class<? extends Saveable> c) throws SQLException, InstantiationException, IllegalAccessException {
+	private List<Object> load(String table, long id) throws SQLException, InstantiationException, IllegalAccessException {
 		List<Object> data = null;
 		
 		try (PreparedStatement s = conn.prepareStatement(GET_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), table))) {
@@ -222,8 +234,8 @@ public class Database {
 						if (referencedTable != null) {
 							System.out.println("yo");
 							try {
-								value = load((Class<? extends Saveable>) c.getDeclaredField(column).getDeclaringClass(), (long) value);
-							} catch (NoSuchFieldException | SecurityException e) {
+								value = load((Class<? extends Saveable>) Class.forName(saveables.get(referencedTable)), (long) value);
+							} catch (ClassNotFoundException e) {
 								log.exception(e);
 								throw new IllegalStateException(fullName(table) + "." + column + " is not mapped to a Saveable object");
 							}
@@ -359,6 +371,14 @@ public class Database {
 		}
 		return u;
 		
+	}
+	
+	private String dbType(Class<?> c) {
+		String dbType = saveables.get(c.getName());
+		if (dbType == null)
+			throw new IllegalArgumentException("No matching database type for Java type: " + c.getName());
+		
+		return dbType;
 	}
 	
 	private String fullName(String table) {
