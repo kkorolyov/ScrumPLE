@@ -19,7 +19,6 @@ public class Sprint {
 		tasks = new HashSet<Task>();
 		start = LocalDate.now();
 		end = LocalDate.of(year, month, dayOfMonth);
-		String a = "sfdsafa";
 		convertedStartDate = new Date(start.getYear(), start.getDayOfMonth()-1, start.getDayOfMonth());
 		convertedEndDate = new Date(end.getYear(), end.getDayOfMonth()-1, end.getDayOfMonth());
 	}
