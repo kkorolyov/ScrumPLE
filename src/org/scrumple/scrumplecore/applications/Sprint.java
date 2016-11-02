@@ -19,8 +19,8 @@ public class Sprint {
 		tasks = new HashSet<Task>();
 		start = LocalDate.now();
 		end = LocalDate.of(year, month, dayOfMonth);
-		convertedStartDate = new Date(start.getYear(), start.getDayOfMonth()-1, start.getDayOfMonth());
-		convertedEndDate = new Date(end.getYear(), end.getDayOfMonth()-1, end.getDayOfMonth());
+		convertedStartDate = Date.valueOf(start);
+		convertedEndDate = Date.valueOf(end);
 	}
 	
 	public void setTasks() {
@@ -29,10 +29,20 @@ public class Sprint {
 	
 	public void setStateDate(int year, int month, int date) {
 		start = LocalDate.of(year, month, date);
+		convertedStartDate = Date.valueOf(start);
 	}
 	
 	public void setEndDate(int year, int month, int date) {
 		end = LocalDate.of(year, month, date);
+		convertedEndDate = Date.valueOf(end);
+	}
+	
+	public Date getConvertedStartDate() {
+		return this.convertedStartDate;
+	}
+	
+	public Date getConvertedEndDate() {
+		return this.convertedEndDate;
 	}
 	
 	public void timeLeft() {
