@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.scrumple.scrumplecore.assets.Assets.Sql;
+import org.scrumple.scrumplecore.assets.Assets.Config;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -38,11 +38,11 @@ public class DataSourcePool {
 	}
 	private static void addDataSource(String databaseName) {
 		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(Sql.getServer());
-		ds.setPort(Sql.getPort());
+		ds.setServerName(Config.getServer());
+		ds.setPort(Config.getPort());
 		ds.setDatabaseName(databaseName);
-		ds.setUser(Sql.getUser());
-		ds.setPassword(Sql.getPassword());
+		ds.setUser(Config.getUser());
+		ds.setPassword(Config.getPassword());
 		
 		dataSources.put(databaseName, ds);
 		

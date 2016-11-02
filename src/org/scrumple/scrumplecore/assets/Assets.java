@@ -22,9 +22,8 @@ public class Assets {
 	 */
 	@SuppressWarnings("synthetic-access")
 	public static void init() {
-		ConfigFiles.init();
+		Config.init();
 		LogFiles.init();
-		Sql.init();
 		
 		log.debug("Initialized Assets");
 	}
@@ -39,79 +38,82 @@ public class Assets {
 	
 	@SuppressWarnings({"unused", "synthetic-access"})
 	private static class Defaults {	// Creates config file defaults
-		public static final String	CONFIG_FILES_CONFIG = "config/configs.ini",	// ConfigFiles defaults
-																LOGGERS_CONFIG = "config/logging.ini",
-																SQL_CONFIG = "config/sql.ini";
-		public static final String 	INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
+		private static final String INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
 																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql",
 																PARAMETER_MARKER = "?";
 		
-		private static Properties propFiles() {
-			log.debug("Building defaults for PropFiles...");
-
-			return buildDefaultsForClass(ConfigFiles.class);
-		}
-		private static Properties logFiles() {
-			log.debug("Building defaults for LogFiles...");
+		static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
+			Properties defaults = new Properties();
 			
-			return buildDefaultsForClass(LogFiles.class);
-		}
-		private static Properties sql() {
-			log.debug("Building defaults for sql...");
-
-			return buildDefaultsForClass(Sql.class);
-		}
-		
-		private static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
-			Field[] fields = c.getFields();
-			String[] fieldNames = new String[fields.length];
+			Field[] fields = c.getFields();	// Assume all public fields are keys
 			
-			int counter = 0;
-			for (Field field : fields)
-				fieldNames[counter++] = field.getName();
-			
-			return buildDefaults(fieldNames);
-		}
-		private static Properties buildDefaults(String... keys) {
-			Properties props = new Properties();
-			
-			for (String key : keys)
-				loadDefault(props, key);
-			
-			return props;
-		}
-		private static void loadDefault(Properties props, String key) {
-			String defaultValue = "";
-			
-			try {
-				defaultValue = (String) Defaults.class.getField(key).get(null);	// Assume default value fields match keys
-			} catch (NoSuchFieldException e) {
-				// Empty value
-			} catch (SecurityException | IllegalAccessException e) {	// These should be logged
-				log.exception(e);
+			for (Field field : fields) {
+				String 	key = "",
+								value = "";	// Default to empty
+				try {
+					key = (String) field.get(null);
+					value = (String) Defaults.class.getDeclaredField(field.getName()).get(null);
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					log.severe("This should not happen");
+					log.exception(e);
+				} catch (NoSuchFieldException e) {
+					// Should only happen if a default not specified
+				}
+				defaults.put(key, value);
 			}
-			props.put(key, defaultValue);
+			return defaults;
 		}
 	}
 	
-	@SuppressWarnings("synthetic-access")
-	private static class ConfigFiles {	// Returns config file locations
-		public static final String 	LOGGERS_CONFIG = "LOGGERS_CONFIG",
-																SQL_CONFIG = "SQL_CONFIG";
+	/**
+	 * Provides access to application configuration parameters.
+	 */
+	public static class Config {
+		@SuppressWarnings("javadoc")
+		public static final String 	DB_HOST = "databaseHost",
+																DB_PORT = "databasePort",
+																DB_USER = "databaseUser",
+																DB_PASSWORD = "databasePassword";
+		@SuppressWarnings("javadoc")
+		public static final String 	INIT_DATABASE_SCRIPT = "databaseInitScript",
+																CREATE_ROLES_SCRIPT = "createRolesScript";	// TODO Does not seem like a global config parameter
 		
+		private static final File file = new File("config/scrumple.ini");
 		private static Properties props;
 		
+		@SuppressWarnings("synthetic-access")
 		private static void init() {
-			props = new Properties(new File(Defaults.CONFIG_FILES_CONFIG), Defaults.propFiles());
+			props = new Properties(file, Defaults.buildDefaultsForClass(Config.class));
 			save(props);
 			
-			log.debug("Loaded PropFiles properties");
+			log.debug("Loaded SQL properties");
 		}
 		
-		public static File get(String key) {
+		/** @return value mapped to {@code key}, or {@code null} if no such key */
+		public static String get(String key) {
+			return props.get(key);
+		}
+		/** @return file mapped to {@code key}, or {@code null} if no such key */
+		public static File getFile(String key) {
 			String fileName = props.get(key);
-			
 			return fileName != null ? new File(fileName) : null;
+		}
+		
+		/** @return configured database server address */
+		public static String getServer() {
+			return get(DB_HOST);
+		}
+		/** @return configured database server port */
+		public static int getPort() {
+			return Integer.parseInt(get(DB_PORT));
+		}
+		/** @return configured database user */
+		public static String getUser() {
+			return get(DB_USER);
+		}
+		/** @return configured database password */
+		public static String getPassword() {
+			return get(DB_PASSWORD);
 		}
 	}
 	
@@ -121,10 +123,11 @@ public class Assets {
 		private static final String GLOBAL_LOGGER = "GLOBAL";
 		private static final Level DEFAULT_LEVEL = Level.INFO;
 		
+		private static final File file = new File("config/loggers.ini");
 		private static Properties props;
 		
 		private static void init() {
-			props = new Properties(ConfigFiles.get(ConfigFiles.LOGGERS_CONFIG), Defaults.logFiles());
+			props = new Properties(file, Defaults.buildDefaultsForClass(LogFiles.class));
 			save(props);
 			
 			applyLoggers();
@@ -162,57 +165,6 @@ public class Assets {
 				}
 			}
 			return null;
-		}
-	}
-	
-	/**
-	 * Returns SQL properties and statements.
-	 */
-	@SuppressWarnings("synthetic-access")
-	public static class Sql {
-		@SuppressWarnings("javadoc")
-		public static final String 	SQL_HOST = "SQL_HOST",
-																SQL_PORT = "SQL_PORT",
-																SQL_USER = "SQL_USER",
-																SQL_PASSWORD = "SQL_PASSWORD";
-		@SuppressWarnings("javadoc")
-		public static final String 	INIT_DATABASE_SCRIPT = "INIT_DATABASE_SCRIPT",
-																CREATE_ROLES_SCRIPT = "CREATE_ROLES_SCRIPT";
-		
-		private static Properties props;
-		
-		private static void init() {
-			props = new Properties(ConfigFiles.get(ConfigFiles.SQL_CONFIG), Defaults.sql());
-			save(props);
-			
-			log.debug("Loaded SQL properties");
-		}
-		
-		/** @return value mapped to {@code key}, or {@code null} if no such key */
-		public static String get(String key) {
-			return props.get(key);
-		}
-		/** @return file mapped to {@code key}, or {@code null} if no such key */
-		public static File getFile(String key) {
-			String fileName = props.get(key);
-			return fileName != null ? new File(fileName) : null;
-		}
-		
-		/** @return configured SQL server address */
-		public static String getServer() {
-			return get(SQL_HOST);
-		}
-		/** @return configured SQL server port */
-		public static int getPort() {
-			return Integer.parseInt(get(SQL_PORT));
-		}
-		/** @return configured SQL user */
-		public static String getUser() {
-			return get(SQL_USER);
-		}
-		/** @return configured SQL password */
-		public static String getPassword() {
-			return get(SQL_PASSWORD);
 		}
 	}
 	
