@@ -27,14 +27,14 @@ public class Sprint {
 		tasks = backlog.getTasks();
 	}
 	
-	public void setStateDate(int year, int month, int date) {
-		start = LocalDate.of(year, month, date);
-		convertedStartDate = Date.valueOf(start);
+	public void setStateDate(Date d) {
+		start = d.toLocalDate();
+		convertedStartDate = d;
 	}
 	
-	public void setEndDate(int year, int month, int date) {
-		end = LocalDate.of(year, month, date);
-		convertedEndDate = Date.valueOf(end);
+	public void setEndDate(Date d) {
+		end = d.toLocalDate();
+		convertedEndDate = d;
 	}
 	
 	public Date getConvertedStartDate() {
