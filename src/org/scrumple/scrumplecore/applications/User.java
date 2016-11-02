@@ -1,6 +1,7 @@
 package org.scrumple.scrumplecore.applications;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.scrumple.scrumplecore.database.Saveable;
@@ -44,5 +45,14 @@ public class User implements Saveable {
 
 		return Arrays.asList(new Object[]{credentials, name, role});
 
+	}
+
+	@Override
+	public void fromData(List<Object> data) {
+		Iterator<Object> it = data.iterator();
+		credentials = (String) it.next();
+		name = (String) it.next();
+		role = (int) it.next();
+		
 	}
 }

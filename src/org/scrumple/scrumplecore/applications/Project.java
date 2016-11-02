@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.applications;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.scrumple.scrumplecore.database.Saveable;
@@ -64,6 +65,15 @@ public class Project implements Saveable {
 	public List<Object> toData() {
 		// TODO Auto-generated method stub
 		return Arrays.asList(new Object[]{projectName, projDescription});
+	}
+
+	@Override
+	public void fromData(List<Object> data) {
+		Iterator<Object> it = data.iterator();
+		//How to handle loading a list of users?
+		projectName = (String) it.next();
+		projDescription = (String) it.next();
+		
 	}
 
 
