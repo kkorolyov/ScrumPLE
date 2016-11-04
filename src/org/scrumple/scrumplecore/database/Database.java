@@ -22,14 +22,14 @@ public class Database {
 	private static final String DELIMITER = ",",
 															EQUALS = "=",
 															AND = " AND ",
-															ID = "id",
 															PARAM_MARKER = "?";
 	private static final String REFERENCED_TABLE_COLUMN = "PKTABLE_NAME";
-	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,
+	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,	// TODO Reduce template redundancy
 															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
 															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")",
-															GET_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " WHERE " + ID + "=" + PARAM_MARKER,
-															GET_ID_TEMPLATE = "SELECT " + ID + " FROM " + PARAM_MARKER + " WHERE " + PARAM_MARKER + " LIMIT 1";
+															GET_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " WHERE id=" + PARAM_MARKER,
+															GET_ID_TEMPLATE = "SELECT id FROM " + PARAM_MARKER + " WHERE " + PARAM_MARKER + " LIMIT 1",
+															GET_SESSION_ID_TEMPLATE = "SELECT id FROM users WHERE credentials=" + PARAM_MARKER + " LIMIT 1";
 	
 	private final String name;
 	private final ColumnFilter columnFilter;
@@ -131,24 +131,6 @@ public class Database {
 			log.exception(e);
 			
 		}
-	}
-	
-	/**
-	 * Returns the id of an entity retrieved by a statement.
-	 * @param statement statement to execute
-	 * @return appropriate id, or {@code -1} if not found
-	 * @throws SQLException if a database error occurs
-	 */
-	public long get(String statement) throws SQLException {
-		long result = -1;
-		
-		try (ResultSet rs = conn.createStatement().executeQuery(statement)) {
-			conn.commit();
-			
-			if (rs.next())
-				result = rs.getLong(1);
-		}
-		return result;
 	}
 
 	/**
@@ -328,6 +310,25 @@ public class Database {
 		log.debug("Built SELECT id base statement for " + table + ": " + statement);
 		
 		return statement;
+	}
+	
+	/**
+	 * Returns the database ID of a user with some credentials.
+	 * @param credentials user credentials to match
+	 * @return ID of matched user
+	 * @throws SQLException if a database error occurs
+	 */
+	public long getUser(String credentials) throws SQLException {
+		long result = -1;
+		
+		try (PreparedStatement s = conn.prepareStatement(GET_SESSION_ID_TEMPLATE)) {
+			s.setString(1, credentials);
+			
+			ResultSet rs = s.executeQuery();
+			if (rs.next())
+				result = rs.getLong(1);
+		}
+		return result;
 	}
 	
 	public void save(List<User> toSave) {
