@@ -8,7 +8,7 @@ import org.scrumple.scrumplecore.session.action.Request;
 /**
  * Represents an interactive session with main application logic.
  */
-public class Session {
+public class Session {	// TODO Expand into self-contained object not reliant on DB info
 	private final long id;
 	private final SessionLog log;
 	private final SessionManager manager;

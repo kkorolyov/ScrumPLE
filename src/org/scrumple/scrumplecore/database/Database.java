@@ -132,6 +132,24 @@ public class Database {
 			
 		}
 	}
+	
+	/**
+	 * Returns the id of an entity retrieved by a statement.
+	 * @param statement statement to execute
+	 * @return appropriate id, or {@code -1} if not found
+	 * @throws SQLException if a database error occurs
+	 */
+	public long get(String statement) throws SQLException {
+		long result = -1;
+		
+		try (ResultSet rs = conn.createStatement().executeQuery(statement)) {
+			conn.commit();
+			
+			if (rs.next())
+				result = rs.getLong(1);
+		}
+		return result;
+	}
 
 	/**
 	 * Saves an object.
