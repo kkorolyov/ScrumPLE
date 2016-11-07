@@ -16,7 +16,7 @@ public class ChatClient {
 	private ObjectOutputStream writer;
 	private String serverAddress, username;
 	private int port;
-	private static final Logger log = Logger.getLogger(Database.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(ChatClient.class.getName(), Level.DEBUG, new PrintWriter(System.err));
 
 	public ChatClient(String address, int port, String username){
 		
@@ -56,5 +56,14 @@ public class ChatClient {
 			return false;
 		}
 		return true;
+	}
+	
+	void sendMessage(String msg) {
+		try {
+			writer.writeObject(msg);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			log.exception(e);
+		}
 	}
 }
