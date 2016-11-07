@@ -31,9 +31,14 @@ public class SessionManager {
 		return false;
 	}
 	
-	/** @return session matching {@code sessionId}, or {@code null} if no such session */
-	public Session getSession(long sessionId) {
-		// TODO Get session from DB
+	/**
+	 * If {@code credentials} are valid, retrieves a session under the user specified by {@code credentials}, if it exists.
+	 * If such a session does not exist, a new session is created.
+	 * @param credentials user credentials as found in the backing credentials system
+	 * @return appropriate session
+	 * @throws AuthenticationException if an authentication error occurs
+	 */
+	public Session getSession(String credentials) throws {
 		return null;
 	}
 	
