@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.database;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -33,7 +34,7 @@ public class Database {
 															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")",
 															GET_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " WHERE id=" + PARAM_MARKER,
 															GET_ID_TEMPLATE = "SELECT id FROM " + PARAM_MARKER + " WHERE " + PARAM_MARKER + " LIMIT 1",
-															GET_SESSION_ID_TEMPLATE = "SELECT id FROM users WHERE credentials=" + PARAM_MARKER + " LIMIT 1";
+															GET_SESSION_ID_TEMPLATE = "SELECT id FROM users WHERE handle=" + PARAM_MARKER + AND + " password=" + PARAM_MARKER + " LIMIT 1";
 	
 	private final String name;
 	private final ColumnFilter columnFilter;
@@ -338,22 +339,26 @@ public class Database {
 	}
 	
 	/**
-	 * Returns the database ID of a user with some credentials.
-	 * @param credentials user credentials to match
-	 * @return ID of matched user
+	 * Returns the database ID of a user with specified credentials.
+	 * @param handle handle name of user
+	 * @param password hashed password of user
+	 * @return matched user or {@code null} if no such user
 	 * @throws SQLException if a database error occurs
 	 */
-	public long getUser(String credentials) throws SQLException {
-		long result = -1;
+	public User getUser(String handle, byte[] password) throws SQLException {
+		User user = null;
 		
 		try (PreparedStatement s = conn.prepareStatement(GET_SESSION_ID_TEMPLATE)) {
-			s.setString(1, credentials);
+			s.setString(1, handle);
+			s.setString(2, new String(password, "UTF-8"));
 			
 			ResultSet rs = s.executeQuery();
 			if (rs.next())
-				result = rs.getLong(1);
+				user = load(User.class, rs.getLong(1));
+		} catch (UnsupportedEncodingException | InstantiationException | IllegalAccessException e) {
+			log.exception(e);
 		}
-		return result;
+		return user;
 	}
 	
 	public void save(List<User> toSave) {
