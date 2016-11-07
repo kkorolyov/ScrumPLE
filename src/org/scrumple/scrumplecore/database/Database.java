@@ -1,5 +1,6 @@
 package org.scrumple.scrumplecore.database;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
@@ -10,6 +11,8 @@ import javax.sql.DataSource;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.User;
+import org.scrumple.scrumplecore.assets.Assets.Config;
+
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 import dev.kkorolyov.simpleprops.Properties;
@@ -24,8 +27,9 @@ public class Database {
 															AND = " AND ",
 															PARAM_MARKER = "?";
 	private static final String REFERENCED_TABLE_COLUMN = "PKTABLE_NAME";
-	private static final String CREATE_DATABASE_TEMPLATE = "CREATE DATABASE IF NOT EXISTS " + PARAM_MARKER,	// TODO Reduce template redundancy
-															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",
+	private static final String CREATE_SCHEMA_TEMPLATE = "CREATE SCHEMA IF NOT EXISTS " + PARAM_MARKER,
+															DROP_SCHEMA_TEMPLATE = "DROP SCHEMA IF EXISTS " + PARAM_MARKER,
+															GET_COLUMNS_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " LIMIT 1",	// TODO Reduce template redundancy
 															INSERT_TEMPLATE = "INSERT INTO " + PARAM_MARKER + " (" + PARAM_MARKER + ") VALUES (" + PARAM_MARKER + ")",
 															GET_TEMPLATE = "SELECT * FROM " + PARAM_MARKER + " WHERE id=" + PARAM_MARKER,
 															GET_ID_TEMPLATE = "SELECT id FROM " + PARAM_MARKER + " WHERE " + PARAM_MARKER + " LIMIT 1",
@@ -37,17 +41,36 @@ public class Database {
 	private final Connection conn;
 	
 	/**
-	 * Creates a new database.
-	 * @param name name of new database
+	 * Creates a new project database.
+	 * @param name name of new project
+	 * @throws SQLException if a database error occurs
 	 */
-	public static void createDatabase(String name) {	// TODO Slightly icky
+	public static void createProject(String name) throws SQLException {
 		try {
-			DataSource ds = DataSourcePool.get("");
-			ds.getConnection().createStatement().executeUpdate(CREATE_DATABASE_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), name));
+			Database db = new Database("", null);
+			db.executeBatch(CREATE_SCHEMA_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), name));
+			db.conn.setCatalog(name);
 			
-			log.info("Created new database=" + name);
-		} catch (SQLException e) {
-			log.exception(e);
+			List<String> initProjectStatements = SqlReader.read(Config.getFile(Config.INIT_DATABASE_SCRIPT), Arrays.asList(name));
+			
+			db.executeBatch(initProjectStatements);
+		} catch (FileNotFoundException | NamingException e) {
+			log.exception(e);	// Should not happen
+		}
+		log.info("Created new database=" + name);
+	}
+	/**
+	 * Drops a project from the database.
+	 * @param name name of project to drop
+	 * @throws SQLException if a database error occurs
+	 */
+	public static void dropProject(String name) throws SQLException {
+		Database db;
+		try {
+			db = new Database("", null);
+			db.executeBatch(DROP_SCHEMA_TEMPLATE.replaceFirst(Pattern.quote(PARAM_MARKER), name));
+		} catch (NamingException e) {
+			log.exception(e);	// Should not happen
 		}
 	}
 	
@@ -81,25 +104,29 @@ public class Database {
 	private static final Map<String, String> buildSaveables(Properties props) {
 		Map<String, String> saveables = new HashMap<>();
 		
-		for (String key : props.keys()) {
-			saveables.put(key, props.get(key));
-			saveables.put(props.get(key), key);	// Mirror to get both class->table and table->class
+		if (props != null) {
+			for (String key : props.keys()) {
+				saveables.put(key, props.get(key));
+				saveables.put(props.get(key), key);	// Mirror to get both class->table and table->class
+			}
 		}
 		return saveables;
 	}
 	
 	/**
 	 * Convenience method for {@link #executeBatch(List)}
+	 * @throws SQLException if a database error occurs
 	 */
-	public int[] executeBatch(String... statements) {
+	public int[] executeBatch(String... statements) throws SQLException {
 		return executeBatch(Arrays.asList(statements));
 	}
 	/**
 	 * Executes a batch of non-parameterized SQL statements.
 	 * @param statements statements to execute
 	 * @return array of update counts, or {@code null} if statement execution failed
+	 * @throws SQLException if a database error occurs
 	 */
-	public int[] executeBatch(List<String> statements) {
+	public int[] executeBatch(List<String> statements) throws SQLException {
 		int[] result = null;
 		
 		try (Statement s = conn.createStatement()) {
@@ -108,8 +135,6 @@ public class Database {
 			
 			result = s.executeBatch();
 			conn.commit();
-		} catch (SQLException e) {
-			log.exception(e);
 		}
 		return result;
 	}

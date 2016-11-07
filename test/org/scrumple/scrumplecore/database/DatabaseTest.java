@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.database;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -15,7 +16,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.scrumple.scrumplecore.assets.Assets;
-import org.scrumple.scrumplecore.assets.Assets.Config;
 
 import dev.kkorolyov.simpleprops.Properties;
 
@@ -42,8 +42,24 @@ public class DatabaseTest {
 	}
 	
 	@Test
-	public void testCreateDatabase() {
-		Database.createDatabase("Test");
+	public void testCreateDropProject() throws SQLException, NamingException {
+		String project = "TestProject";
+		
+		Database.dropProject(project);	// Cleanup
+
+		Database.createProject(project);
+		try {
+			new Database(project, null);
+		} catch (SQLException e) {
+			fail("Project was not created");
+		}
+		Database.dropProject(project);
+		try {
+			new Database(project, null);
+		} catch (SQLException e) {
+			return;	// Success
+		}
+		fail("Project was not dropped");
 	}
 	
 	@Test
