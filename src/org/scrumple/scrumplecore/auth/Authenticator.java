@@ -38,6 +38,17 @@ public class Authenticator {
 		this.digestAlgorithm = digestAlgorithm;
 	}
 	
+	public String authorize(String handle, String password) {	// TODO Would return a Response
+		try {
+			User user = get(handle, password);
+		} catch (AuthenticationException e) {
+		}
+		
+		// TODO Return session key randomized on user or error code if auth error
+		
+		return null;
+	}
+	
 	/**
 	 * Returns the user backed by specified credentials.
 	 * @param handle handle to use
@@ -55,6 +66,9 @@ public class Authenticator {
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException | SQLException e) {
 			log.exception(e);
 		}
+		if (user == null)
+			throw new AuthenticationException("No such user: (" + handle + ", " + password + ")");
+			
 		return user;
 	}
 }
