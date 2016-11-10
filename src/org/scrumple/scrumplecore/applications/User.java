@@ -7,52 +7,49 @@ import java.util.List;
 import org.scrumple.scrumplecore.database.Saveable;
 
 public class User implements Saveable {
-	private String credentials;
-	private String name;
-	private int role;
+	private String handle;
+	private String password;
+	private Role role;
 	
-	public User(String credential, String name, int role) {
-		this.credentials = credential;
-		this.name = name;
+	public User(String handle, String password, Role role) {
+		this.handle = handle;
+		this.password = password;
 		this.role = role;
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getHandle() {
+		return this.handle;
 	}
-	public void setName(String aName) {
-		this.name = aName;
+	public void setName(String handle) {
+		this.handle = handle;
 	}
-	
-	public String getCredentials() {
-		return this.credentials;
-	}
-	
-	public void setCredentials(String aCred) {
-		this.credentials = aCred;
+		
+	public void setPassword(String password) {
+		// TODO Hash before set?
+		this.password = password;
 	}
 	
-	public int getRole() {
+	public Role getRole() {
 		return this.role;
 	}
 	
-	public void setRole(int roleIDX) {
+	public void setRole(Role roleIDX) {
 		this.role = roleIDX;
 	}
 
 	@Override
 	public List<Object> toData() {
 
-		return Arrays.asList(new Object[]{credentials, name, role});
+		return Arrays.asList(handle, password, role);
 
 	}
 
 	@Override
 	public void fromData(List<Object> data) {
 		Iterator<Object> it = data.iterator();
-		credentials = (String) it.next();
-		name = (String) it.next();
-		role = (int) it.next();
+		handle = (String) it.next();
+		password = (String) it.next();
+		role = (Role) it.next();
 		
 	}
 }

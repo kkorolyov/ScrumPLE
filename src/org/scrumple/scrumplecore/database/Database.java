@@ -361,7 +361,7 @@ public class Database {
 		return user;
 	}
 	
-	public void save(List<User> toSave) {
+	/*public void save(List<User> toSave) {
 		String sql = "INSERT INTO Project.users (credentials, name, role) VALUES (?, ?, ?)";
 
 		try {
@@ -380,7 +380,7 @@ public class Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public Project load(String toLoad, Project p) {
 		String sql = "Select * FROM Project.project WHERE name = ?";
@@ -400,7 +400,7 @@ public class Database {
 		return p;
 	}
 	
-	public User load(String toLoad, User u) {
+	/*public User load(String toLoad, User u) {
 		String sql = "Select * FROM Project.users WHERE name = ?";
 		
 		try {
@@ -418,7 +418,7 @@ public class Database {
 		}
 		return u;
 		
-	}
+	}*/
 	
 	private String dbType(Class<?> c) {
 		String dbType = saveables.get(c.getName());

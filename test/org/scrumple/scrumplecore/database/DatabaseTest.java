@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -15,7 +18,11 @@ import javax.naming.NamingException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.scrumple.scrumplecore.applications.Role;
+import org.scrumple.scrumplecore.applications.User;
 import org.scrumple.scrumplecore.assets.Assets;
+import org.scrumple.scrumplecore.assets.Assets.Config;
+import org.scrumple.scrumplecore.service.ServiceLoader;
 
 import dev.kkorolyov.simpleprops.Properties;
 
@@ -79,6 +86,26 @@ public class DatabaseTest {
 		long complexId = db.save(complexS);
 		assertNotEquals(-1, complexId);
 		assertEquals(complexS, db.load(complexS.getClass(), complexId));
+	}
+	
+	@Test
+	public void testREST() throws UnsupportedEncodingException, NoSuchAlgorithmException, SQLException, NamingException {	// TODO Not a test
+		Role role = new Role("This is role");
+		
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		byte[] hashedPass = md.digest("password".getBytes("UTF-8"));
+		
+		User user = new User("UserBob", new String(hashedPass, "UTF-8"), role);
+		
+		Database db = new Database("", null);
+		db.executeBatch("DROP SCHEMA IF EXISTS StubProject",
+										"CREATE SCHEMA IF NOT EXISTS StubProject");
+		
+		db = new Database("StubProject", new Properties(Config.getFile(Config.SAVEABLES)));
+		db.executeBatch("CREATE TABLE IF NOT EXISTS `role` (id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(64) NOT NULL UNIQUE, PRIMARY KEY (id))",
+										"CREATE TABLE IF NOT EXISTS `user` (id INT UNSIGNED NOT NULL AUTO_INCREMENT, handle VARCHAR(64) NOT NULL, password CHAR(64) NOT NULL, role INT UNSIGNED NOT NULL, PRIMARY KEY (id), INDEX role_idx (role ASC), CONSTRAINT `role` FOREIGN KEY (`role`)	REFERENCES `role` (id) ON DELETE NO ACTION ON UPDATE NO ACTION)");
+		
+		db.save(user);
 	}
 	
 	private static String drop(String table) {
