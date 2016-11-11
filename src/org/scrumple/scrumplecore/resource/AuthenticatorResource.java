@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.resource;
 
+import java.io.File;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,6 +17,7 @@ public class AuthenticatorResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String authenticate(@QueryParam("handle") String handle, @QueryParam("pass") String password) {
+		return new File("").getAbsolutePath();
 		User user;
 		try {
 			user = ServiceLoader.getAuthenticator().get(handle, password);
