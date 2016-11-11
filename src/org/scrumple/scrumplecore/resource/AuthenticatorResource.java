@@ -17,7 +17,8 @@ public class AuthenticatorResource {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String authenticate(@QueryParam("handle") String handle, @QueryParam("pass") String password) {
-		return new File("").getAbsolutePath();
+		//return new File("config/scrumple.ini").getAbsolutePath() + " " + new File("config/scrumple.ini").exists();
+		
 		User user;
 		try {
 			user = ServiceLoader.getAuthenticator().get(handle, password);
