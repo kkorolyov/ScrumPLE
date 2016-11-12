@@ -78,6 +78,7 @@ public class Assets {
 																CREATE_ROLES_SCRIPT = "createRolesScript";	// TODO Does not seem like a global config parameter
 		public static final String SAVEABLES = "saveables";
 		
+		private static final File file = new File("config/scrumple.ini");
 		private static Properties props;
 		
 		@SuppressWarnings("synthetic-access")
