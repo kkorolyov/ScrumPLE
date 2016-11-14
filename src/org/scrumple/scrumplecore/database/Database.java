@@ -11,6 +11,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.scrumple.scrumplecore.applications.Project;
+import org.scrumple.scrumplecore.applications.Task;
 import org.scrumple.scrumplecore.applications.User;
 import org.scrumple.scrumplecore.assets.Assets.Config;
 
@@ -381,6 +382,43 @@ public class Database {
 			e.printStackTrace();
 		}
 	}*/
+	
+	public void save(Task toSave) {
+		String sql = "INSERT INTO Project.tasks (label, description, hours_left) VALUES (?, ?, 5)";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setInt(1, toSave.getTaskType());
+			s.setString(2, toSave.getTaskDescription());
+			s.addBatch();
+			s.executeBatch();
+			conn.commit();
+		} 
+		
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public Task load(int id) {
+		String sql = "Select * FROM Project.tasks WHERE id = ?";
+		//Set<Task> tasks = new HashSet<Task>();
+		Task t = new Task(0, null);
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setInt(1,  id);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()) {
+				t.setTaskType(rs.getInt("id"));
+				t.updateDescription(rs.getString("description"));
+				//tasks.add(t);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return t;
+	}
 	
 	public Project load(String toLoad, Project p) {
 		String sql = "Select * FROM Project.project WHERE name = ?";
