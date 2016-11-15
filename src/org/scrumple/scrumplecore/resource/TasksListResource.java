@@ -18,20 +18,25 @@ import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.database.Database;
 import org.scrumple.scrumplecore.service.ServiceLoader;
 
-@Path("tasks")
-public class TaskResource {
+@Path("tasklist")
+public class TasksListResource {
+	
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public String fetchTask(@QueryParam("id") int id) {
-		Task task = new Task(1, null);
-			Database db;
-			try {
-				db = new Database("Project", null);
-				task = db.load(id);
-			} catch (NamingException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		return task.getTaskDescription();
+	public String fetchSimilarTasks(@QueryParam("type") int type) {
+		Set <Task> tasks= new HashSet<Task>();
+		String list = "";
+		try {
+			Database db = new Database("Project", null);
+			tasks = db.loadSimilarTasks(type);
+		} catch (NamingException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(Task t : tasks) {
+			list = list.concat(t.getTaskDescription()+ t.getTaskType()+ "<br />");
+		}
+		return list;
+		
 	}
 }

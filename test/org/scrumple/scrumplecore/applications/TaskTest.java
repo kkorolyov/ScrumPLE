@@ -1,6 +1,8 @@
 package org.scrumple.scrumplecore.applications;
 
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.naming.NamingException;
 
@@ -25,8 +27,15 @@ public class TaskTest {
 			//db.save(t2);
 			Task t3 = db.load(4);
 			Task t4 = db.load(5);
-			System.out.println(t3.getTaskDescription());
-			System.out.println(t4.getTaskDescription());
+			Set<Task> tasks = new HashSet<Task>();
+			tasks = db.loadSimilarTasks(1);
+			
+			System.out.println(tasks.size());
+			for(Task task : tasks) {
+				System.out.println(task.getTaskDescription());
+			}
+			//System.out.println(t3.getTaskDescription());
+			//System.out.println(t4.getTaskDescription());
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

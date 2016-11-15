@@ -400,9 +400,14 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Returns a specific task based on its id.
+	 * @param id id of task
+	 * @return t a task.
+	 */
 	public Task load(int id) {
 		String sql = "Select * FROM Project.tasks WHERE id = ?";
-		//Set<Task> tasks = new HashSet<Task>();
 		Task t = new Task(0, null);
 		try {
 			PreparedStatement s = conn.prepareStatement(sql);
@@ -411,13 +416,38 @@ public class Database {
 			while(rs.next()) {
 				t.setTaskType(rs.getInt("id"));
 				t.updateDescription(rs.getString("description"));
-				//tasks.add(t);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return t;
+	}
+	
+	/**
+	 * Returns a set of tasks that are of the same type.
+	 * @param type type of task.
+	 * @return tasks a set of tasks.
+	 */
+	public Set<Task> loadSimilarTasks(int type) {
+		String sql = "Select * FROM Project.tasks WHERE label = ?";
+		Set<Task> tasks = new HashSet<Task>();
+		try {
+			PreparedStatement s = conn.prepareStatement(sql);
+			s.setInt(1, type);
+			ResultSet rs = s.executeQuery();
+			while(rs.next()) {
+				Task t = new Task(0, null);
+				t.setTaskType(rs.getInt("label"));
+				t.updateDescription(rs.getString("description"));
+				tasks.add(t);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tasks;
+		
 	}
 	
 	public Project load(String toLoad, Project p) {

@@ -7,7 +7,6 @@ import java.util.List;
 import org.scrumple.scrumplecore.database.Saveable;
 
 public class Task implements Saveable{
-	//private String taskName;
 	private int taskType;  //Is it a feature, bug, etc.  Do we need a Label class, or can we just include it as a String field in Task? Current save method will require that we have a Label class.
 	private String taskDescription;
 	private boolean done;
@@ -17,10 +16,6 @@ public class Task implements Saveable{
 		this.taskType = type;
 		this.done = false;
 	}
-	
-	/*public String getTaskName() {
-		return this.taskName;
-	}*/
 	
 	public int getTaskType() {
 		return this.taskType;
