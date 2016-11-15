@@ -30,9 +30,8 @@ public class Application extends ResourceConfig {
 	public Application(@Context ServletContext context) throws MalformedURLException {
 		packages("org.scrumple.scrumplecore.resource");	// Load JAX-RS components
 		
-		File 	config = new File(context.getResource("WEB-INF/config/scrumple.ini").getFile()),	// Load config files
-					logging = new File(context.getResource("WEB-INF/config/logging.ini").getFile());
-		Assets.init(config, logging);
+		File root = new File(context.getResource("WEB-INF/").getFile());
+		Assets.init(root);
 	}
 	
 	@WebListener

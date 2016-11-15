@@ -16,14 +16,19 @@ import dev.kkorolyov.simpleprops.Properties;
  */
 public class Assets {
 	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static String root;
 	
 	/**
 	 * Initializes Assets.
 	 */
 	@SuppressWarnings("synthetic-access")
-	public static void init(File config, File logging) {
-		Config.init(config);
-		LogFiles.init(logging);
+	public static void init(File rootFile) {
+		root = rootFile.getAbsolutePath();
+		if (!root.equals(""))	// Absolute path specified
+			root += "/";
+		
+		Config.init();
+		LogFiles.init();
 		
 		log.debug("Initialized Assets");
 	}
@@ -74,8 +79,8 @@ public class Assets {
 		private static Properties props;
 		
 		@SuppressWarnings("synthetic-access")
-		private static void init(File file) {
-			props = new Properties(file, Defaults.buildDefaultsForClass(Config.class));
+		private static void init() {
+			props = new Properties(new File(root + "config/scrumple.ini"), Defaults.buildDefaultsForClass(Config.class));
 			save(props);
 			
 			log.debug("Loaded SQL properties");
@@ -117,8 +122,8 @@ public class Assets {
 		
 		private static Properties props;
 		
-		private static void init(File file) {
-			props = new Properties(file, Defaults.buildDefaultsForClass(LogFiles.class));
+		private static void init() {
+			props = new Properties(new File(root + "config/logging.ini"), Defaults.buildDefaultsForClass(LogFiles.class));
 			save(props);
 			
 			applyLoggers();
@@ -130,8 +135,8 @@ public class Assets {
 			for (String logger : props.keys()) {
 				try {
 					String[] config = props.get(logger).split(CONFIG_DELIMITER);
-					File file = new File(config[0].trim());
-					
+					File file = new File(root + config[0].trim());
+
 					if (!file.isFile()) {	// Create filepath if needed
 						File parent = file.getParentFile();
 						if (parent != null && !parent.exists())
