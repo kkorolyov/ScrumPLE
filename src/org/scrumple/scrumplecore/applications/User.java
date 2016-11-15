@@ -4,13 +4,21 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.scrumple.scrumplecore.database.Saveable;
 
+@XmlRootElement
 public class User implements Saveable {
+	@XmlElement
 	private String handle;
+	@XmlElement
 	private String password;
 	private Role role;
 	
+	public User(){}
 	public User(String handle, String password, Role role) {
 		this.handle = handle;
 		this.password = password;

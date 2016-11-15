@@ -5,13 +5,20 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.scrumple.scrumplecore.database.Saveable;
 
+import dev.kkorolyov.sqlob.annotation.Transient;
+
+@XmlRootElement
 public class Project implements Saveable {
 	private String projectName;
 	private String projDescription;
+	@Transient
 	private List<User> users;
 	
+	public Project(){}
 	public Project(String name, String description) {
 		this.projectName = name;
 		this.projDescription = description;
