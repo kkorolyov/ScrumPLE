@@ -1,18 +1,18 @@
 package org.scrumple.scrumplecore.resource;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.auth.AuthenticationException;
-import org.scrumple.scrumplecore.auth.Authenticator;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
@@ -32,24 +32,26 @@ public class UsersResource {
 		this.ds = dataSource;
 	}
 	
+	/** @return names of all users under this project */
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	@Path("auth")
-	public String getUser(@QueryParam("handle") String handle, @QueryParam("password") String password) throws AuthenticationException, SQLException {
-		String uuid = null;
-		User user = new Authenticator(ds).get(handle, password);
+	public NameList listNames() throws SQLException {
+		Set<String> names = new HashSet<>();
 		
 		try (Session s = new Session(ds)) {
-			uuid = s.put(user).toString();
+			for (User user : s.get(User.class, (Condition) null))
+				names.add(user.getHandle());
 		}
-		return uuid;
+		return new NameList(names);
 	}
 	
-	/** @return all users under this project */
-	@GET
-	public Set<User> getUsers() throws SQLException {	// TODO Testing only
-		try (Session s = new Session(ds)) {
-			return s.get(User.class, (Condition) null);
+	@XmlRootElement
+	public static class NameList {
+		@XmlElement
+		private Collection<String> names;
+		
+		public NameList(){}
+		NameList(Collection<String> names) {
+			this.names = names;
 		}
 	}
 }

@@ -21,9 +21,9 @@ public class Assets {
 	 * Initializes Assets.
 	 */
 	@SuppressWarnings("synthetic-access")
-	public static void init() {
-		Config.init();
-		LogFiles.init();
+	public static void init(File config, File logging) {
+		Config.init(config);
+		LogFiles.init(logging);
 		
 		log.debug("Initialized Assets");
 	}
@@ -38,23 +38,18 @@ public class Assets {
 	
 	@SuppressWarnings({"unused", "synthetic-access"})
 	private static class Defaults {	// Creates config file defaults
-		private static final String INIT_DATABASE_SCRIPT = "sql/init-database.sql",	// SQL defaults
-																CREATE_ROLES_SCRIPT = "sql/create-default-roles.sql",
-																SAVEABLES = "config/saveables.ini";
+		private static final String SYSTEM_DB = "ScrumPLE";
 		
-		static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public field names in class
+		static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public fields in class
 			Properties defaults = new Properties();
 			
-			Field[] fields = c.getFields();	// Assume all public fields are keys
-			
-			for (Field field : fields) {
+			for (Field field : c.getFields()) {
 				String 	key = "",
 								value = "";	// Default to empty
 				try {
 					key = (String) field.get(null);
 					value = (String) Defaults.class.getDeclaredField(field.getName()).get(null);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					log.severe("This should not happen");
 					log.exception(e);
 				} catch (NoSuchFieldException e) {
 					// Should only happen if a default not specified
@@ -74,15 +69,12 @@ public class Assets {
 																DB_PORT = "databasePort",
 																DB_USER = "databaseUser",
 																DB_PASSWORD = "databasePassword";
-		public static final String 	INIT_DATABASE_SCRIPT = "databaseInitScript",
-																CREATE_ROLES_SCRIPT = "createRolesScript";	// TODO Does not seem like a global config parameter
-		public static final String SAVEABLES = "saveables";
+		public static final String 	SYSTEM_DB = "systemDatabase";
 		
-		private static final File file = new File("config/scrumple.ini"); //If we use the absolute path to scrumple.ini here, it works.  Might want to look into ClassLoader instead.
 		private static Properties props;
 		
 		@SuppressWarnings("synthetic-access")
-		private static void init() {
+		private static void init(File file) {
 			props = new Properties(file, Defaults.buildDefaultsForClass(Config.class));
 			save(props);
 			
@@ -123,10 +115,9 @@ public class Assets {
 		private static final String GLOBAL_LOGGER = "GLOBAL";
 		private static final Level DEFAULT_LEVEL = Level.INFO;
 		
-		private static final File file = new File("config/logging.ini");
 		private static Properties props;
 		
-		private static void init() {
+		private static void init(File file) {
 			props = new Properties(file, Defaults.buildDefaultsForClass(LogFiles.class));
 			save(props);
 			
@@ -140,15 +131,16 @@ public class Assets {
 				try {
 					String[] config = props.get(logger).split(CONFIG_DELIMITER);
 					File file = new File(config[0].trim());
+					
 					if (!file.isFile()) {	// Create filepath if needed
 						File parent = file.getParentFile();
 						if (parent != null && !parent.exists())
 							parent.mkdirs();
 					}
-					Level level = config.length > 1 ? parseLevel(config[1].trim()) : DEFAULT_LEVEL;
+					Level level = config.length > 1 ? Level.valueOf(config[1].trim()) : DEFAULT_LEVEL;
 					PrintWriter writer = new PrintWriter(file);
 					
-					Logger.getLogger(logger.equals(GLOBAL_LOGGER) ? "" : logger, level, writer);
+					Logger.getLogger((logger.equals(GLOBAL_LOGGER) ? "" : logger), level, writer);
 					
 					log.debug("Loaded Logger: name=" + logger + ", file=" + file + ", level=" + level);
 				} catch (FileNotFoundException e) {	// Should not happen
@@ -156,23 +148,5 @@ public class Assets {
 				}
 			}
 		}
-		
-		private static Level parseLevel(String levelName) {
-			if (levelName != null) {
-				for (Level level : Level.values()) {
-					if (level.name().equals(levelName.toUpperCase()))
-						return level;
-				}
-			}
-			return null;
-		}
-	}
-	
-	/**
-	 * Returns pre-built strings.
-	 */
-	public static class Strings {
-		@SuppressWarnings("javadoc")
-		public static final String CANNOT_FIND_LOGFILE = "Unable to locate log file for this class";
 	}
 }
