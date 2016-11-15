@@ -30,7 +30,7 @@ public class UsersResource {
 	
 	/** @return all users under this project */
 	@GET
-	public Set<User> getUsers() throws SQLException {
+	public Set<User> getUsers() throws SQLException {	// TODO Testing only
 		try (Session s = new Session(ds)) {
 			return s.get(User.class, (Condition) null);
 		}

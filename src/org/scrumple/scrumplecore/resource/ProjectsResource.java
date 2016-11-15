@@ -1,6 +1,8 @@
 package org.scrumple.scrumplecore.resource;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.UUID;
@@ -42,15 +44,24 @@ public class ProjectsResource {
 	}
 	
 	@GET
-	@Path("{uuid}")
-	public Project getProject(@PathParam("uuid") String uuid) throws SQLException {
-		try (Session session = new Session(ds)) {
-			return session.get(Project.class, UUID.fromString(uuid));
+	@Path("{name}")
+	@Produces(MediaType.TEXT_HTML)
+	public String getProject(@PathParam("name") String name) throws SQLException {	// TODO Not production
+		try (Connection conn = ds.getConnection()) {
+			PreparedStatement s = conn.prepareStatement("SELECT uuid FROM Project WHERE projectName=?");
+			s.setString(1, name);
+			
+			String uuid = null;
+			ResultSet rs = s.executeQuery();
+			if (rs.next())
+				uuid = rs.getString(1);
+				
+			return uuid;
 		}
 	}
 	
 	@Path("{uuid}/users")
-	public UsersResource getUsers(@PathParam("uuid") String uuid) throws SQLException {
+	public UsersResource getUsersResource(@PathParam("uuid") String uuid) throws SQLException {
 		String projectSchema = null;
 		
 		try (Session s = new Session(ds)) {
@@ -65,12 +76,13 @@ public class ProjectsResource {
 		Assets.init();
 		
 		try (Connection conn = DataSourcePool.get("").getConnection()) {
+			conn.createStatement().executeUpdate("DROP DATABASE IF EXISTS ScrumPLE");
 			conn.createStatement().executeUpdate("CREATE DATABASE IF NOT EXISTS ScrumPLE");
 			
 			if (!conn.getAutoCommit())
 				conn.commit();
 		}
-		int tests = 100;
+		int tests = 10;
 		try (Session session = new Session(DataSourcePool.get("ScrumPLE"))) {
 			for (int i = 0; i < tests; i++)
 				session.put(new Project("Project" + i, "Description" + i));
@@ -79,6 +91,7 @@ public class ProjectsResource {
 			
 			for (Project project : session.get(Project.class, (Condition) null)) {
 				try (Connection conn = DataSourcePool.get("").getConnection()) {
+					conn.createStatement().executeUpdate("DROP DATABASE IF EXISTS " + project.getName());
 					conn.createStatement().executeUpdate("CREATE DATABASE IF NOT EXISTS " + project.getName());
 					
 					if (!conn.getAutoCommit())
