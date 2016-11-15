@@ -3,10 +3,23 @@ Virtual collaboration and development environment following the Scrum SDLC
 
 ## REST API
 ### Basic Flow
-* `GET` or `POST` to the `rest/auth` URL 3 attributes
- * `project=` name of project to enter
- * `handle=` handle of user to authenticate as
- * `signature=` Base64-encoded password of user to authenticate as
-* If authentication passes, the server will return a unique `authkey` contained both project and user information
+* `GET` or `POST` to `rest/auth` authenticates a project-user pair (users are local to projects)
+  * 3 attributes
+    * `project=` name of project to enter
+    * `handle=` handle of user to authenticate as
+    * `signature=` Base64-encoded password of user to authenticate as
+* If authentication passes, the server returns a unique `authkey` containing both project and user information
 * `GET` to `rest/{authkey}/profile` returns information for the authenticated user
 * `GET` to `rest/{authkey}/users` returns basic information on all users in the project
+
+### Debug
+* `GET` or `POST` to `rest/debug/reset` resets the backing database with stub entities
+  * 2 optional attributes
+    * `projects=` number of projects to create
+    * `users=` number of users to create per project
+* `GET` to `rest/debug/projects` lists all projects
+* `GET` or `POST` to `rest/debug/projects/byName` retrieves the UUID for a specific project
+  * 1 attribute
+    * `name=` project name
+* `GET` to `rest/debug/projects/{projectUUID}` retrieves the project for the specified UUID
+* `GET` to `rest/debug/projects/{projectUUID}/users` retrieves all users in the specified project
