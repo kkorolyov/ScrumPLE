@@ -73,9 +73,11 @@ public class DebugResource {
 	@GET
 	@Path("reset")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String reset() throws SQLException {	// Test stub for populating projects
-		int numProjects = 10,
-				numUsers = 10;
+	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users) throws SQLException {	// Test stub for populating projects
+		long start = System.nanoTime();
+		
+		int numProjects = Integer.parseInt(projects),
+				numUsers = Integer.parseInt(users);
 		
 		try (Connection conn = DataSourcePool.get("").getConnection()) {
 			conn.createStatement().executeUpdate("DROP DATABASE IF EXISTS " + systemDB);
@@ -106,6 +108,8 @@ public class DebugResource {
 				}
 			}
 		}
-		return "Database reset (" + systemDB + ") complete with " + numProjects + " projects, " + numUsers + " users per project";
+		long 	end = System.nanoTime(),
+					elapsedMS = (end - start) / 1000000;
+		return "Database reset (" + systemDB + ") complete with " + numProjects + " projects, " + numUsers + " users per project in " + elapsedMS + "ms";
 	}
 }
