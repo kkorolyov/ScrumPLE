@@ -5,10 +5,14 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.applications.User;
+import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.auth.Authenticator;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
@@ -26,6 +30,19 @@ public class UsersResource {
 	 */
 	public UsersResource(DataSource dataSource) {
 		this.ds = dataSource;
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	@Path("auth")
+	public String getUser(@QueryParam("handle") String handle, @QueryParam("password") String password) throws AuthenticationException, SQLException {
+		String uuid = null;
+		User user = new Authenticator(ds).get(handle, password);
+		
+		try (Session s = new Session(ds)) {
+			uuid = s.put(user).toString();
+		}
+		return uuid;
 	}
 	
 	/** @return all users under this project */
