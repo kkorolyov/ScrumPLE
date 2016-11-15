@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -55,14 +56,25 @@ public class Application extends ResourceConfig {
 	public static class SQLExceptionMapper implements ExceptionMapper<SQLException> {
 		@Override
 		public Response toResponse(SQLException e) {
-			return Response.status(500).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+			return buildExceptionResponse(500, e);
+		}
+	}
+	@Provider
+	public static class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
+		@Override
+		public Response toResponse(EntityNotFoundException e) {
+			return buildExceptionResponse(404, e);
 		}
 	}
 	@Provider
 	public static class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
 		@Override
 		public Response toResponse(AuthenticationException e) {
-			return Response.status(401).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+			return buildExceptionResponse(401, e);
 		}
+	}
+	
+	private static Response buildExceptionResponse(int errorCode, Throwable e) {
+		return Response.status(errorCode).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
 	}
 }

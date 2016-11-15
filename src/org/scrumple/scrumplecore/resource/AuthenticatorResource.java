@@ -3,6 +3,7 @@ package org.scrumple.scrumplecore.resource;
 import java.sql.SQLException;
 import java.util.Set;
 
+import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -51,7 +52,7 @@ public class AuthenticatorResource {
 		try (Session s = new Session(ds)) {	// TODO Move this to worker class?
 			Set<Project> projects = s.get(Project.class, new Condition("projectName", "=", project));
 			if (projects.isEmpty())
-				throw new NotFoundException("No such project: " + project);
+				throw new EntityNotFoundException("No such project: " + project);
 			
 			projectId = s.put(projects.iterator().next()).toString();	// TODO Change to getUUID()
 		}
