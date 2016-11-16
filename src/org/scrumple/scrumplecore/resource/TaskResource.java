@@ -40,6 +40,7 @@ public class TaskResource {
 			Database db;
 			
 			try (Session s = new Session(ds)) {
+
 				for (Task t : s.get(Task.class, new Condition("taskType","=",id)))
 				{
 					tasks.add(t);

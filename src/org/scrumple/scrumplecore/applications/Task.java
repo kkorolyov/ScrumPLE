@@ -17,6 +17,11 @@ public class Task implements Saveable{
 	private String taskDescription;
 	private boolean done;
 	
+	public Task() {
+		this.taskDescription = null;
+		this.taskType = 0;
+		this.done = false;
+	}
 	public Task(int type, String taskDescription) {
 		this.taskDescription = taskDescription;
 		this.taskType = type;
