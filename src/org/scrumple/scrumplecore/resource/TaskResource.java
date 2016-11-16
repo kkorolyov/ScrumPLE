@@ -35,25 +35,14 @@ public class TaskResource {
 	}
 	@GET
 	//@Produces(MediaType.APPLICATION_XML)
-	public TaskList fetchTask(@QueryParam("type") int id) throws SQLException {
+	public Set<Task> fetchTask(@QueryParam("type") int id) throws SQLException {
 		Set <Task> tasks = new HashSet<Task>();
 			
 			try (Session s = new Session(ds)) {
 
-				for (Task t : s.get(Task.class, new Condition("taskType","=",id)))
-				{
-					tasks.add(t);
-				}
+				return s.get(Task.class, new Condition("taskType","=",id));
 			}
-			return new TaskList(tasks);
-			/*try {
-				db = new Database("Project", null);
-				task = db.load(id);
-			} catch (NamingException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		return task.getTaskDescription();*/
+
 	}
 	
 	@XmlRootElement

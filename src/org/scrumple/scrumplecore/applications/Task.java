@@ -5,16 +5,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.scrumple.scrumplecore.database.Saveable;
+
+import dev.kkorolyov.sqlob.annotation.Transient;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Task implements Saveable{
-	@XmlElement
+	
 	private int taskType;  //Is it a feature, bug, etc.  Do we need a Label class, or can we just include it as a String field in Task? Current save method will require that we have a Label class.
 	@XmlElement
 	private String taskDescription;
+	@Transient
 	private boolean done;
 	
 	public Task() {
