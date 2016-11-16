@@ -36,14 +36,23 @@ public class TaskResource {
 		this.ds = ds;
 	}
 	@GET
-	//@Produces(MediaType.APPLICATION_XML)
-	public Set<Task> fetchTask(@QueryParam("type") int id) throws SQLException {
+	public Set<Task> fetchTask() throws SQLException {
 			
 			try (Session s = new Session(ds)) {
 
-				return s.get(Task.class, new Condition("taskType","=",id));
+				return s.get(Task.class, (Condition) null);
 			}
 
+	}
+	
+	@Path("similar")
+	@GET
+	public Set<Task> fetchTask(@QueryParam("type") int id) throws SQLException {
+		
+		try (Session s = new Session(ds)) {
+
+			return s.get(Task.class, new Condition("taskType","=",id));
+		}
 	}
 	
 	@POST

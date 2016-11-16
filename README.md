@@ -11,7 +11,15 @@ Virtual collaboration and development environment following the Scrum SDLC
 * If authentication passes, the server returns a unique `authkey` containing both project and user information
 * `GET` to `rest/{authkey}/profile` returns information for the authenticated user
 * `GET` to `rest/{authkey}/users` returns basic information on all users in the project
-
+* `GET` to `rest/{authkey}/tasks` lists all tasks for the selected project
+* `POST` to `rest/{authkey}/tasks` will create and add a task to the project database
+  * 2 attributes
+  	 * `tasktype=` the integer representation of task type
+  	 * `des=` description of the task
+*`GET` to `rest/{authkey}/tasks/similar` will fetch tasks of a similar category
+  * 1 attribute
+    * `type=` the integer representation of task type
+*`POST` to 
 ### Debug
 * `GET` or `POST` to `rest/debug/reset` resets the backing database with stub entities
   * 2 optional attributes
