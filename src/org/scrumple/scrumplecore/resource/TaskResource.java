@@ -35,9 +35,8 @@ public class TaskResource {
 	}
 	@GET
 	//@Produces(MediaType.APPLICATION_XML)
-	public TaskList fetchTask(@QueryParam("id") int id) throws SQLException {
+	public TaskList fetchTask(@QueryParam("type") int id) throws SQLException {
 		Set <Task> tasks = new HashSet<Task>();
-			Database db;
 			
 			try (Session s = new Session(ds)) {
 
