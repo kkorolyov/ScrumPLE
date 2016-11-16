@@ -16,7 +16,6 @@ import org.scrumple.scrumplecore.applications.Task;
 import org.scrumple.scrumplecore.applications.User;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.database.Database;
-import org.scrumple.scrumplecore.service.ServiceLoader;
 
 @Path("tasklist")
 public class TasksListResource {

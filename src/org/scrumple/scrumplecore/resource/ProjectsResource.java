@@ -59,4 +59,8 @@ public class ProjectsResource {
 	public UsersResource getUsers() {
 		return new UsersResource(ds);
 	}
+	@Path("tasks")
+	public TaskResource getTask() {
+		return new TaskResource(ds);
+	}
 }

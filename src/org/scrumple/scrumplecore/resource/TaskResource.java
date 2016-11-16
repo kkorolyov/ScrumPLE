@@ -2,36 +2,68 @@ package org.scrumple.scrumplecore.resource;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.applications.Task;
 import org.scrumple.scrumplecore.applications.User;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.database.Database;
-import org.scrumple.scrumplecore.service.ServiceLoader;
 
-@Path("tasks")
+import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.persistence.Session;
+
+//@Path("tasks")
+@Produces(MediaType.APPLICATION_XML)
 public class TaskResource {
+	
+	private DataSource ds;
+	
+	public TaskResource(DataSource ds) {
+		this.ds = ds;
+	}
 	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public String fetchTask(@QueryParam("id") int id) {
-		Task task = new Task(1, null);
+	//@Produces(MediaType.APPLICATION_XML)
+	public TaskList fetchTask(@QueryParam("id") int id) throws SQLException {
+		Set <Task> tasks = new HashSet<Task>();
 			Database db;
-			try {
+			
+			try (Session s = new Session(ds)) {
+				for (Task t : s.get(Task.class, new Condition("taskType","=",id)))
+				{
+					tasks.add(t);
+				}
+			}
+			return new TaskList(tasks);
+			/*try {
 				db = new Database("Project", null);
 				task = db.load(id);
 			} catch (NamingException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		return task.getTaskDescription();
+		return task.getTaskDescription();*/
+	}
+	
+	@XmlRootElement
+	public static class TaskList {
+		@XmlElement
+		private Collection<Task> tasks;
+		
+		public TaskList(){}
+		TaskList(Collection<Task> tasks) {
+			this.tasks = tasks;
+		}
 	}
 }
