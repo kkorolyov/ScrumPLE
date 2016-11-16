@@ -5,10 +5,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -36,13 +38,20 @@ public class TaskResource {
 	@GET
 	//@Produces(MediaType.APPLICATION_XML)
 	public Set<Task> fetchTask(@QueryParam("type") int id) throws SQLException {
-		Set <Task> tasks = new HashSet<Task>();
 			
 			try (Session s = new Session(ds)) {
 
 				return s.get(Task.class, new Condition("taskType","=",id));
 			}
 
+	}
+	
+	@POST
+	public UUID createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
+		try (Session s = new Session(ds)) {
+
+			return s.put(new Task(type, des));
+		}
 	}
 	
 	@XmlRootElement
