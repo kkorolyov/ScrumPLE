@@ -1,29 +1,51 @@
 package org.scrumple.scrumplecore.resource;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Set;
+import java.util.UUID;
 
+import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.assets.Assets.Config;
 import org.scrumple.scrumplecore.database.DataSourcePool;
 
+import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
 
 /**
- * Handles public project requests.
+ * Handles project requests.
  */
 @Path("projects")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class ProjectsResource {
-	private String systemDB = Config.get(Config.SYSTEM_DB);
-	private DataSource ds = DataSourcePool.get(systemDB);
+	private final String systemDB = Config.get(Config.SYSTEM_DB);
+	private final DataSource ds = DataSourcePool.get(systemDB);
+	
+	/**
+	 * Constructs a new projects resource using an authentication key.
+	 * @param authKey combination of project and user to authenticate as
+	 * @throws SQLException if a database error occurs
+	 */
+	/*public ProjectResource(@PathParam("authkey") String authKey) throws SQLException {
+		int midIndex = authKey.length() / 2;	// AuthKey is concatenated Type 4 UUIDs of Project and User
+		UUID 	projectId = UUID.fromString(authKey.substring(0, midIndex)),
+					userId = UUID.fromString(authKey.substring(midIndex, authKey.length()));
+		
+		try (Session s = new Session(DataSourcePool.get(Config.get(Config.SYSTEM_DB)))) {
+			project = s.get(Project.class, projectId);
+		}
+		ds = DataSourcePool.get(project.getName());
+		
+		try (Session s = new Session(ds)) {
+			user = s.get(User.class, userId);
+		}
+	}*/
 	
 	/**
 	 * Creates a new project and returns its UUID.
@@ -35,7 +57,89 @@ public class ProjectsResource {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addProject(Project data) throws SQLException {	// TODO Exception if project exists
 		try (Session s = new Session(ds)) {
+			try (Connection conn = ds.getConnection()) {
+				conn.createStatement().executeUpdate("CREATE DATABASE " + data.getName());
+			}
 			return s.put(data).toString();
+		}
+	}
+	/**
+	 * Removes a project.
+	 * @param uuid project uuid
+	 * @return removed project
+	 * @throws SQLException if a database error occurs
+	 */
+	@DELETE
+	@Path("{uuid}")
+	public Project removeProject(@PathParam("uuid") String uuid) throws SQLException {
+		try (Session s = new Session(ds)) {
+			Project project = s.get(Project.class, UUID.fromString(uuid));	// TODO Session.drop()
+			if (project == null)
+				throw new EntityNotFoundException("No such project: " + uuid);
+			
+			return project;
+		}
+	}
+	
+	/**
+	 * @param name project name to search for
+	 * @return UUID of matching project
+	 * @throws SQLException if a database error occurs
+	 */
+	@GET
+	@Path("find")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String findProjectGet(@QueryParam("name") String name) throws SQLException {
+		return findProject(name);
+	}
+	/**
+	 * @param name project name to search for
+	 * @return UUID of matching project
+	 * @throws SQLException if a database error occurs
+	 */
+	@POST
+	@Path("find")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String findProjectPost(@FormParam("name") String name) throws SQLException {
+		return findProject(name);
+	}
+	private String findProject(String name) throws SQLException {
+		try (Session s = new Session(ds)) {
+			Set<Project> matches = s.get(Project.class, new Condition("name", "=", name));
+			if (matches.isEmpty())
+				throw new EntityNotFoundException("No such project with name: " + name);
+			
+			return s.put(matches.iterator().next()).toString();	// TODO Change to getUUID()
+		}
+	}
+
+	/**
+	 * @param uuid project uuid
+	 * @return users resource for a project
+	 * @throws SQLException if a database error occurs
+	 */
+	@Path("{uuid}/users")
+	public UsersResource getUsers(@PathParam("uuid") String uuid) throws SQLException {
+		return new UsersResource(getProjectDataSource(uuid));
+	}
+	/**
+	 * @param uuid project uuid
+	 * @return tasks resource for a project
+	 * @throws SQLException if a database error occurs
+	 */
+	@Path("{uuid}/tasks")
+	public TaskResource getTasks(@PathParam("uuid") String uuid) throws SQLException {
+		return new TaskResource(getProjectDataSource(uuid));
+	}
+	
+	private DataSource getProjectDataSource(String uuid) throws SQLException {
+		try (Session s = new Session(ds)) {
+			Project project = s.get(Project.class, UUID.fromString(uuid));
+			if (project == null)
+				throw new EntityNotFoundException("Project: " + uuid);
+			
+			return DataSourcePool.get(project.getName());
 		}
 	}
 }
