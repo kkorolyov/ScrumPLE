@@ -3,31 +3,36 @@ Virtual collaboration and development environment following the Scrum SDLC
 
 ## REST API
 ### Basic Flow
-* `GET` or `POST` to `rest/auth` authenticates a project-user pair (users are local to projects)
-  * 3 attributes
-    * `project=` name of project to enter
-    * `handle=` handle of user to authenticate as
-    * `signature=` Base64-encoded password of user to authenticate as
-* If authentication passes, the server returns a unique `authkey` containing both project and user information
-* `GET` to `rest/{authkey}/profile` returns information for the authenticated user
-* `GET` to `rest/{authkey}/users` returns basic information on all users in the project
-* `GET` to `rest/{authkey}/tasks` lists all tasks for the selected project
-* `GET` to `rest/{authkey}/tasks/create` will create and add a task to the project database
-  * 2 attributes
+* `POST` to `rest/projects` creates a new project
+	* XML or ~~JSON~~ `project` object with 2 attributes:
+		* `name` = project name
+		* `description` = project description
+	* Returns the UUID of the new project
+* `DELETE` to `rest/projects/{uuid}` deletes the project matching `uuid`
+	* Returns the deleted project in XML or ~~JSON~~
+* `GET` or `POST` to `rest/projects/find` locates a project by name
+	* 1 parameter:
+		* `name` = project name
+	* Returns the UUID of a matching project
+* `GET` to `rest/projects/{uuid}/users` returns basic information on all users in the project matching `uuid`
+* `GET` to `rest/projects/{uuid}/tasks` returns all tasks in the project matching `uuid`
+* `GET` to `rest/projects/{uuid}/tasks/create` creates a new task in the project matching `uuid`
+  * 2 parameters
   	 * `tasktype=` the integer representation of task type
   	 * `des=` description of the task
 *`GET` to `rest/{authkey}/tasks/similar` will fetch tasks of a similar category
-  * 1 attribute
+  * 1 parameter
     * `type=` the integer representation of task type
 *`POST` to 
 ### Debug
-* `GET` or `POST` to `rest/debug/reset` resets the backing database with stub entities
-  * 2 optional attributes
+* `GET` to `rest/debug/reset` resets the backing database with stub entities
+  * 2 optional parameters
     * `projects=` number of projects to create
     * `users=` number of users to create per project
 * `GET` to `rest/debug/projects` lists all projects
-* `GET` or `POST` to `rest/debug/projects/byName` retrieves the UUID for a specific project
-  * 1 attribute
+* `GET` to `rest/debug/projects/byName` retrieves the UUID for a specific project
+  * 1 parameter
     * `name=` project name
 * `GET` to `rest/debug/projects/{projectUUID}` retrieves the project for the specified UUID
 * `GET` to `rest/debug/projects/{projectUUID}/users` retrieves all users in the specified project
+  
