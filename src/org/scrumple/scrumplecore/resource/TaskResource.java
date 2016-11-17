@@ -56,8 +56,9 @@ public class TaskResource {
 		}
 	}
 	
-	@POST
-	public UUID createTask(@FormParam("tasktype") int type, @FormParam("des") String des) throws SQLException {
+	@Path("create")
+	@GET
+	public UUID createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
 		try (Session s = new Session(ds)) {
 
 			return s.put(new Task(type, des));
