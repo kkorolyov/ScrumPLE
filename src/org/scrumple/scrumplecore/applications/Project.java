@@ -13,33 +13,33 @@ import dev.kkorolyov.sqlob.annotation.Transient;
 
 @XmlRootElement
 public class Project implements Saveable {
-	private String projectName;
-	private String projDescription;
+	private String name;
+	private String description;
 	@Transient
 	private List<User> users;
 	
 	public Project(){}
 	public Project(String name, String description) {
-		this.projectName = name;
-		this.projDescription = description;
+		this.name = name;
+		this.description = description;
 		users = new ArrayList<User>();
 
 	}
 	
 	public String getName() {
-		return this.projectName;
+		return this.name;
 	}
 	
 	public void setName(String name) {
-		this.projectName = name;
+		this.name = name;
 	}
 	
 	public String getDescription() {
-		return this.projDescription;
+		return this.description;
 	}
 	
 	public void setDescription(String description) {
-		this.projDescription = description;
+		this.description = description;
 	}
 	
 	public void addUser(User user) {
@@ -71,15 +71,15 @@ public class Project implements Saveable {
 	@Override
 	public List<Object> toData() {
 		// TODO Auto-generated method stub
-		return Arrays.asList(new Object[]{projectName, projDescription});
+		return Arrays.asList(new Object[]{name, description});
 	}
 
 	@Override
 	public void fromData(List<Object> data) {
 		Iterator<Object> it = data.iterator();
 		//How to handle loading a list of users?
-		projectName = (String) it.next();
-		projDescription = (String) it.next();
+		name = (String) it.next();
+		description = (String) it.next();
 		
 	}
 
