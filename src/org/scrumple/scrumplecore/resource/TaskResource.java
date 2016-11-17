@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -56,7 +57,7 @@ public class TaskResource {
 	}
 	
 	@POST
-	public UUID createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
+	public UUID createTask(@FormParam("tasktype") int type, @FormParam("des") String des) throws SQLException {
 		try (Session s = new Session(ds)) {
 
 			return s.put(new Task(type, des));
