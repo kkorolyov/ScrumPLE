@@ -12,7 +12,7 @@ Virtual collaboration and development environment following the Scrum SDLC
 * `GET` to `rest/{authkey}/profile` returns information for the authenticated user
 * `GET` to `rest/{authkey}/users` returns basic information on all users in the project
 * `GET` to `rest/{authkey}/tasks` lists all tasks for the selected project
-* `POST` to `rest/{authkey}/tasks` will create and add a task to the project database
+* `GET` to `rest/{authkey}/tasks/create` will create and add a task to the project database
   * 2 attributes
   	 * `tasktype=` the integer representation of task type
   	 * `des=` description of the task
