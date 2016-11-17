@@ -16,14 +16,13 @@ Virtual collaboration and development environment following the Scrum SDLC
 	* Returns the UUID of a matching project
 * `GET` to `rest/projects/{uuid}/users` returns basic information on all users in the project matching `uuid`
 * `GET` to `rest/projects/{uuid}/tasks` returns all tasks in the project matching `uuid`
-* `GET` to `rest/projects/{uuid}/tasks/create` creates a new task in the project matching `uuid`
-  * 2 parameters
+* `POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`
+	* XML object with 2 attributes:
   	 * `tasktype=` the integer representation of task type
   	 * `des=` description of the task
-*`GET` to `rest/{authkey}/tasks/similar` will fetch tasks of a similar category
+*`GET` to `rest/project/{uuid}/tasks/similar` will fetch tasks of a similar category
   * 1 parameter
     * `type=` the integer representation of task type
-*`POST` to 
 ### Debug
 * `GET` to `rest/debug/reset` resets the backing database with stub entities
   * 2 optional parameters

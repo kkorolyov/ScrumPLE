@@ -1,15 +1,11 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
-
-import javax.naming.NamingException;
 import javax.sql.DataSource;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,14 +16,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.applications.Task;
-import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.auth.AuthenticationException;
-import org.scrumple.scrumplecore.database.Database;
+
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
 
-//@Path("tasks")
 @Produces(MediaType.APPLICATION_XML)
 public class TaskResource {
 	
@@ -56,14 +49,12 @@ public class TaskResource {
 		}
 	}
 	
-	@Path("create")
-	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public String createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
+	@POST
+	@Consumes(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String createTask(Task t) throws SQLException {
 		try (Session s = new Session(ds)) {
-
-			 String str = s.put(new Task(type, des)).toString();
-			 return str;
+			return s.put(t).toString();
 		}
 	}
 	
