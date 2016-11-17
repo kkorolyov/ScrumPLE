@@ -58,10 +58,12 @@ public class TaskResource {
 	
 	@Path("create")
 	@GET
-	public UUID createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
+	@Produces(MediaType.TEXT_HTML)
+	public String createTask(@QueryParam("tasktype") int type, @QueryParam("des") String des) throws SQLException {
 		try (Session s = new Session(ds)) {
 
-			return s.put(new Task(type, des));
+			 String str = s.put(new Task(type, des)).toString();
+			 return str;
 		}
 	}
 	
