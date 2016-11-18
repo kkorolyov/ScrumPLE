@@ -51,6 +51,14 @@ public class Application extends ResourceConfig {
 		}
 	}
 	
+	/*@Provider	
+	public static class DebugMapper implements ExceptionMapper<Exception> {
+		@Override
+		public Response toResponse(Exception e) {
+			e.printStackTrace();
+			return buildExceptionResponse(500, e);
+		}
+	}*/
 	@Provider
 	public static class SQLExceptionMapper implements ExceptionMapper<SQLException> {
 		@Override

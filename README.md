@@ -10,10 +10,10 @@ Virtual collaboration and development environment following the Scrum SDLC
 	* Returns the UUID of the new project
 * `DELETE` to `rest/projects/{uuid}` deletes the project matching `uuid`
 	* Returns the deleted project in XML or ~~JSON~~
-* `GET` or `POST` to `rest/projects/find` locates a project by name
-	* 1 parameter:
+* `GET` to `rest/projects` returns all public projects or the project exactly matching optional parameters
+	* 1 optional parameter:
 		* `name` = project name
-	* Returns the UUID of a matching project
+* `GET` to `rest/projects/{uuid}` returns the project matching `uuid`
 * `GET` to `rest/projects/{uuid}/users` returns basic information on all users in the project matching `uuid`
 * `GET` to `rest/projects/{uuid}/tasks` returns all tasks in the project matching `uuid`
 * `POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`

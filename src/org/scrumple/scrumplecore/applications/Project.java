@@ -15,15 +15,16 @@ import dev.kkorolyov.sqlob.annotation.Transient;
 public class Project implements Saveable {
 	private String name;
 	private String description;
+	private boolean isPrivate;
 	@Transient
 	private List<User> users;
 	
 	public Project(){}
-	public Project(String name, String description) {
-		this.name = name;
-		this.description = description;
+	public Project(String name, String description, boolean isPrivate) {
+		setName(name);
+		setDescription(description);
+		setPrivate(isPrivate);
 		users = new ArrayList<User>();
-
 	}
 	
 	public String getName() {
@@ -40,6 +41,18 @@ public class Project implements Saveable {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	/** @return {@code true} if this project is private */
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+	/**
+	 * Sets this project's {@code private} status.
+	 * @param isPrivate whether this project is private
+	 */
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
 	}
 	
 	public void addUser(User user) {

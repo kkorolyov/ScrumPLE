@@ -32,16 +32,16 @@ public class UsersResource {
 		this.ds = dataSource;
 	}
 	
-	/** @return names of all users under this project */
+	/** @return all users under this project */
 	@GET
-	public NameList listNames() throws SQLException {
-		Set<String> names = new HashSet<>();
+	public Set<Entity> getUsers() throws SQLException {
+		Set<Entity> users = new HashSet<>();
 		
 		try (Session s = new Session(ds)) {
 			for (User user : s.get(User.class, (Condition) null))
-				names.add(user.getHandle());
+				users.add(new Entity(s.put(user), user));
 		}
-		return new NameList(names);
+		return users;
 	}
 	
 	@XmlRootElement

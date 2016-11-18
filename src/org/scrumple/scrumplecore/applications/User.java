@@ -14,7 +14,6 @@ import org.scrumple.scrumplecore.database.Saveable;
 public class User implements Saveable {
 	@XmlElement
 	private String handle;
-	@XmlElement
 	private String password;
 	private Role role;
 	

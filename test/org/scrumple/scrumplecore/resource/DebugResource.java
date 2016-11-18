@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -88,7 +89,7 @@ public class DebugResource {
 		}
 		try (Session session = new Session(systemDS)) {
 			for (int i = 0; i < numProjects; i++)
-				session.put(new Project("Project" + i, "Description" + i));
+				session.put(new Project("Project" + i, "Description" + i, (i % 3 == 0)));
 			
 			session.flush();
 			

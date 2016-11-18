@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,6 +10,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.assets.Assets.Config;
@@ -47,6 +50,30 @@ public class ProjectsResource {
 		}
 	}*/
 	
+	@GET
+	public Set<Entity> getProjects(@QueryParam("name") String name) throws SQLException {
+		Set<Entity> resources = new HashSet<>();
+		
+		try (Session s = new Session(ds)) {
+			for (Project project : s.get(Project.class, (name == null ? (Condition) null : new Condition("name", "=", name)))) {
+				if ((name == null && !project.isPrivate()) || (name != null && name.equals(project.getName())))	// If no name, add all publics; else, add only name matches
+					resources.add(new Entity(s.put(project), project));
+			}
+		}
+		return resources;
+	}
+	/**
+	 * Retrieves a project for a specific UUID.
+	 * @param uuid project uuid
+	 * @return appropriate project
+	 * @throws SQLException if a database error occurs
+	 */
+	@GET
+	@Path("{uuid}")
+	public Project getProject(@PathParam("uuid") String uuid) throws SQLException {
+		return getByUUID(uuid);
+	}
+	
 	/**
 	 * Creates a new project and returns its UUID.
 	 * @param data new project data
@@ -56,6 +83,8 @@ public class ProjectsResource {
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addProject(Project data) throws SQLException {	// TODO Exception if project exists
+		data.setName(data.getName().replaceAll("\\s+", "_"));	// Replace whitespace with underscore
+		
 		try (Session s = new Session(ds)) {
 			try (Connection conn = ds.getConnection()) {
 				conn.createStatement().executeUpdate("CREATE DATABASE " + data.getName());
@@ -63,6 +92,7 @@ public class ProjectsResource {
 			return s.put(data).toString();
 		}
 	}
+	
 	/**
 	 * Removes a project.
 	 * @param uuid project uuid
@@ -78,39 +108,6 @@ public class ProjectsResource {
 				throw new EntityNotFoundException("No such project: " + uuid);
 			
 			return project;
-		}
-	}
-	
-	/**
-	 * @param name project name to search for
-	 * @return UUID of matching project
-	 * @throws SQLException if a database error occurs
-	 */
-	@GET
-	@Path("find")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String findProjectGet(@QueryParam("name") String name) throws SQLException {
-		return findProject(name);
-	}
-	/**
-	 * @param name project name to search for
-	 * @return UUID of matching project
-	 * @throws SQLException if a database error occurs
-	 */
-	@POST
-	@Path("find")
-	@Produces(MediaType.TEXT_PLAIN)
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public String findProjectPost(@FormParam("name") String name) throws SQLException {
-		return findProject(name);
-	}
-	private String findProject(String name) throws SQLException {
-		try (Session s = new Session(ds)) {
-			Set<Project> matches = s.get(Project.class, new Condition("name", "=", name));
-			if (matches.isEmpty())
-				throw new EntityNotFoundException("No such project with name: " + name);
-			
-			return s.put(matches.iterator().next()).toString();	// TODO Change to getUUID()
 		}
 	}
 
@@ -133,13 +130,16 @@ public class ProjectsResource {
 		return new TaskResource(getProjectDataSource(uuid));
 	}
 	
-	private DataSource getProjectDataSource(String uuid) throws SQLException {
+	private Project getByUUID(String uuid) throws SQLException {
 		try (Session s = new Session(ds)) {
 			Project project = s.get(Project.class, UUID.fromString(uuid));
 			if (project == null)
 				throw new EntityNotFoundException("Project: " + uuid);
 			
-			return DataSourcePool.get(project.getName());
+			return project;
 		}
+	}
+	private DataSource getProjectDataSource(String uuid) throws SQLException {
+		return DataSourcePool.get(getByUUID(uuid).getName());
 	}
 }

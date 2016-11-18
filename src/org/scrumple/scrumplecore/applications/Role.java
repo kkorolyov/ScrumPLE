@@ -3,14 +3,14 @@ package org.scrumple.scrumplecore.applications;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.database.Saveable;
 
 @XmlRootElement
 public class Role implements Saveable {
-	@XmlElement
+	@XmlAttribute
 	private String value;
 	
 	public Role(){}
