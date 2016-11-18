@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Set;
 import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
-
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -52,7 +52,8 @@ public class TaskResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String createTask(Task t) throws SQLException {
+	public String createTask(@FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
+		Task t = new Task(type, des);
 		try (Session s = new Session(ds)) {
 			return s.put(t).toString();
 		}
