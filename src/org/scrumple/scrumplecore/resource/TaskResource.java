@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
@@ -30,11 +31,16 @@ public class TaskResource {
 		this.ds = ds;
 	}
 	@GET
-	public Set<Task> fetchTask() throws SQLException {
-			
+	public Set<Entity> fetchTask() throws SQLException {
+			Set<Entity> resources = new HashSet<Entity>();
 			try (Session s = new Session(ds)) {
+				
+				for(Task t : s.get(Task.class, (Condition) null))
+				{
+					resources.add(new Entity(s.put(t), t));
+				}
 
-				return s.get(Task.class, (Condition) null);
+				return resources;
 			}
 
 	}
@@ -50,7 +56,7 @@ public class TaskResource {
 	}
 	
 	@POST
-	@Consumes(MediaType.APPLICATION_XML)
+	//@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
 	public String createTask(@FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
 		Task t = new Task(type, des);
