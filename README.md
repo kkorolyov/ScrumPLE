@@ -1,15 +1,28 @@
 # ScrumPLE
 Virtual collaboration and development environment following the Scrum SDLC
 
+## Installation
+Included are the core ScrumPLE application and browser-based client, which both run in a servlet deployed on the Tomcat application server.
+### Deployment on Apache Tomcat
+* Configure an [Apache Tomcat](http://tomcat.apache.org/) instance
+* Deploy the included WAR file on Tomcat
+* In a web browser, navigate to the `[Tomcat Server IP Address]:[Tomcat Port]//[ScrumPLE]` URL
+
+## Usage
+The included ScrumPLE client is a browser-based application.
+### Some possible action 1
+### Some possible action 2
+
 ## REST API
+ScrumPLE's business logic layer is exposed to client applications as a RESTful web service.
 ### Basic Flow
 * `POST` to `rest/projects` creates a new project
-	* XML or ~~JSON~~ `project` object with 2 attributes:
+	* XML `project` object with 2 attributes:
 		* `name` = project name
 		* `description` = project description
 	* Returns the UUID of the new project
 * `DELETE` to `rest/projects/{uuid}` deletes the project matching `uuid`
-	* Returns the deleted project in XML or ~~JSON~~
+	* Returns the deleted project in XML
 * `GET` to `rest/projects` returns all public projects or the project exactly matching optional parameters
 	* 1 optional parameter:
 		* `name` = project name
