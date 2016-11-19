@@ -10,9 +10,16 @@ Included are the core ScrumPLE application and browser-based client, which both 
 
 ## Usage
 The included ScrumPLE client is a browser-based application.
-### Some possible action 1
-### Some possible action 2
-
+### Creating a project
+* Enter the project name
+* Click the create new button
+* Enter the description of the project
+* Click the create button
+### Adding a new task
+* Enter the task type
+* Enter the task Description
+* Click on submit
+* Check DB to ensure task was created
 ## REST API
 ScrumPLE's business logic layer is exposed to client applications as a RESTful web service.
 ### Basic Flow
