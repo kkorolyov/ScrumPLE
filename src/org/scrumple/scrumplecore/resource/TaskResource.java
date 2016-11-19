@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.scrumple.scrumplecore.applications.Task;
-
+import org.scrumple.scrumplecore.applications.UserStory;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
@@ -58,8 +58,8 @@ public class TaskResource {
 	@POST
 	//@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String createTask(@FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
-		Task t = new Task(type, des);
+	public String createTask(@FormParam("userStory") UserStory story, @FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
+		Task t = new Task(story, type, des);
 		try (Session s = new Session(ds)) {
 			return s.put(t).toString();
 		}
