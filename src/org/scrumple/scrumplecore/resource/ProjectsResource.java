@@ -134,7 +134,7 @@ public class ProjectsResource {
 		try (Session s = new Session(ds)) {
 			Project project = s.get(Project.class, UUID.fromString(uuid));
 			if (project == null)
-				throw new EntityNotFoundException("Project: " + uuid);
+				throw new EntityNotFoundException("No such project: " + uuid);
 			
 			return project;
 		}
