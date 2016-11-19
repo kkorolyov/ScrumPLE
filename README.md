@@ -6,7 +6,7 @@ Included are the core ScrumPLE application and browser-based client, which both 
 ### Deployment on Apache Tomcat
 * Configure an [Apache Tomcat](http://tomcat.apache.org/) instance
 * Deploy the included `ScrumPLE.war` file on Tomcat
-* In a web browser, navigate to the `[Tomcat Server IP Address]:[Tomcat Port]//[ScrumPLE]` URL
+* In a web browser, navigate to the `[Tomcat Server IP Address]:[Tomcat Port]/[ScrumPLE]` URL
 
 ## Usage
 The included ScrumPLE client is a browser-based application.
