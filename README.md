@@ -36,13 +36,19 @@ ScrumPLE's business logic layer is exposed to client applications as a RESTful w
 * `GET` to `rest/projects/{uuid}` returns the project matching `uuid`
 * `GET` to `rest/projects/{uuid}/users` returns basic information on all users in the project matching `uuid`
 * `GET` to `rest/projects/{uuid}/tasks` returns all tasks in the project matching `uuid`
-* `POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`
-	* XML object with 2 attributes:
-  	 * `tasktype=` the integer representation of task type
-  	 * `des=` description of the task
 *`GET` to `rest/project/{uuid}/tasks/similar` will fetch tasks of a similar category
   * 1 parameter
     * `type=` the integer representation of task type
+* `POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`
+	* XML object with 2 attributes:
+	 * `story` = string representation of a userstory
+  	 * `tasktype=` the integer representation of task type
+  	 * `des=` description of the task
+* `GET` to `rest/projects/{uuid}/userstories` returns all userstories in the project matching `uuid`
+* `POST` to `rest/projects/{uuid}/userstories` creates a new userstory in the project matching `uuid`
+    * Form Data with 1 attribute:
+		* `userStory` = The story
+
 ### Debug
 * `GET` to `rest/debug/reset` resets the backing database with stub entities
   * 2 optional parameters
