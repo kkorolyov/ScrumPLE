@@ -120,6 +120,16 @@ public class ProjectsResource {
 	public UsersResource getUsers(@PathParam("uuid") String uuid) throws SQLException {
 		return new UsersResource(getProjectDataSource(uuid));
 	}
+	
+	/**
+	 * @param uuid project uuid
+	 * @return user story resource for a project
+	 * @throws SQLException if a database error occurs
+	 */
+	@Path("{uuid}/userstories")
+	public UserStoryResource getStory(@PathParam("uuid") String uuid) throws SQLException {
+		return new UserStoryResource(getProjectDataSource(uuid));
+	}
 	/**
 	 * @param uuid project uuid
 	 * @return tasks resource for a project
