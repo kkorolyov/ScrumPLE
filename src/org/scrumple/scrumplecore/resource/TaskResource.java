@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.resource;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -55,13 +57,28 @@ public class TaskResource {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param story the user story
+	 * @param type the task type
+	 * @param des the task description
+	 * @return String representation of the task uuid
+	 * @throws SQLException
+	 */
 	@POST
 	//@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String createTask(@FormParam("userStory") UserStory story, @FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
-		Task t = new Task(story, type, des);
+	// Creates a task that is tied to a userstory. Entries in the database store the uuid of the userStory under the story column.
+	public String createTask(@FormParam("userStory") String story, @FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
 		try (Session s = new Session(ds)) {
-			return s.put(t).toString();
+			try (Connection conn = ds.getConnection()) {
+				ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStory WHERE story =  " + "'"+story+"'");
+				rs.next();
+				UserStory u = new UserStory(rs.getString("story"));
+				Task t = new Task(u, type, des);
+				return s.put(t).toString();
+			}
+			
 		}
 	}
 	
