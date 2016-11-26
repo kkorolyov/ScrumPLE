@@ -1,17 +1,10 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.scrumple.scrumplecore.database.Saveable;
-
 @XmlRootElement
-public class User implements Saveable {
+public class User {
 	@XmlElement
 	private String handle;
 	private String password;
@@ -42,21 +35,5 @@ public class User implements Saveable {
 	
 	public void setRole(Role roleIDX) {
 		this.role = roleIDX;
-	}
-
-	@Override
-	public List<Object> toData() {
-
-		return Arrays.asList(handle, password, role);
-
-	}
-
-	@Override
-	public void fromData(List<Object> data) {
-		Iterator<Object> it = data.iterator();
-		handle = (String) it.next();
-		password = (String) it.next();
-		role = (Role) it.next();
-		
 	}
 }

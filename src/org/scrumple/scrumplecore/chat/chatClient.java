@@ -1,14 +1,13 @@
 package org.scrumple.scrumplecore.chat;
 
-import java.net.*;
-import java.util.*;
-
-import org.scrumple.scrumplecore.database.Database;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
-
-import java.io.*;
 
 public class ChatClient {
 	private Socket socket;

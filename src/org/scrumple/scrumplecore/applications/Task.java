@@ -1,19 +1,12 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import org.scrumple.scrumplecore.database.Saveable;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import dev.kkorolyov.sqlob.annotation.Transient;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-
 @XmlRootElement
-public class Task implements Saveable{
+public class Task {
 	
 	private int taskType;  //Is it a feature, bug, etc.  Do we need a Label class, or can we just include it as a String field in Task? Current save method will require that we have a Label class.
 	@XmlElement
@@ -56,18 +49,5 @@ public class Task implements Saveable{
 	}
 	public boolean isFinished() {
 		return done;
-	}
-
-	@Override
-	public List<Object> toData() {
-		// TODO Auto-generated method stub
-		return Arrays.asList(new Object[]{taskType, taskDescription});
-	}
-
-	@Override
-	public void fromData(List<Object> data) {
-		Iterator <Object> it = data.iterator();
-		this.taskType = (int) it.next();
-		this.taskDescription = (String) it.next();
 	}
 }

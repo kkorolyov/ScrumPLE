@@ -1,18 +1,14 @@
 package org.scrumple.scrumplecore.applications;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.scrumple.scrumplecore.database.Saveable;
-
 import dev.kkorolyov.sqlob.annotation.Transient;
 
 @XmlRootElement
-public class Project implements Saveable {
+public class Project {
 	private String name;
 	private String description;
 	private boolean isPrivate;
@@ -80,21 +76,6 @@ public class Project implements Saveable {
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());		}
 	}*/
-
-	@Override
-	public List<Object> toData() {
-		// TODO Auto-generated method stub
-		return Arrays.asList(new Object[]{name, description});
-	}
-
-	@Override
-	public void fromData(List<Object> data) {
-		Iterator<Object> it = data.iterator();
-		//How to handle loading a list of users?
-		name = (String) it.next();
-		description = (String) it.next();
-		
-	}
 
 	@Override
 	public String toString() {

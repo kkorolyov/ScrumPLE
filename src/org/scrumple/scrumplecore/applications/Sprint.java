@@ -1,15 +1,12 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.util.*;
-
-import org.scrumple.scrumplecore.database.Saveable;
-
-import java.time.*;
-import java.sql.*
-;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Sprint implements Saveable {
+public class Sprint {
 	private String description;
 	private Set<Task> tasks;
 	private Backlog backlog;
@@ -58,22 +55,4 @@ public class Sprint implements Saveable {
 		current = LocalDate.now();
 		timeLeft = Period.between(current, end);
 	}
-
-	@Override
-	public List<Object> toData() {
-		// TODO Auto-generated method stub
-		return Arrays.asList(new Object[]{description, Date.valueOf(start), Date.valueOf(end)});
-
-	}
-
-	@Override
-	public void fromData(List<Object> data) {
-		Iterator <Object> it = data.iterator();
-		
-		this.description = (String) it.next();
-		start = ((Date) it.next()).toLocalDate();
-		end = ((Date) it.next()).toLocalDate();
-		
-	}
-
 }
