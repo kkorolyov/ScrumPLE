@@ -14,7 +14,7 @@ import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;
 
 /**
- * Authenticates session credentials.
+ * Authenticates users.
  */
 public class Authenticator {
 	private static final Logger log = Logger.getLogger(Authenticator.class.getName(), Level.DEBUG, new PrintWriter(System.err));

@@ -96,5 +96,8 @@ public class Project implements Saveable {
 		
 	}
 
-
+	@Override
+	public String toString() {
+		return name + ", " + description + ", " + isPrivate;
+	}
 }

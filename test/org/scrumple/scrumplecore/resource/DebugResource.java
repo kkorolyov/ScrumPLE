@@ -2,7 +2,6 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 

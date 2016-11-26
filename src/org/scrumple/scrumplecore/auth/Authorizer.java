@@ -1,25 +1,31 @@
 package org.scrumple.scrumplecore.auth;
 
-import org.scrumple.scrumplecore.database.Database;
-import org.scrumple.scrumplecore.session.Session;
-import org.scrumple.scrumplecore.session.action.Action;
+import java.io.PrintWriter;
+
+import javax.sql.DataSource;
+
+import org.scrumple.scrumplecore.applications.User;
+
+import dev.kkorolyov.simplelogs.Logger;
+import dev.kkorolyov.simplelogs.Logger.Level;
 
 /**
- * Authorizes session actions.
+ * Authorizes user actions.
  */
 public class Authorizer {
-	private final Database db;
+	private static final Logger log = Logger.getLogger(Authorizer.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	
+	private final DataSource ds;
 	
 	/**
-	 * Constructs a new authorizer backed by the specified database.
-	 * @param database database providing authorization information
+	 * Constructs a new authorizer.
+	 * @param dataSource database providing authorization information
 	 */
-	public Authorizer(Database database) {
-		this.db = database;
+	public Authorizer(DataSource dataSource) {
+		this.ds = dataSource;
 	}
 	
-	/** @return {@code true} if {@code session} is authorized to perform {@code action} */
-	boolean isAuthorized(Session session, Action action) {
+	boolean isAuthorized(User user) {
 		// TODO
 		return false;
 	}

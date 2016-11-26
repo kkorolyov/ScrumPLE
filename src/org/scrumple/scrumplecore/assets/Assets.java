@@ -19,7 +19,15 @@ public class Assets {
 	private static String root;
 	
 	/**
-	 * Initializes Assets.
+	 * Initializes assets with the root folder being the execution directory.
+	 * @see #init(File)
+	 */
+	public static void init() {
+		init(new File(""));
+	}
+	/**
+	 * Initializes assets following a custom root folder.
+	 * @param rootFile file to root folder of assets
 	 */
 	@SuppressWarnings("synthetic-access")
 	public static void init(File rootFile) {
