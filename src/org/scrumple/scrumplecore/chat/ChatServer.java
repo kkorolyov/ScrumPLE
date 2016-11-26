@@ -11,7 +11,7 @@ public class ChatServer {
 	private ArrayList<ClientThread> clients;
 	private int port;
 	private boolean on;
-	private static final Logger log = Logger.getLogger(ChatServer.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(ChatServer.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	public ChatServer(int port) {
 		this.port = port;
 		clients = new ArrayList<ClientThread>();

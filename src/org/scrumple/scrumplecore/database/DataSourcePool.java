@@ -21,7 +21,7 @@ public class DataSourcePool {
 	/** JNDI name prefix for bound {@code DataSource} objects */
 	public static final String LOOKUP_PREFIX = "jdbc/";
 	
-	private static final Logger log = Logger.getLogger(DataSourcePool.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(DataSourcePool.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	private static Map<String, DataSource> dataSources = new HashMap<>();
 	
 	/**

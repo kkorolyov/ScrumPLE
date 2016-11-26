@@ -17,7 +17,7 @@ import dev.kkorolyov.sqlob.persistence.Session;
  * Authenticates users.
  */
 public class Authenticator {
-	private static final Logger log = Logger.getLogger(Authenticator.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(Authenticator.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	
 	private final DataSource ds;
 	

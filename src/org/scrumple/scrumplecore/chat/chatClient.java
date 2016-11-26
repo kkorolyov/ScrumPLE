@@ -15,7 +15,7 @@ public class ChatClient {
 	private ObjectOutputStream writer;
 	private String serverAddress, username;
 	private int port;
-	private static final Logger log = Logger.getLogger(ChatClient.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(ChatClient.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 
 	public ChatClient(String address, int port, String username){
 		

@@ -15,7 +15,7 @@ import dev.kkorolyov.simpleprops.Properties;
  * Global access to all external assets.
  */
 public class Assets {
-	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	private static String root;
 	
 	/**
@@ -127,6 +127,7 @@ public class Assets {
 		private static final String CONFIG_DELIMITER = Pattern.quote(",");
 		private static final String GLOBAL_LOGGER = "GLOBAL";
 		private static final Level DEFAULT_LEVEL = Level.INFO;
+		private static final PrintWriter errWriter = new PrintWriter(System.err);
 		
 		private static Properties props;
 		
@@ -143,20 +144,26 @@ public class Assets {
 			for (String logger : props.keys()) {
 				try {
 					String[] config = props.get(logger).split(CONFIG_DELIMITER);
-					File file = new File(root + config[0].trim());
+					String fileName = config[0].trim();
+					File file = null;
+					
+					if (fileName.length() > 0) {
+						file = new File(root + fileName);
 
-					if (!file.isFile()) {	// Create filepath if needed
-						File parent = file.getParentFile();
-						if (parent != null && !parent.exists())
-							parent.mkdirs();
+						if (!file.isFile()) {	// Create filepath if needed
+							File parent = file.getParentFile();
+							if (parent != null && !parent.exists())
+								parent.mkdirs();
+						}
 					}
 					Level level = config.length > 1 ? Level.valueOf(config[1].trim()) : DEFAULT_LEVEL;
-					PrintWriter writer = new PrintWriter(file);
+					PrintWriter writer = (file == null ? errWriter : new PrintWriter(file));
 					
 					Logger.getLogger((logger.equals(GLOBAL_LOGGER) ? "" : logger), level, writer);
 					
 					log.debug("Loaded Logger: name=" + logger + ", file=" + file + ", level=" + level);
 				} catch (FileNotFoundException e) {	// Should not happen
+					e.printStackTrace();
 					log.exception(e);
 				}
 			}

@@ -13,7 +13,7 @@ import dev.kkorolyov.simplelogs.Logger.Level;
  * Authorizes user actions.
  */
 public class Authorizer {
-	private static final Logger log = Logger.getLogger(Authorizer.class.getName(), Level.DEBUG, new PrintWriter(System.err));
+	private static final Logger log = Logger.getLogger(Authorizer.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	
 	private final DataSource ds;
 	
