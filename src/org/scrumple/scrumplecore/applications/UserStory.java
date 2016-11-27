@@ -16,5 +16,9 @@ public class UserStory {
 	public UserStory(String story) {
 		this.story = story;
 	}
+	
+	public String getStory() {
+		return story;
+	}
 
 }

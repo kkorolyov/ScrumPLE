@@ -46,11 +46,12 @@ public class UserStoryResource {
 	}
 	
 	@POST
+	@Consumes(MediaType.APPLICATION_XML)
 	@Produces(MediaType.TEXT_PLAIN)
-	public String createUserStory(@FormParam("userStory")String story) throws SQLException {
-		UserStory u = new UserStory(story);
+	public String createUserStory(UserStory story) throws SQLException {
+		
 		try (Session s = new Session(ds)) {
-			return s.put(u).toString();
+			return s.put(story).toString();
 		}
 	}
 	

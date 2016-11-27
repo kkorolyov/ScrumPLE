@@ -11,7 +11,6 @@ public class Task {
 	private int taskType;  //Is it a feature, bug, etc.  Do we need a Label class, or can we just include it as a String field in Task? Current save method will require that we have a Label class.
 	@XmlElement
 	private String taskDescription;
-	@XmlElement
 	private UserStory story;
 	@Transient
 	private boolean done;
@@ -34,6 +33,10 @@ public class Task {
 	
 	public UserStory getStory() {
 		return this.story;
+	}
+	
+	public void setStory(UserStory aStory) {
+		this.story = aStory;
 	}
 	
 	public void setTaskType(int newType) {
