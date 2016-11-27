@@ -39,7 +39,7 @@ public class UsersResource {
 		
 		try (Session s = new Session(ds)) {
 			for (User user : s.get(User.class, (Condition) null))
-				users.add(new Entity(s.put(user), user));
+				users.add(new Entity(s.getId(user), user));
 		}
 		return users;
 	}

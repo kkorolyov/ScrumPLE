@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
 import javax.ws.rs.*;
@@ -57,7 +58,7 @@ public class ProjectsResource {
 		try (Session s = new Session(ds)) {
 			for (Project project : s.get(Project.class, (name == null ? (Condition) null : new Condition("name", "=", name)))) {
 				if ((name == null && !project.isPrivate()) || (name != null && name.equals(project.getName())))	// If no name, add all publics; else, add only name matches
-					resources.add(new Entity(s.put(project), project));
+					resources.add(new Entity(s.getId(project), project));
 			}
 		}
 		return resources;
@@ -82,10 +83,13 @@ public class ProjectsResource {
 	 */
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String addProject(Project data) throws SQLException {	// TODO Exception if project exists
+	public String addProject(Project data) throws SQLException {
 		data.setName(data.getName().replaceAll("\\s+", "_"));	// Replace whitespace with underscore
 		
 		try (Session s = new Session(ds)) {
+			if (!s.get(Project.class, new Condition("name", "=", data.getName())).isEmpty())
+				throw new EntityExistsException("A project of the same name already exists: " + data.getName());
+			
 			try (Connection conn = ds.getConnection()) {
 				conn.createStatement().executeUpdate("CREATE DATABASE " + data.getName());
 			}
@@ -103,10 +107,16 @@ public class ProjectsResource {
 	@Path("{uuid}")
 	public Project removeProject(@PathParam("uuid") String uuid) throws SQLException {
 		try (Session s = new Session(ds)) {
-			Project project = s.get(Project.class, UUID.fromString(uuid));	// TODO Session.drop()
+			UUID id = UUID.fromString(uuid);
+			
+			Project project = s.get(Project.class, id);
 			if (project == null)
 				throw new EntityNotFoundException("No such project: " + uuid);
 			
+			s.drop(Project.class, id);
+			try (Connection conn = ds.getConnection()) {
+				conn.createStatement().executeUpdate("DROP DATABASE " + project.getName());
+			}
 			return project;
 		}
 	}
