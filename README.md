@@ -40,10 +40,18 @@ ScrumPLE's business logic layer is exposed to client applications as a RESTful w
   * 1 parameter
     * `type=` the integer representation of task type
 * `POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`
-	* XML object with 2 attributes:
-	 * `story` = string representation of a userstory
-  	 * `tasktype=` the integer representation of task type
-  	 * `des=` description of the task
+	* 3 attributes:
+	 * `userStory` = string representation of a userstory
+  	 * `taskType=` the integer representation of task type
+  	 * `taskDescription=` description of the task
+* `PUT` to `rest/projects/{uuid}/tasks/{taskUUID}` will update the corresponding task
+	* 3 attributes:
+	 * `userStory` = string representation of a userstory
+  	 * `taskType` = the integer representation of task type
+  	 * `taskDescription` = description of the task
+  	*Returns the updated task in XML
+*`DELETE` to `rest/projects/{uuid}/tasks/{taskUUID}` will delete the corresponding task
+	*Returns the deleted task in XML
 * `GET` to `rest/projects/{uuid}/userstories` returns all userstories in the project matching `uuid`
 * `POST` to `rest/projects/{uuid}/userstories` creates a new userstory in the project matching `uuid`
     * Form Data with 1 attribute:

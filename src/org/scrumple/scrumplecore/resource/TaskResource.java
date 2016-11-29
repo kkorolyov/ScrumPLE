@@ -6,12 +6,16 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+
 import javax.sql.DataSource;
-import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -58,7 +62,7 @@ public class TaskResource {
 	}
 	
 	/**
-	 * 
+	 * Creates a task.
 	 * @param story the user story
 	 * @param type the task type
 	 * @param des the task description
@@ -79,6 +83,50 @@ public class TaskResource {
 				return s.put(t).toString();
 			}
 			
+		}
+	}
+	/**
+	 * Updates the task tied to corresponding uuid.
+	 * @param uuid the task uuid
+	 * @param story the user story
+	 * @param type the task type
+	 * @param des the task description
+	 * @return Updated Task
+	 * @throws SQLException
+	 */
+	@PUT
+	@Path("{taskUUID}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Task updateTask(@PathParam("taskUUID") String uuid, @FormParam("userStory") String story, @FormParam("taskType") int type, @FormParam("taskDescription") String des) throws SQLException {
+		try (Session s = new Session(ds)) {
+			try (Connection conn = ds.getConnection()) {
+				
+				ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM userStory WHERE story =  " + "'"+story+"'");
+				rs.next();
+				String storyUUID = rs.getString("uuid");
+				String sql = "UPDATE TASK SET taskType = " + type + ", taskDescription = " + "'"+des+"'" + ", story = " + "'"+storyUUID +"'" + " WHERE uuid = " + "'"+uuid+"'";
+				conn.createStatement().executeUpdate(sql);
+				Task t = s.get(Task.class, UUID.fromString(uuid));
+				return t;
+			}
+		}
+	}
+	
+	/**
+	 * Deletes the task tied to corresponding uuid.
+	 * @param uuid the task uuid
+	 * @return Deleted Task
+	 * @throws SQLException
+	 */
+	@DELETE
+	@Path("{taskUUID}")
+	@Produces(MediaType.APPLICATION_XML)
+	public Task deleteTask(@PathParam("taskUUID") String uuid) throws SQLException
+	{
+		try (Session s = new Session(ds)) {
+			Task t = s.get(Task.class, UUID.fromString(uuid));
+			s.drop(Task.class, UUID.fromString(uuid));
+			return t;
 		}
 	}
 	
