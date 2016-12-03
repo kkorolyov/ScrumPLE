@@ -4,26 +4,18 @@ import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
-import org.scrumple.scrumplecore.applications.Project;
-import org.scrumple.scrumplecore.applications.Task;
-import org.scrumple.scrumplecore.applications.User;
-
-@XmlRootElement
-@XmlSeeAlso({Project.class, User.class, Task.class})
-class Entity {
+class Entity<T> {	// TODO Providers
 	@XmlAttribute
 	final String uuid;
 	@XmlElement
-	final Object data;
+	final T data;
 	
 	@SuppressWarnings("unused")
 	private Entity() {
 		this(null, null);
 	}
-	Entity(UUID uuid, Object data) {
+	Entity(UUID uuid, T data) {
 		this.uuid = uuid.toString();
 		this.data = data;
 	}
