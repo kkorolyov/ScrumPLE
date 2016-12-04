@@ -15,7 +15,7 @@ import javax.ws.rs.ext.Provider;
 public class ParamConverters implements ParamConverterProvider {
 	@Override
 	public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
-		if (rawType.isAssignableFrom(UUID.class))
+		if (rawType.isAssignableFrom(UUID.class)) {
 			return new ParamConverter<T>() {
 				@Override
 				public T fromString(String value) {
@@ -26,6 +26,7 @@ public class ParamConverters implements ParamConverterProvider {
 					return value.toString();
 				}
 			};
+		}
 		return null;
 	}
 }

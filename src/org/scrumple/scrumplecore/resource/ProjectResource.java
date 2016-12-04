@@ -2,15 +2,16 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.assets.Assets.Config;
@@ -25,49 +26,14 @@ import dev.kkorolyov.sqlob.persistence.Session;
 @Path("projects")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-public class ProjectsResource {
+public class ProjectResource implements CRUDResource<Project> {
 	private final String systemDB = Config.get(Config.SYSTEM_DB);
 	private final DataSource ds = DataSourcePool.get(systemDB);
 	
-	/**
-	 * Retrieves all projects.
-	 * @param name name of project to retrieve
-	 * @return all projects
-	 * @throws SQLException if a database error occurs
-	 */
-	@GET
-	public Set<Entity> getProjects(@QueryParam("name") String name) throws SQLException {
-		Set<Entity> resources = new HashSet<>();
-		
-		try (Session s = new Session(ds)) {
-			for (Project project : s.get(Project.class, (name == null ? (Condition) null : new Condition("name", "=", name)))) {
-				if ((name == null && !project.isPrivate()) || (name != null && name.equals(project.getName())))	// If no name, add all publics; else, add only name matches
-					resources.add(new Entity(s.getId(project), project));
-			}
-		}
-		return resources;
-	}
-	/**
-	 * Retrieves a project matching an ID.
-	 * @param id project ID
-	 * @return appropriate project
-	 * @throws SQLException if a database error occurs
-	 */
-	@GET
-	@Path("{uuid}")
-	public Project getProject(@PathParam("uuid") UUID id) throws SQLException {
-		return getByUUID(id);
-	}
-	
-	/**
-	 * Creates a new project and returns its ID.
-	 * @param data new project data
-	 * @return ID of new project
-	 * @throws SQLException if a database error occurs
-	 */
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public String addProject(Project data) throws SQLException {
+	@Override
+	public UUID create(Project data) throws SQLException {
 		data.setName(data.getName().replaceAll("\\s+", "_"));	// Replace whitespace with underscore
 		
 		try (Session s = new Session(ds)) {
@@ -77,19 +43,60 @@ public class ProjectsResource {
 			try (Connection conn = ds.getConnection()) {
 				conn.createStatement().executeUpdate("CREATE DATABASE " + data.getName());
 			}
-			return s.put(data).toString();
+			return s.put(data);
 		}
 	}
 	
-	/**
-	 * Removes a project.
-	 * @param id project id
-	 * @return removed project
-	 * @throws SQLException if a database error occurs
-	 */
+	@GET
+	@Path("{uuid}")
+	@Override
+	public Project retrieve(@PathParam("uuid") UUID id) throws SQLException {
+		return getByUUID(id);
+	}
+	@GET
+	@Override
+	public Set<Entity> retrieveAll(@Context UriInfo uriInfo) throws SQLException {
+		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+		//Map<UUID, Project> results = new HashMap<>();
+		Set<Entity> results = new HashSet<>();
+		
+		Condition cond = buildCondition(queryParams.get("name"));
+		try (Session s = new Session(ds)) {
+			for (Project project : s.get(Project.class, cond))
+				//results.put(s.getId(project), project);
+				results.add(new Entity(s.getId(project), project));
+		}
+		return results;
+	}
+	private static Condition buildCondition(List<String> names) {
+		Condition cond = null;
+		
+		if (names == null || names.isEmpty())
+			cond = new Condition("isPrivate", "=", false);
+		else {
+			for (String name : names) {
+				Condition currentCondition = new Condition("name", "=", name);
+				
+				if (cond == null)
+					cond = currentCondition;
+				else
+					cond.or(currentCondition);
+			}
+		}
+		return cond;
+	}
+	
+	@PUT
+	@Path("{uuid}")
+	@Override
+	public boolean update(@PathParam("uuid") UUID toUpdate, Project replacement)	throws SQLException {
+		return false;
+	}
+	
 	@DELETE
 	@Path("{uuid}")
-	public Project removeProject(@PathParam("uuid") UUID id) throws SQLException {
+	@Override
+	public Project delete(@PathParam("uuid") UUID id) throws SQLException {
 		try (Session s = new Session(ds)) {
 			Project project = s.get(Project.class, id);
 			if (project == null)
@@ -121,15 +128,6 @@ public class ProjectsResource {
 	@Path("{uuid}/userstories")
 	public UserStoryResource getStory(@PathParam("uuid") UUID id) throws SQLException {
 		return new UserStoryResource(getProjectDataSource(id));
-	}
-	/**
-	 * @param id project id
-	 * @return tasks resource for a project
-	 * @throws SQLException if a database error occurs
-	 */
-	@Path("{uuid}/tasks")
-	public TaskResource getTasks(@PathParam("uuid") UUID id) throws SQLException {
-		return new TaskResource(getProjectDataSource(id));
 	}
 	
 	private Project getByUUID(UUID id) throws SQLException {
