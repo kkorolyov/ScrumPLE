@@ -130,6 +130,16 @@ public class ProjectResource implements CRUDResource<Project> {
 		return new UserStoryResource(getProjectDataSource(id));
 	}
 	
+	/**
+	 * @param id project id
+	 * @return tasks resource for a project
+	 * @throws SQLException if a database error occurs
+	 */
+	@Path("{uuid}/userstories/tasks")
+	public TaskResource getTasks(@PathParam("uuid") UUID id) throws SQLException {
+		return new TaskResource(getProjectDataSource(id));
+	}
+	
 	private Project getByUUID(UUID id) throws SQLException {
 		try (Session s = new Session(ds)) {
 			Project project = s.get(Project.class, id);
