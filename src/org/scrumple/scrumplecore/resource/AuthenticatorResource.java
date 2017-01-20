@@ -1,16 +1,21 @@
 package org.scrumple.scrumplecore.resource;
 
+import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
+
 import java.sql.SQLException;
 import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.assets.Assets.Config;
+import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.auth.Authenticator;
 import org.scrumple.scrumplecore.database.DataSourcePool;
@@ -29,7 +34,7 @@ public class AuthenticatorResource {
 	 * Constructs a new authenticator resource.
 	 */
 	public AuthenticatorResource() {
-		ds = DataSourcePool.get(Config.get(Config.SYSTEM_DB));
+		ds = DataSourcePool.get(Assets.get(SYSTEM_DB));
 	}
 	
 	/**

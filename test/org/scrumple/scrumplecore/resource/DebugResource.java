@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.resource;
 
+import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
@@ -12,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.scrumple.scrumplecore.applications.Project;
 import org.scrumple.scrumplecore.applications.Role;
 import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.assets.Assets.Config;
+import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.database.DataSourcePool;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -24,7 +26,7 @@ import dev.kkorolyov.sqlob.persistence.Session;
 @Path("debug")
 @Produces({MediaType.APPLICATION_XML})
 public class DebugResource {
-	private String systemDB = Config.get(Config.SYSTEM_DB);
+	private String systemDB = Assets.get(SYSTEM_DB);
 	private DataSource systemDS = DataSourcePool.get(systemDB);
 	
 	/** @return	all projects */

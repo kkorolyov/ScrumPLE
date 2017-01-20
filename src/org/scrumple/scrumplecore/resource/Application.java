@@ -1,7 +1,9 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -20,10 +22,10 @@ import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 public class Application extends ResourceConfig {
 	// Dinky web.xml
 	
-	public Application(@Context ServletContext context) throws MalformedURLException {
+	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
 		packages("org.scrumple.scrumplecore.resource");	// Load JAX-RS components
 		
-		File root = new File(context.getResource("WEB-INF/").getFile());
+		Path root = Paths.get(context.getResource("WEB-INF/").toURI());
 		Assets.init(root);
 	}
 	

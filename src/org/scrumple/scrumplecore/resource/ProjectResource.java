@@ -1,8 +1,13 @@
 package org.scrumple.scrumplecore.resource;
 
+import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -14,7 +19,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
 import org.scrumple.scrumplecore.applications.Project;
-import org.scrumple.scrumplecore.assets.Assets.Config;
+import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.database.DataSourcePool;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -27,7 +32,7 @@ import dev.kkorolyov.sqlob.persistence.Session;
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class ProjectResource implements CRUDResource<Project> {
-	private final String systemDB = Config.get(Config.SYSTEM_DB);
+	private final String systemDB = Assets.get(SYSTEM_DB);
 	private final DataSource ds = DataSourcePool.get(systemDB);
 	
 	@POST

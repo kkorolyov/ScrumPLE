@@ -1,12 +1,14 @@
 package org.scrumple.scrumplecore.database;
 
+import static org.scrumple.scrumplecore.assets.Assets.*;
+
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.scrumple.scrumplecore.assets.Assets.Config;
+import org.scrumple.scrumplecore.assets.Assets;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -38,11 +40,11 @@ public class DataSourcePool {
 	}
 	private static void addDataSource(String databaseName) {
 		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(Config.getServer());
-		ds.setPort(Config.getPort());
+		ds.setServerName(Assets.get(DB_HOST));
+		ds.setPort(Assets.getInt(DB_PORT));
 		ds.setDatabaseName(databaseName);
-		ds.setUser(Config.getUser());
-		ds.setPassword(Config.getPassword());
+		ds.setUser(Assets.get(DB_USER));
+		ds.setPassword(Assets.get(DB_PASSWORD));
 		
 		dataSources.put(databaseName, ds);
 		

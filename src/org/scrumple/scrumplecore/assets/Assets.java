@@ -68,6 +68,7 @@ public final class Assets {
 		}
 		return file;
 	}
+	
 	private static Properties generateDefaults() {
 		Properties defaults = new Properties();
 		
@@ -82,5 +83,29 @@ public final class Assets {
 		defaults.put(SYSTEM_DB, "ScrumPLE");
 		
 		return defaults;
+	}
+	
+	/**
+	 * @param key property identifier
+	 * @return value of property defined by {@code key}
+	 */
+	public static String get(String key) {
+		return config.get(key);
+	}
+	
+	/**
+	 * @param key property identifier
+	 * @return value of property defined by {@code key} parsed into a positive {@code int}, or {@code -1} if value is not a positive {@code int}
+	 */
+	public static int getInt(String key) {
+		String value = get(key);
+		return isInt(value, 10) ? Integer.parseInt(value) : -1;
+	}
+	private static boolean isInt(String s, int radix) {
+		for (char c : s.toCharArray()) {
+			if (Character.digit(c, radix) < 0)
+				return false;
+		}
+		return true;
 	}
 }

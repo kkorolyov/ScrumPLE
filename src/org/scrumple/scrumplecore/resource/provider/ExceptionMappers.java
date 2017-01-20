@@ -14,7 +14,7 @@ import org.scrumple.scrumplecore.auth.AuthenticationException;
  * Contains all exception mappers.
  */
 @SuppressWarnings("synthetic-access")
-public class ExceptionMappers {
+public final class ExceptionMappers {
 	private ExceptionMappers() {/* Not instantiable */}
 
 	/*@Provider
