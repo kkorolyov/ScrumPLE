@@ -1,11 +1,9 @@
 package org.scrumple.scrumplecore.assets;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-import java.util.regex.Pattern;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -14,159 +12,75 @@ import dev.kkorolyov.simpleprops.Properties;
 /**
  * Global access to all external assets.
  */
-public class Assets {
-	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG, (PrintWriter[]) null);
-	private static String root;
+public final class Assets {
+	@SuppressWarnings("javadoc")
+	public static final String 	DB_HOST = "databaseHost",
+															DB_PORT = "databasePort",
+															DB_USER = "databaseUser",
+															DB_PASSWORD = "databasePassword";
+	@SuppressWarnings("javadoc")
+	public static final String 	SYSTEM_DB = "systemDatabase";
+
+	private static final String CONFIG_FILE = "config/scrumple.ini",
+															LOG_PROPS_FILE = "config/logging.ini";
+	
+	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG);
+	private static Properties config;
 	
 	/**
 	 * Initializes assets with the root folder being the execution directory.
-	 * @see #init(File)
+	 * @see #init(Path)
 	 */
 	public static void init() {
-		init(new File(""));
+		init(Paths.get(""));
 	}
 	/**
 	 * Initializes assets following a custom root folder.
-	 * @param rootFile file to root folder of assets
+	 * @param root path to root folder of assets
 	 */
-	@SuppressWarnings("synthetic-access")
-	public static void init(File rootFile) {
-		root = rootFile.getAbsolutePath();
-		if (!root.equals(""))	// Absolute path specified
-			root += "/";
+	public static void init(Path root) {
+		Path absoluteRoot = root.toAbsolutePath();
 		
-		Config.init();
-		LogFiles.init();
+		try {
+			if (!Logger.applyProps(prepareFile(absoluteRoot.resolve(LOG_PROPS_FILE)), absoluteRoot))
+				log.severe("Failed to apply logging properties");
+			
+			Path configFile = prepareFile(absoluteRoot.resolve(CONFIG_FILE));
+			config = new Properties(configFile);
+			
+			if (config.put(generateDefaults(), false) > 0)	// File missing some defaults
+				config.save(configFile);
+		} catch (IOException e) {
+			log.severe("Failed to load config");
+			log.exception(e);
+		}
 		
 		log.debug("Initialized Assets");
 	}
 	
-	private static void save(Properties props) {
-		try {
-			props.saveFile(true);
-		} catch (IOException e) {
-			log.exception(e);
+	private static Path prepareFile(Path file) throws IOException {
+		if (!Files.exists(file)) {
+			Path parent = file.getParent();
+			if (parent != null)
+				Files.createDirectories(parent);
+			
+			Files.createFile(file);
 		}
+		return file;
 	}
-	
-	@SuppressWarnings({"unused", "synthetic-access"})
-	private static class Defaults {	// Creates config file defaults
-		private static final String SYSTEM_DB = "ScrumPLE";
+	private static Properties generateDefaults() {
+		Properties defaults = new Properties();
 		
-		static Properties buildDefaultsForClass(Class<?> c) {	// Builds defaults for all public fields in class
-			Properties defaults = new Properties();
-			
-			for (Field field : c.getFields()) {
-				String 	key = "",
-								value = "";	// Default to empty
-				try {
-					key = (String) field.get(null);
-					value = (String) Defaults.class.getDeclaredField(field.getName()).get(null);
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					log.exception(e);
-				} catch (NoSuchFieldException e) {
-					// Should only happen if a default not specified
-				}
-				defaults.put(key, value);
-			}
-			return defaults;
-		}
-	}
-	
-	/**
-	 * Provides access to application configuration parameters.
-	 */
-	@SuppressWarnings("javadoc")
-	public static class Config {
-		public static final String 	DB_HOST = "databaseHost",
-																DB_PORT = "databasePort",
-																DB_USER = "databaseUser",
-																DB_PASSWORD = "databasePassword";
-		public static final String 	SYSTEM_DB = "systemDatabase";
+		defaults.putComment("Database connection");
+		defaults.put(DB_HOST, "<URL or IP address>");
+		defaults.put(DB_PORT, "");
+		defaults.put(DB_USER, "");
+		defaults.put(DB_PASSWORD, "");
+		defaults.putBlankLine();
 		
-		private static Properties props;
+		defaults.putComment("Database constants");
+		defaults.put(SYSTEM_DB, "ScrumPLE");
 		
-		@SuppressWarnings("synthetic-access")
-		private static void init() {
-			props = new Properties(new File(root + "config/scrumple.ini"), Defaults.buildDefaultsForClass(Config.class));
-			save(props);
-			
-			log.debug("Loaded SQL properties");
-		}
-		
-		/** @return value mapped to {@code key}, or {@code null} if no such key */
-		public static String get(String key) {
-			return props.get(key);
-		}
-		/** @return file mapped to {@code key}, or {@code null} if no such key */
-		public static File getFile(String key) {
-			String fileName = props.get(key);
-			return fileName != null ? new File(fileName) : null;
-		}
-		
-		/** @return configured database server address */
-		public static String getServer() {
-			return get(DB_HOST);
-		}
-		/** @return configured database server port */
-		public static int getPort() {
-			return Integer.parseInt(get(DB_PORT));
-		}
-		/** @return configured database user */
-		public static String getUser() {
-			return get(DB_USER);
-		}
-		/** @return configured database password */
-		public static String getPassword() {
-			return get(DB_PASSWORD);
-		}
-	}
-	
-	@SuppressWarnings("synthetic-access")
-	private static class LogFiles {
-		private static final String CONFIG_DELIMITER = Pattern.quote(",");
-		private static final String GLOBAL_LOGGER = "GLOBAL";
-		private static final Level DEFAULT_LEVEL = Level.INFO;
-		private static final PrintWriter errWriter = new PrintWriter(System.err);
-		
-		private static Properties props;
-		
-		private static void init() {
-			props = new Properties(new File(root + "config/logging.ini"), Defaults.buildDefaultsForClass(LogFiles.class));
-			save(props);
-			
-			applyLoggers();
-			
-			log.debug("Loaded LogFiles");
-		}
-		
-		private static void applyLoggers() {
-			for (String logger : props.keys()) {
-				try {
-					String[] config = props.get(logger).split(CONFIG_DELIMITER);
-					String fileName = config[0].trim();
-					File file = null;
-					
-					if (fileName.length() > 0) {
-						file = new File(root + fileName);
-
-						if (!file.isFile()) {	// Create filepath if needed
-							File parent = file.getParentFile();
-							if (parent != null && !parent.exists())
-								parent.mkdirs();
-						}
-					}
-					Level level = config.length > 1 ? Level.valueOf(config[1].trim()) : DEFAULT_LEVEL;
-					PrintWriter writer = (file == null ? errWriter : new PrintWriter(file));
-					
-					Logger.getLogger((logger.equals(GLOBAL_LOGGER) ? "" : logger), level, writer);
-					
-					log.debug("Loaded Logger: name=" + logger + ", file=" + file + ", level=" + level);
-				} catch (FileNotFoundException e) {	// Should not happen
-					e.printStackTrace();
-					log.exception(e);
-				}
-			}
-		}
+		return defaults;
 	}
 }
