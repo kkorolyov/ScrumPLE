@@ -1,7 +1,5 @@
 package org.scrumple.scrumplecore.resource.provider;
 
-import java.sql.SQLException;
-
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.MediaType;
@@ -10,6 +8,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.database.DataAccessException;
 
 /**
  * Contains all exception mappers.
@@ -28,9 +27,9 @@ public final class ExceptionMappers {
 	}*/
 	
 	@Provider
-	private static class SQLExceptionMapper implements ExceptionMapper<SQLException> {
+	private static class DataAccessExceptionMapper implements ExceptionMapper<DataAccessException> {
 		@Override
-		public Response toResponse(SQLException e) {
+		public Response toResponse(DataAccessException e) {
 			return buildExceptionResponse(500, e);
 		}
 	}
