@@ -41,4 +41,13 @@ public final class SqlobDAOFactory {
 			}
 		};
 	}
+	
+	/**
+	 * @param c type of {@code DAO} to get
+	 * @param project project hosting {@code DAO}
+	 * @return appropriate {@code DAO}
+	 */
+	public static <T> DAO<T> getDAOUnderProject(Class<T> c, Project project) {
+		return new SqlobDAO<T>(c, DataSourcePool.get(project.getName()));
+	}
 }

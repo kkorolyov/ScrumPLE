@@ -53,7 +53,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
 	public boolean contains(Condition cond) throws DataAccessException {
-		return !getAll(cond).isEmpty();
+		return !get(cond).isEmpty();
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 			T result = s.get(c, id);
 			
 			if (result == null)
-				throw new EntityNotFoundException(c.getSimpleName() + ": " + id);
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 			
 			return result;
 		} catch (SQLException e) {
@@ -95,13 +95,8 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 			throw new DataAccessException(e);
 		}
 	}
-	
 	@Override
-	public Map<UUID, T> getAll() throws DataAccessException {
-		return getAll(null);
-	}
-	@Override
-	public Map<UUID, T> getAll(Condition cond) throws DataAccessException {
+	public Map<UUID, T> get(Condition cond) throws DataAccessException {
 		try {
 			Map<UUID, T> results = new HashMap<>();
 			for (T result : s.get(c, cond))
@@ -113,12 +108,16 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 			throw new DataAccessException(e);
 		}
 	}
-
+	@Override
+	public Map<UUID, T> getAll() throws DataAccessException {
+		return get((Condition) null);
+	}
+	
 	@Override
 	public void update(UUID id, T newObj) throws EntityNotFoundException, DataAccessException {
 		try {
 			if (s.get(c, id) == null)
-				throw new EntityNotFoundException(c.getSimpleName() + ": " + id);
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 			
 			s.put(id, newObj);
 		} catch (SQLException e) {
@@ -141,7 +140,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 		try {
 			T result = s.get(c, id);
 			if (result == null)
-				throw new EntityNotFoundException(c.getSimpleName() + ": " + id);
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 			
 			s.drop(c, id);
 			

@@ -19,19 +19,18 @@ public interface DAO<T> {
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
 	public T get(UUID id) throws EntityNotFoundException, DataAccessException;
-	
-	/**
-	 * @return all persisted objects of type {@code T} as <code>{id, object}</code> pairs
-	 * @throws DataAccessException if an issue occurs during data access
-	 * @see #getAll(Condition)
-	 */
-	public Map<UUID, T> getAll() throws DataAccessException;
 	/** 
 	 * @param cond filter restricting returned objects, {@code null} implies no filter
 	 * @return all persisted objects matching {@code cond} as <code>{id, object}</code> pairs
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public Map<UUID, T> getAll(Condition cond) throws DataAccessException;
+	public Map<UUID, T> get(Condition cond) throws DataAccessException;
+	/**
+	 * @return all persisted objects of type {@code T} as <code>{id, object}</code> pairs
+	 * @throws DataAccessException if an issue occurs during data access
+	 * @see #get(Condition)
+	 */
+	public Map<UUID, T> getAll() throws DataAccessException;
 	
 	/**
 	 * Updates a persisted object with a new instance.

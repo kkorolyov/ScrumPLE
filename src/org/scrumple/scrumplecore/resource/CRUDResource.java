@@ -1,53 +1,86 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.sql.SQLException;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
+import org.scrumple.scrumplecore.database.DAO;
+
+import dev.kkorolyov.sqlob.persistence.Condition;
+
 /**
- * A resource providing all CRUD methods.
- * @param <T> type of resource on which methods executed
+ * Provides for creation, retrieval, update, and deletion of resources via HTML requests.
+ * @param <T> type handled by this resource
  */
-public interface CRUDResource<T> {
+public abstract class CRUDResource<T> {
+	private final DAO<T> dao;
+	
+	/**
+	 * Constructs a new resource backed by a {@code DAO}.
+	 * @param dao data access object for resource data
+	 */
+	public CRUDResource(DAO<T> dao) {
+		this.dao = dao;
+	}
+	
 	/**
 	 * Creates a new resource.
-	 * @param toCreate resource to create
+	 * @param obj resource to create
 	 * @return id of created resource
-	 * @throws SQLException if a database error occurs
 	 */
-	UUID create(T toCreate) throws SQLException;
+	@POST
+	public UUID create(T obj) {
+		return dao.add(obj);
+	}
 	
 	/**
 	 * Retrieves a resource.
-	 * @param toRetrieve id of resource to retrieve
-	 * @return retrieved resource wrapped in an {@code Entity}
-	 * @throws SQLException if a database error occurs
+	 * @param id id of resource to retrieve
+	 * @return retrieved resource
 	 */
-	T retrieve(UUID toRetrieve) throws SQLException;
+	@GET
+	@Path("{uuid}")
+	public T retrieve(@PathParam("uuid") UUID id) {
+		return dao.get(id);
+	}
 	/**
-	 * Retrieves all resources.
+	 * Retrieves a collection of resources.
 	 * @param uriInfo request URI info
-	 * @return all resources
-	 * @throws SQLException if a database error occurs
+	 * @return optionally-filtered collection of resources
 	 */
-	Set<Entity> retrieveAll(UriInfo uriInfo) throws SQLException;
+	@GET
+	public Map<UUID, T> retrieve(@Context UriInfo uriInfo) {
+		return dao.get(buildRetrieveCondition(uriInfo.getQueryParameters()));
+	}
+	/**
+	 * Builds and returns an optional retrieval filter/condition in response to query parameters.
+	 * @param queryParams query parameters passed in request
+	 * @return appropriate filter
+	 */
+	protected abstract Condition buildRetrieveCondition(MultivaluedMap<String, String> queryParams);
 	
 	/**
 	 * Updates a resource.
-	 * @param toUpdate id of resource to update
+	 * @param id id of resource to update
 	 * @param replacement replacement resource
-	 * @return {@code true} if update successful
-	 * @throws SQLException if a database error occurs
 	 */
-	boolean update(UUID toUpdate, T replacement) throws SQLException;
+	@PUT
+	@Path("{uuid}")
+	public void update(@PathParam("uuid") UUID id, T replacement) {
+		dao.update(id, replacement);
+	}
 	
 	/**
 	 * Deletes a resource.
-	 * @param toDelete id of resource to delete
-	 * @return deleted resource wrapped in an {@code Entity}
-	 * @throws SQLException if a database error occurs
+	 * @param id id of resource to delete
+	 * @return deleted resource
 	 */
-	T delete(UUID toDelete) throws SQLException;
+	@Path("{uuid}")
+	public T delete(@PathParam("uuid") UUID id) {
+		return dao.remove(id);
+	}
 }
