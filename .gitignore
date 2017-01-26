@@ -19,7 +19,7 @@
 hs_err_pid*
 
 # Project Files
-WebContent/*
+WebContent/META-INF/*
 config/*
 logs/*
 *.ini	
