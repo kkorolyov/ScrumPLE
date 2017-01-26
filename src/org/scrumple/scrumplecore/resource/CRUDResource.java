@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
@@ -16,6 +17,7 @@ import dev.kkorolyov.sqlob.persistence.Condition;
  * Provides for creation, retrieval, update, and deletion of resources via HTML requests.
  * @param <T> type handled by this resource
  */
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public abstract class CRUDResource<T> {
 	private final DAO<T> dao;
 	
@@ -79,6 +81,7 @@ public abstract class CRUDResource<T> {
 	 * @param id id of resource to delete
 	 * @return deleted resource
 	 */
+	@DELETE
 	@Path("{uuid}")
 	public T delete(@PathParam("uuid") UUID id) {
 		return dao.remove(id);
