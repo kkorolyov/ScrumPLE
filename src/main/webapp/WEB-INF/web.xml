@@ -14,7 +14,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>pages/Debug.html</welcome-file>
+		<welcome-file>pages/debug.html</welcome-file>
 		<welcome-file>pages/index.html</welcome-file>
 	</welcome-file-list>
 </web-app>

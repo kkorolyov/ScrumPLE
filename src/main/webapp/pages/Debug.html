@@ -2,7 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="pages/Debug.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="pages/debug.css">
+
 <title>ScrumPLE REST Debug Page</title>
 </head>
 <body>
@@ -10,13 +13,15 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 	
-	<nav>
-		<button id="projectsButton" onclick="getProjects()">Projects</button>
-		<button id="usersButton" onclick="getUsers('yo')">Users</button>
-	</nav>
+	<div class="round" id="projectsBox" title="Click to show projects" onclick="showProjects(document.getElementById('projectsList'));">
+		<h3>PROJECTS</h3>
+		<div id="projectsList"></div>
+	</div>
 	
-	<section id="display"></section>
+	<div class="round" id="rawSection">
+		<pre><code id="raw">RAW</code></pre>
+	</div>
 	
-	<script type="text/javascript" src="pages/Debug.js"></script>
+	<script src="pages/debug.js"></script>
 </body>
 </html>
