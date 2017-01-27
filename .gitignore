@@ -1,5 +1,6 @@
 # Bin Files
 /bin/
+/target/
 *.class
 
 # Eclipse Files
@@ -19,9 +20,6 @@
 hs_err_pid*
 
 # Project Files
-WebContent/META-INF/*
-config/*
-logs/*
-*.ini	
+*.ini
 *.log
 
