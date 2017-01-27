@@ -15,7 +15,7 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.scrumple.scrumplecore.assets.Assets;
 
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 @SuppressWarnings("javadoc")
 @ApplicationPath("rest")
