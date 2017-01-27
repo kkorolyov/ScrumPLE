@@ -44,7 +44,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 		this.c = c;
 		this.ds = ds;
 		
-		s = new Session(this.ds);
+		s = new Session(this.ds, 0);	// TODO Move closing to Resource class
 	}
 	
 	/**

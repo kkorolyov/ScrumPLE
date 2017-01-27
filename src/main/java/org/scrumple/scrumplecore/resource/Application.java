@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Context;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -18,14 +17,9 @@ import org.scrumple.scrumplecore.assets.Assets;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 @SuppressWarnings("javadoc")
-@ApplicationPath("rest")
 public class Application extends ResourceConfig {
-	// Dinky web.xml
-	
 	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
-		packages("org.scrumple.scrumplecore.resource");	// Load JAX-RS components
-		
-		Path root = Paths.get(context.getResource("WEB-INF/").toURI());
+		Path root = Paths.get(getClass().getResource("/").toURI());
 		Assets.init(root);
 	}
 	

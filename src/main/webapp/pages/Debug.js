@@ -4,7 +4,7 @@ function getProjects() {
 	var xhttp = new XMLHttpRequest();
 	display.innerHTML = xhttp;
 	xhttp.onreadystatechange = function() {
-		display.innerHTML = (this.readyState == 4) ? this.responseXML : this.readyState;
+		display.innerHTML = (this.readyState == 4) ? JSON.stringify(JSON.parse(this.responseText), null, 2) : this.readyState;
 	}
 	xhttp.open("GET", "http://localhost:8080/ScrumPLE-Core/rest/projects", true);
 	xhttp.send();
