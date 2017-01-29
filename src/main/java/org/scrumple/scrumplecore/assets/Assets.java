@@ -25,7 +25,7 @@ public final class Assets {
 															LOG_PROPS_FILE = "config/logging.ini";
 	
 	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG);
-	private static Properties config;
+	private static Properties config = new Properties();
 	
 	/**
 	 * Initializes assets with the root folder being the execution directory.
@@ -107,5 +107,14 @@ public final class Assets {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Adds a parameter to the global configuration parameters.
+	 * @param key parameter key
+	 * @param value parameter value
+	 */
+	public static void put(String key, String value) {
+		config.put(key, value);
 	}
 }

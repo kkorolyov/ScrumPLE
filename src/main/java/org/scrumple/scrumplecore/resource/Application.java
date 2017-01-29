@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -15,12 +16,21 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.scrumple.scrumplecore.assets.Assets;
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+import org.scrumple.scrumplecore.database.DataSourcePool;
 
 @SuppressWarnings("javadoc")
 public class Application extends ResourceConfig {
 	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
-		Path root = Paths.get(getClass().getResource("/").toURI());
-		Assets.init(root);
+		System.out.println("Started Application");
+		Enumeration<String> names = context.getInitParameterNames();
+		while (names.hasMoreElements()) {
+			String 	key = names.nextElement(),
+							value = context.getInitParameter(key);
+			System.out.println(key + ", " + value);
+			Assets.put(key, value);
+		}
+		//Path root = Paths.get(getClass().getResource("/").toURI());
+		//Assets.init(root);
 	}
 	
 	@WebListener

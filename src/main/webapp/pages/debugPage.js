@@ -1,6 +1,6 @@
 "use strict";
 
-var restRoot = "http://localhost:8080/ScrumPLE/rest/";
+var restRoot = "http://localhost:8080/scrumple/rest/";
 
 function showProjects(el) {
 	el.innerHTML = "Getting Projects...";
