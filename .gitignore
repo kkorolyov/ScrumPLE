@@ -8,6 +8,9 @@
 *.classpath
 .settings/
 
+# IntelliJ Files
+*.iml
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
