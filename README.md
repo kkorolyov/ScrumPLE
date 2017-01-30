@@ -1,6 +1,16 @@
 # ScrumPLE
 Virtual collaboration and development environment following the Scrum SDLC
 
+## Dev Setup
+### Required Tools
+* [Maven](https://maven.apache.org/)
+* [Tomcat](https://tomcat.apache.org/)
+### Maven Usage
+
+### Tomcat Configuration
+* Copy the (context XML)[src/main/resources/scrumple.xml] to `<tomcat-install>/conf/Catalina/localhost/`
+* Configure the environment properties in the context XML to match your environment
+
 ## Installation
 Included are the core ScrumPLE application and browser-based client, which both run in a servlet deployed on the Tomcat application server.
 ### Deployment on Apache Tomcat
