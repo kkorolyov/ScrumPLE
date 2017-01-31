@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context docBase="C:\Dev\IntelliJ IDEA\projects\ScrumPLE\ScrumPLE-Core\target\scrumple-0.0.1-SNAPSHOT">
-	<!--<Parameter name="databaseHost" value="192.168.1.195"/>
+	<Parameter name="databaseHost" value="192.168.1.195"/>
 	<Parameter name="databasePort" value="3306"/>
 	<Parameter name="databaseUser" value="scrumple"/>
 	<Parameter name="databasePassword" value="Password1!"/>
 	
-	<Parameter name="systemDatabase" value="ScrumPLE"/>-->
-	
-	<Environment name="databaseHost" value="192.168.1.195" type="java.lang.String" override="false"/>
-	<Environment name="databasePort" value="3306" type="java.lang.Integer" override="false"/>
-	<Environment name="databaseUser" value="scrumple" type="java.lang.String" override="false"/>
-	<Environment name="databasePassword" value="Password1!" type="java.lang.String" override="false"/>
-	
-	<Environment name="systemDatabase" value="ScrumPLE" type="java.lang.String" override="false"/>
+	<Parameter name="systemDatabase" value="ScrumPLE"/>
 </Context>
