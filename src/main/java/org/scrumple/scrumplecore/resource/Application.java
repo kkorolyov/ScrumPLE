@@ -2,8 +2,6 @@ package org.scrumple.scrumplecore.resource;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -12,27 +10,29 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.ws.rs.core.Context;
 
+import dev.kkorolyov.simpleprops.Properties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.scrumple.scrumplecore.assets.Assets;
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
-import org.scrumple.scrumplecore.database.DataSourcePool;
 
 @SuppressWarnings("javadoc")
 public class Application extends ResourceConfig {
 	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
-		System.out.println("Started Application");
+		Assets.applyConfig(parseInitProps(context));
+	}
+	private static Properties parseInitProps(ServletContext context) {
+		Properties props = new Properties();
+
 		Enumeration<String> names = context.getInitParameterNames();
 		while (names.hasMoreElements()) {
 			String 	key = names.nextElement(),
 							value = context.getInitParameter(key);
-			System.out.println(key + ", " + value);
-			Assets.put(key, value);
+			props.put(key, value);
 		}
-		//Path root = Paths.get(getClass().getResource("/").toURI());
-		//Assets.init(root);
+		return props;
 	}
-	
+
 	@WebListener
 	public static class ThreadCleanupListener implements ServletContextListener {
 		@Override

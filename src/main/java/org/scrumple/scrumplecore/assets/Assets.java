@@ -21,42 +21,10 @@ public final class Assets {
 	@SuppressWarnings("javadoc")
 	public static final String 	SYSTEM_DB = "systemDatabase";
 
-	private static final String CONFIG_FILE = "config/scrumple.ini",
-															LOG_PROPS_FILE = "config/logging.ini";
+	private static final String LOG_PROPS_FILE = "config/logging.ini";
 	
 	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG);
 	private static Properties config = new Properties();
-	
-	/**
-	 * Initializes assets with the root folder being the execution directory.
-	 * @see #init(Path)
-	 */
-	public static void init() {
-		init(Paths.get(""));
-	}
-	/**
-	 * Initializes assets following a custom root folder.
-	 * @param root path to root folder of assets
-	 */
-	public static void init(Path root) {
-		Path absoluteRoot = root.toAbsolutePath();
-		
-		try {
-			if (!Logger.applyProps(prepareFile(absoluteRoot.resolve(LOG_PROPS_FILE)), absoluteRoot))
-				log.severe("Failed to apply logging properties");
-			
-			Path configFile = prepareFile(absoluteRoot.resolve(CONFIG_FILE));
-			config = new Properties(configFile);
-			
-			if (config.put(generateDefaults(), false) > 0)	// File missing some defaults
-				config.save(configFile);
-		} catch (IOException e) {
-			log.severe("Failed to load config");
-			log.exception(e);
-		}
-		
-		log.debug("Initialized Assets");
-	}
 	
 	private static Path prepareFile(Path file) throws IOException {
 		if (!Files.exists(file)) {
@@ -110,11 +78,10 @@ public final class Assets {
 	}
 
 	/**
-	 * Adds a parameter to the global configuration parameters.
-	 * @param key parameter key
-	 * @param value parameter value
+	 * Applies properties to the global configuration, overwriting preexisiting properties of the same name.
+	 * @param properties all properties to apply
 	 */
-	public static void put(String key, String value) {
-		config.put(key, value);
+	public static void applyConfig(Properties properties) {
+		config.put(properties, true);
 	}
 }
