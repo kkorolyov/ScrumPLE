@@ -1,26 +1,20 @@
 package org.scrumple.scrumplecore.applications;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import dev.kkorolyov.sqlob.annotation.Transient;
-
-@XmlRootElement
 public class Project {
+	@JsonProperty("name")
 	private String name;
+	@JsonProperty("description")
 	private String description;
+	@JsonProperty("isPrivate")
 	private boolean isPrivate;
-	@Transient
-	private List<User> users;
-	
+
 	public Project(){}
 	public Project(String name, String description, boolean isPrivate) {
 		setName(name);
 		setDescription(description);
 		setPrivate(isPrivate);
-		users = new ArrayList<User>();
 	}
 	
 	public String getName() {
@@ -51,13 +45,6 @@ public class Project {
 		this.isPrivate = isPrivate;
 	}
 	
-	public void addUser(User user) {
-		users.add(user);
-	}
-	
-	public List<User> getUsers() {
-		return users;
-	}
 	/*public void createProject(){
 		try {
 			db.getConn().setCatalog("Project");

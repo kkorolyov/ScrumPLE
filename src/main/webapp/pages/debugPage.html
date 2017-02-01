@@ -13,10 +13,10 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 	
-	<div class="round" id="projectsBox">
+	<div class="round" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects(projectsList)">
 		<h3>PROJECTS</h3>
 		
-		<form id="projectCreate" action="javascript:void()" onsubmit="createProject(projectName.value, projectDescription.value, projectPrivate.checked)" method="POST">
+		<form id="projectCreate" title=" " style="cursor: default" action="javascript:void()" onclick="event.stopPropagation()" onsubmit="createProject(projectName.value, projectDescription.value, projectPrivate.checked)" method="POST">
 			<fieldset>
 				<legend>Create</legend>
 				
@@ -29,7 +29,7 @@
 			</fieldset>
 		</form>
 		
-		<div id="projectsList" title="Click to show projects" style="cursor: pointer" onclick="showProjects(this)">Click to show projects</div>
+		<div id="projectsList">Click to show projects</div>
 	</div>
 	
 	<div class="round" id="rawSection">

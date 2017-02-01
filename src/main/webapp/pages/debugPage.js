@@ -12,7 +12,7 @@ function showProjects(el) {
 			var entry = document.createElement('div');
 			entry.setAttribute('class', "entry round");
 			entry.setAttribute('title', "Click to expand");
-			entry.setAttribute('onclick', "showProjectMenu(this); event.cancelBubble = true;");
+			entry.setAttribute('onclick', "showProjectMenu(this); event.stopPropagation();");
 			
 			var name = document.createElement('h4');
 			name.appendChild(document.createTextNode("Project: " + key));
