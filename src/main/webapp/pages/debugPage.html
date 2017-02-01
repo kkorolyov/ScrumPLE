@@ -13,9 +13,23 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 	
-	<div class="round" id="projectsBox" title="Click to show projects" onclick="showProjects(document.getElementById('projectsList'));">
+	<div class="round" id="projectsBox">
 		<h3>PROJECTS</h3>
-		<div id="projectsList"></div>
+		
+		<form id="projectCreate" action="javascript:void()" onsubmit="createProject(projectName.value, projectDescription.value, projectPrivate.checked)" method="POST">
+			<fieldset>
+				<legend>Create</legend>
+				
+				Name:<br>
+				<input type="text" name="projectName"><br>
+				Description:<br>
+				<input type="text" size="40" name="projectDescription"><br>
+				<input type="checkbox" name="projectPrivate" value="true">Private<br>
+				<input type="submit" value="Submit">
+			</fieldset>
+		</form>
+		
+		<div id="projectsList" title="Click to show projects" style="cursor: pointer" onclick="showProjects(this)">Click to show projects</div>
 	</div>
 	
 	<div class="round" id="rawSection">

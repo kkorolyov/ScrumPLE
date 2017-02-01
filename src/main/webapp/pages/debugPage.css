@@ -16,7 +16,6 @@ header {
 #projectsBox {
 	background-color: cyan;
 	float: left;
-	cursor: pointer;
 }
 
 #rawSection {

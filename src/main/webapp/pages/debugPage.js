@@ -5,7 +5,7 @@ var restRoot = "http://localhost:8080/scrumple/rest/";
 function showProjects(el) {
 	el.innerHTML = "Getting Projects...";
 	
-	ajax("GET", "projects", function(projects) {
+	get("projects", function(projects) {
 		el.innerHTML = "";
 		
 		for (var key in projects) {
@@ -30,6 +30,15 @@ function showProjects(el) {
 	});
 }
 
+function createProject(name, description, isPrivate) {
+	var project = {"name": name,
+									"description": description,
+									"isPrivate": isPrivate};
+	
+	alert(JSON.stringify(project));
+	post("projects", JSON.stringify(project), function(response){});
+}
+
 function showProjectMenu(project) {
 	project.appendChild(document.createTextNode("Test"));
 }
@@ -45,7 +54,17 @@ function ajax(method, url, handler) {
 		}
 	}
 	xhttp.open(method, restRoot + url, true);
-	xhttp.send();
+	
+	return xhttp;
+}
+
+function get(url, handler) {
+	ajaxReady("GET", url, handler).send();
+}
+function post(url, content, handler) {
+	var xhttp = ajaxReady("POST", url, handler);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(content);
 }
 
 function displayRaw(response) {
