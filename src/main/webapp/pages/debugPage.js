@@ -35,7 +35,6 @@ function createProject(name, description, isPrivate) {
 									"description": description,
 									"isPrivate": isPrivate};
 	
-	alert(JSON.stringify(project));
 	post("projects", JSON.stringify(project), function(response){});
 }
 
@@ -43,7 +42,7 @@ function showProjectMenu(project) {
 	project.appendChild(document.createTextNode("Test"));
 }
 
-function ajax(method, url, handler) {
+function ajaxReady(method, url, handler) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState === 4) {
