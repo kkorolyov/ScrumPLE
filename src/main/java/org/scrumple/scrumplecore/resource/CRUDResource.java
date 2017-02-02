@@ -38,6 +38,12 @@ public abstract class CRUDResource<T> {
 	public UUID create(T obj) {
 		return dao.add(obj);
 	}
+	@POST
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public UUID create(MultivaluedMap<String, String> params) {
+		// TODO Implement
+		return null;
+	}
 	
 	/**
 	 * Retrieves a resource.
