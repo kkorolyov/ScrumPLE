@@ -21,37 +21,9 @@ public final class Assets {
 	@SuppressWarnings("javadoc")
 	public static final String 	SYSTEM_DB = "systemDatabase";
 
-	private static final String LOG_PROPS_FILE = "config/logging.ini";
-	
 	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG);
-	private static Properties config = new Properties();
-	
-	private static Path prepareFile(Path file) throws IOException {
-		if (!Files.exists(file)) {
-			Path parent = file.getParent();
-			if (parent != null)
-				Files.createDirectories(parent);
-			
-			Files.createFile(file);
-		}
-		return file;
-	}
-	
-	private static Properties generateDefaults() {
-		Properties defaults = new Properties();
-		
-		defaults.putComment("Database connection");
-		defaults.put(DB_HOST, "<URL or IP address>");
-		defaults.put(DB_PORT, "");
-		defaults.put(DB_USER, "");
-		defaults.put(DB_PASSWORD, "");
-		defaults.putBlankLine();
-		
-		defaults.putComment("Database constants");
-		defaults.put(SYSTEM_DB, "ScrumPLE");
-		
-		return defaults;
-	}
+	private static final String LOG_PROPS = "logProps";
+	private static final Properties config = new Properties();
 	
 	/**
 	 * @param key property identifier
@@ -83,5 +55,19 @@ public final class Assets {
 	 */
 	public static void applyConfig(Properties properties) {
 		config.put(properties, true);
+
+		applyLogProps();
+
+		log.info("Config was updated; current config: " + config);
+	}
+	private static void applyLogProps() {
+		String logProps = config.get(LOG_PROPS);
+
+		if (logProps != null) {
+			Path logPropsPath = Paths.get(logProps);
+
+			Logger.applyProps(logPropsPath);
+			log.info("Applied logging properties from: " + logPropsPath);
+		}
 	}
 }
