@@ -18,7 +18,7 @@ a {
 }
 
 img {
-	border:none;
+	border: none;
 }
 
 #mywrapper {
@@ -40,10 +40,8 @@ img {
 	float: left;
 	color: #d0d502;
 	font-size: 50px;
-	
 	font-weight: bold;
-
-	text-shadow:3px 3px 2px white,5px 3px 2px #000;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
 }
 
 #myhome .myheader .signbutton {
@@ -88,7 +86,7 @@ img {
 
 #myhome .mypop .mycontent {
 	width: 400px;
-	margin:0 auto;
+	margin: 0 auto;
 	padding-bottom: 20px;
 }
 
@@ -121,7 +119,6 @@ img {
 	margin-top: 10px;
 }
 
-
 #mymain {
 	position: relative;
 }
@@ -135,10 +132,8 @@ img {
 	float: left;
 	color: #d0d502;
 	font-size: 50px;
-	
 	font-weight: bold;
-
-	text-shadow:3px 3px 2px white,5px 3px 2px #000;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
 }
 
 #mymain .myheader input {
@@ -218,10 +213,8 @@ img {
 	float: left;
 	color: #d0d502;
 	font-size: 50px;
-	
 	font-weight: bold;
-
-	text-shadow:3px 3px 2px white,5px 3px 2px #000;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
 }
 
 #mycreate .mycontent {
@@ -258,7 +251,7 @@ img {
 #mycreate .mycontent button {
 	border-radius: 16px;
 	background: #9dca6d;
-	color:white;
+	color: white;
 	outline: none;
 	border: none;
 	margin-top: 30px;
