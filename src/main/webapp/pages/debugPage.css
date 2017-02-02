@@ -17,6 +17,11 @@ header {
 	background-color: cyan;
 	float: left;
 }
+#usersBox {
+	background-color: orange;
+	float: left;
+	display: none;
+}
 
 #rawSection {
 	background-color: silver;

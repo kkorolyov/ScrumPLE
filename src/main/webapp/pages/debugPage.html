@@ -15,8 +15,9 @@
 	
 	<div class="round" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects(projectsList)">
 		<h3>PROJECTS</h3>
+		<a href="localhost:8080/scrumple/rest/projects">Direct</a>
 		
-		<form id="projectCreate" title=" " style="cursor: default" action="javascript:void()" onclick="event.stopPropagation()" onsubmit="createProject(projectName.value, projectDescription.value, projectPrivate.checked)" method="POST">
+		<form id="projectCreate" title=" " style="cursor: default" action="javascript:void()" onclick="event.stopPropagation()" onsubmit="createProject(projectName.value, projectDescription.value, projectPrivate.checked)">
 			<fieldset>
 				<legend>Create</legend>
 				
@@ -29,7 +30,11 @@
 			</fieldset>
 		</form>
 		
-		<div id="projectsList">Click to show projects</div>
+		<div id="projectsList" onclick="event.stopPropagation()"></div>
+	</div>
+	
+	<div class="round" id="usersBox">
+		<h3>USERS</h3>
 	</div>
 	
 	<div class="round" id="rawSection">
