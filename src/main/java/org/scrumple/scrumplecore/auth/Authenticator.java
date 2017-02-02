@@ -6,7 +6,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.scrumple.scrumplecore.applications.User;
+import org.scrumple.scrumplecore.bean.User;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;

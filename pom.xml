@@ -83,7 +83,9 @@
 								<version>3.6.1</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/TasksListResource.java</exclude>
+											<exclude>**/TaskResource.java</exclude>
+											<exclude>**/TasksListResource.java</exclude>
+											<exclude>**/UserStoryResource.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

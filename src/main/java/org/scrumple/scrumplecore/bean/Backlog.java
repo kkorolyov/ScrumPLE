@@ -1,4 +1,4 @@
-package org.scrumple.scrumplecore.applications;
+package org.scrumple.scrumplecore.bean;
 
 import java.util.*;
 

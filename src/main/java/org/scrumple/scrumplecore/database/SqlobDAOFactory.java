@@ -7,7 +7,7 @@ import java.util.UUID;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
-import org.scrumple.scrumplecore.applications.Project;
+import org.scrumple.scrumplecore.bean.Project;
 import org.scrumple.scrumplecore.assets.Assets;
 
 import dev.kkorolyov.sqlob.persistence.Condition;

@@ -13,8 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.scrumple.scrumplecore.applications.Project;
-import org.scrumple.scrumplecore.applications.User;
+import org.scrumple.scrumplecore.bean.Project;
+import org.scrumple.scrumplecore.bean.User;
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.auth.Authenticator;

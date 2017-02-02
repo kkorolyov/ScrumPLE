@@ -1,13 +1,14 @@
-package org.scrumple.scrumplecore.applications;
+package org.scrumple.scrumplecore.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project {
-	@JsonProperty("name")
+	@JsonProperty
 	private String name;
-	@JsonProperty("description")
+	@JsonProperty
 	private String description;
-	@JsonProperty("isPrivate")
+	@JsonProperty
 	private boolean isPrivate;
 
 	public Project(){}
@@ -34,6 +35,7 @@ public class Project {
 	}
 	
 	/** @return {@code true} if this project is private */
+	@JsonIgnore
 	public boolean isPrivate() {
 		return isPrivate;
 	}
@@ -45,25 +47,6 @@ public class Project {
 		this.isPrivate = isPrivate;
 	}
 	
-	/*public void createProject(){
-		try {
-			db.getConn().setCatalog("Project");
-		} 
-		catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		try(Statement sql = db.getConn().createStatement()){
-			System.out.println(PROJECT_NAME);
-			String name = s.nextLine();
-			System.out.println(DESCRIPTION);
-			String des = s.nextLine();
-			sql.executeUpdate("INSERT INTO Project (name, description) VALUES ('"+name+"', '" +des + "')");
-			db.getConn().commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());		}
-	}*/
-
 	@Override
 	public String toString() {
 		return name + ", " + description + ", " + isPrivate;

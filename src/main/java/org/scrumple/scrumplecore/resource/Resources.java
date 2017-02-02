@@ -6,8 +6,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.scrumple.scrumplecore.applications.Project;
-import org.scrumple.scrumplecore.applications.User;
+import org.scrumple.scrumplecore.bean.Project;
+import org.scrumple.scrumplecore.bean.User;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 
 import dev.kkorolyov.sqlob.persistence.Condition;

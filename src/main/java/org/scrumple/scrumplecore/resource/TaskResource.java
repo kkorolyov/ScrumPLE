@@ -22,8 +22,8 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.scrumple.scrumplecore.applications.Task;
-import org.scrumple.scrumplecore.applications.UserStory;
+import org.scrumple.scrumplecore.bean.Task;
+import org.scrumple.scrumplecore.bean.UserStory;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import dev.kkorolyov.sqlob.persistence.Session;

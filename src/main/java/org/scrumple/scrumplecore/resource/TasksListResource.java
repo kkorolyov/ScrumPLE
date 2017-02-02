@@ -1,6 +1,5 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,9 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.scrumple.scrumplecore.applications.Task;
-import org.scrumple.scrumplecore.applications.User;
-import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.bean.Task;
 import org.scrumple.scrumplecore.database.Database;
 
 @Path("tasklist")
