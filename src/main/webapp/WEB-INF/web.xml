@@ -13,6 +13,6 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>pages/debugPage.html</welcome-file>
+		<welcome-file>chat.html</welcome-file>
 	</welcome-file-list>
 </web-app>
