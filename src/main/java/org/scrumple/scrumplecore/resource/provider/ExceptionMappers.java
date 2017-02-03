@@ -1,5 +1,10 @@
 package org.scrumple.scrumplecore.resource.provider;
 
+import dev.kkorolyov.simplelogs.Logger;
+import dev.kkorolyov.simplelogs.Logger.Level;
+import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.database.DataAccessException;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.MediaType;
@@ -7,57 +12,63 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.scrumple.scrumplecore.auth.AuthenticationException;
-import org.scrumple.scrumplecore.database.DataAccessException;
-
 /**
  * Contains all exception mappers.
  */
 @SuppressWarnings("synthetic-access")
 public final class ExceptionMappers {
+	private static final Logger log = Logger.getLogger(ExceptionMappers.class.getName(), Level.DEBUG);
+
 	private ExceptionMappers() {/* Not instantiable */}
 
-	/*@Provider
-	public static class DebugMapper implements ExceptionMapper<Exception> {
-		@Override
-		public Response toResponse(Exception e) {
-			e.printStackTrace();
-			return buildExceptionResponse(500, e);
-		}
-	}*/
-	
 	@Provider
-	private static class DataAccessExceptionMapper implements ExceptionMapper<DataAccessException> {
-		@Override
-		public Response toResponse(DataAccessException e) {
-			return buildExceptionResponse(500, e);
+	private static class IllegalArgumentExceptionMapper extends ExceptionMapperLogger<IllegalArgumentException> {
+		IllegalArgumentExceptionMapper() {
+			super(400);
 		}
 	}
-	
+
 	@Provider
-	private static class EntityNotFoundExceptionMapper implements ExceptionMapper<EntityNotFoundException> {
-		@Override
-		public Response toResponse(EntityNotFoundException e) {
-			return buildExceptionResponse(404, e);
+	private static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
+		AuthenticationExceptionMapper() {
+			super(401);
+		}
+
+	}
+
+	@Provider
+	private static class EntityNotFoundExceptionMapper extends ExceptionMapperLogger<EntityNotFoundException> {
+		EntityNotFoundExceptionMapper() {
+			super(404);
 		}
 	}
 	@Provider
-	private static class EntityExistsExceptionMapper implements ExceptionMapper<EntityExistsException> {
-		@Override
-		public Response toResponse(EntityExistsException e) {
-			return buildExceptionResponse(409, e);
+	private static class EntityExistsExceptionMapper extends ExceptionMapperLogger<EntityExistsException> {
+		EntityExistsExceptionMapper() {
+			super(409);
 		}
+
 	}
-	
 	@Provider
-	private static class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
-		@Override
-		public Response toResponse(AuthenticationException e) {
-			return buildExceptionResponse(401, e);
+	private static class DataAccessExceptionMapper extends ExceptionMapperLogger<DataAccessException> {
+
+		DataAccessExceptionMapper() {
+			super(500);
 		}
+
 	}
-	
-	private static Response buildExceptionResponse(int errorCode, Throwable e) {
-		return Response.status(errorCode).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+
+	private static class ExceptionMapperLogger<T extends Throwable> implements ExceptionMapper<T> {
+		private final int errorCode;
+
+		ExceptionMapperLogger(int errorCode) {
+			this.errorCode = errorCode;
+		}
+
+		@Override
+		public Response toResponse(T e) {
+			log.exception((Exception) e, Level.WARNING);
+			return Response.status(errorCode).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
+		}
 	}
 }
