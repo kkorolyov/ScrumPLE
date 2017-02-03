@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>HOME</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+	<div id="mywrapper">
+		<div id="myhome">
+			<div class="myheader">
+				<a href="index.html"><div class="logo">ScrumPLE</div></a>
+				<button class="signbutton"
+					onclick="document.getElementById('mypop').style.display='block';">Sign
+					in</button>
+			</div>
+
+			<div class="form">
+				<form action="">
+					<input type="text" name="email" placeholder="Email address">
+					<button type="button" onclick='location.href="view/create.html"'>Create
+						your project</button>
+				</form>
+			</div>
+
+			<div class="mypop" id="mypop">
+				<div class="mycontent">
+					<form>
+						<div class="item">
+							<div class="title">Project domain Email</div>
+							<div class="input">
+								<input type="text" name="email" placeholder="Email">
+							</div>
+						</div>
+
+						<div class="item">
+							<div class="title">Password</div>
+							<div class="input">
+								<input type="password" name="email" placeholder="Password">
+							</div>
+						</div>
+
+						<div class="item center">
+							<button type="button" onclick='location.href="view/main.html"'>Sign
+								in</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

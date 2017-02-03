@@ -1,6 +1,6 @@
 # Bin Files
-/bin/
-/target/
+bin/
+target/
 *.class
 
 # Eclipse Files
@@ -9,6 +9,7 @@
 .settings/
 
 # IntelliJ Files
+*.idea
 *.iml
 
 # Mobile Tools for Java (J2ME)
