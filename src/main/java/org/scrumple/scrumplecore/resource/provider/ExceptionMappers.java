@@ -23,14 +23,14 @@ public final class ExceptionMappers {
 
 	@Provider
 	private static class IllegalArgumentExceptionMapper extends ExceptionMapperLogger<IllegalArgumentException> {
-		IllegalArgumentExceptionMapper() {
+		public IllegalArgumentExceptionMapper() {
 			super(400);
 		}
 	}
 
 	@Provider
 	private static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
-		AuthenticationExceptionMapper() {
+		public AuthenticationExceptionMapper() {
 			super(401);
 		}
 
@@ -38,21 +38,20 @@ public final class ExceptionMappers {
 
 	@Provider
 	private static class EntityNotFoundExceptionMapper extends ExceptionMapperLogger<EntityNotFoundException> {
-		EntityNotFoundExceptionMapper() {
+		public EntityNotFoundExceptionMapper() {
 			super(404);
 		}
 	}
 	@Provider
 	private static class EntityExistsExceptionMapper extends ExceptionMapperLogger<EntityExistsException> {
-		EntityExistsExceptionMapper() {
+		public EntityExistsExceptionMapper() {
 			super(409);
 		}
 
 	}
 	@Provider
 	private static class DataAccessExceptionMapper extends ExceptionMapperLogger<DataAccessException> {
-
-		DataAccessExceptionMapper() {
+		public DataAccessExceptionMapper() {
 			super(500);
 		}
 
