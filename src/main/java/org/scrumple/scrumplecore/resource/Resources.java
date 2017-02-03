@@ -1,16 +1,14 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.util.UUID;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MultivaluedMap;
-
+import dev.kkorolyov.sqlob.persistence.Condition;
 import org.scrumple.scrumplecore.bean.Project;
 import org.scrumple.scrumplecore.bean.User;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.UUID;
 
 /**
  * Contains all main resource handlers.
@@ -26,6 +24,18 @@ public class Resources {
 		 */
 		public ProjectsResource() {
 			super(SqlobDAOFactory.getProjectDAO());
+		}
+
+		@Override
+		protected Project parseForm(MultivaluedMap<String, String> params) {
+			String name = params.getFirst("name"),
+					description = params.getFirst("description"),
+					isPrivate = params.getFirst("isPrivate");
+
+			if (name == null || description == null || isPrivate == null)
+				throw new IllegalArgumentException("Missing some form parameters: name = " + name + ", description = " + description + " isPrivate = " + isPrivate);
+
+			return new Project(name, description, isPrivate.equalsIgnoreCase("true"));
 		}
 
 		@Override
@@ -69,6 +79,14 @@ public class Resources {
 		 */
 		public UsersResource(Project project) {
 			super(SqlobDAOFactory.getDAOUnderProject(User.class, project));
+		}
+
+		@Override
+		protected User parseForm(MultivaluedMap<String, String> params) {
+			String handle = params.getFirst("handle"),
+					password = params.getFirst("password");
+
+			return new User(handle, password, null);	// TODO Null role for now
 		}
 
 		@Override
