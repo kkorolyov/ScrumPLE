@@ -26,3 +26,5 @@ hs_err_pid*
 *.ini
 *.log
 
+#Node_Modules
+node_modules/
