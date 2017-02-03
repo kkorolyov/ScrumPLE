@@ -1,5 +1,5 @@
-# ScrumPLE
-Virtual collaboration and development environment following the Scrum SDLC
+# ScrumPLE-Core
+RESTful web service handling ScrumPLE business logic
 
 ## Dev Setup
 ### Required Tools
