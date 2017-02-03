@@ -1,17 +1,15 @@
 package org.scrumple.scrumplecore.resource;
 
-import java.util.Map;
-import java.util.UUID;
+import dev.kkorolyov.sqlob.persistence.Condition;
+import org.scrumple.scrumplecore.database.DAO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
-
-import org.scrumple.scrumplecore.database.DAO;
-
-import dev.kkorolyov.sqlob.persistence.Condition;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Provides for creation, retrieval, update, and deletion of resources via HTML requests.
@@ -41,9 +39,15 @@ public abstract class CRUDResource<T> {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public UUID create(MultivaluedMap<String, String> params) {
-		// TODO Implement
-		return null;
+		return create(parseForm(params));
 	}
+
+	/**
+	 * Constructs an instance of {@code T} from form parameters.
+	 * @param params supplied form parameters
+	 * @return instance representing data supplied in {@code params}
+	 */
+	protected abstract T parseForm(MultivaluedMap<String, String> params);
 	
 	/**
 	 * Retrieves a resource.
