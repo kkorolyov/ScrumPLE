@@ -32,10 +32,10 @@ public class Resources {
 					description = params.getFirst("description"),
 					isPrivate = params.getFirst("isPrivate");
 
-			if (name == null || description == null || isPrivate == null)
-				throw new IllegalArgumentException("Missing some form parameters: name = " + name + ", description = " + description + " isPrivate = " + isPrivate);
+			if (name == null || description == null)
+				throw new IllegalArgumentException("Missing some form parameters: name = " + name + ", description = " + description);
 
-			return new Project(name, description, isPrivate.equalsIgnoreCase("true"));
+			return new Project(name, description, isPrivate != null);
 		}
 
 		@Override
