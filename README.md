@@ -1,5 +1,5 @@
-# ScrumPLE-Core
-RESTful web service handling ScrumPLE business logic
+# ScrumPLE
+Collaborative development environment tailored to the Scrum framework
 
 ## Dev Setup
 ### Required Tools
