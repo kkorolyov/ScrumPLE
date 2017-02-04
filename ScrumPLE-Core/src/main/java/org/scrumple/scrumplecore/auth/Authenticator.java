@@ -1,17 +1,16 @@
 package org.scrumple.scrumplecore.auth;
 
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
-import org.scrumple.scrumplecore.bean.User;
-
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 import dev.kkorolyov.sqlob.persistence.Condition;
-import dev.kkorolyov.sqlob.persistence.Session;
+import org.scrumple.scrumplecore.bean.Project;
+import org.scrumple.scrumplecore.bean.User;
+import org.scrumple.scrumplecore.bean.UserSession;
+import org.scrumple.scrumplecore.database.SqlobDAOFactory;
+
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Authenticates users.
@@ -19,36 +18,26 @@ import dev.kkorolyov.sqlob.persistence.Session;
 public class Authenticator {
 	private static final Logger log = Logger.getLogger(Authenticator.class.getName(), Level.DEBUG, (PrintWriter[]) null);
 	
-	private final DataSource ds;
+	private final Project project;
 	
 	/**
 	 * Constructs a new authenticator.
-	 * @param dataSource dataSource to database providing authentication information
+	 * @param project project for which authentication is handled
 	 */
-	public Authenticator(DataSource dataSource) {
-		this.ds = dataSource;
+	public Authenticator(Project project) {
+		this.project = project;
 	}
-	
-	/**
-	 * Returns the user backed by specified credentials.
-	 * @param handle handle to use
-	 * @param signature Base64-encoded password to use
-	 * @return appropriate user
-	 * @throws AuthenticationException if an authentication error occurs
-	 * @throws SQLException if a database error occurs
-	 */
-	public User get(String handle, String signature) throws AuthenticationException, SQLException {
-		try (Session s = new Session(ds)) {
-			Set<User> users = s.get(User.class, new Condition("handle", "=", handle).and("password", "=", signature));
-			if (users.isEmpty()) {
-				String message = "Failed authentication for handle: " + handle;
-				log.warning(message);
-				throw new AuthenticationException(message);
-			}
-			User user = users.iterator().next();
-			
-			log.info("Authenticated user: " + user);
-			return user;
+
+	public String authenticate(String handle, String password) throws AuthenticationException {	// TODO Not for use yet
+		Map<UUID, User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project).get(
+				new Condition("handle", "=", handle)
+						.and("password", "=", password));
+
+		if (users.isEmpty()) {
+			throw new AuthenticationException(handle);
 		}
+		UserSession session = new UserSession(users.values().iterator().next(), 10000);
+
+		return session.getToken();
 	}
 }

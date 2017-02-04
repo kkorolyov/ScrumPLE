@@ -13,10 +13,10 @@ public class AuthenticationException extends Exception {
 		this(null);
 	}
 	/**
-	 * Constructs a new exception with a custom message.
-	 * @param message exception message
+	 * Constructs a new exception with a message mentioning failed authentication for a certain handle.
+	 * @param handle user handle failing authentication
 	 */
-	public AuthenticationException(String message) {
-		super(message);
+	public AuthenticationException(String handle) {
+		super("Failed to authenticate user: " + handle);
 	}
 }

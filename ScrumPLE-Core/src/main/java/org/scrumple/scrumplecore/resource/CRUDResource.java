@@ -36,6 +36,12 @@ public abstract class CRUDResource<T> {
 	public UUID create(T obj) {
 		return dao.add(obj);
 	}
+
+	/**
+	 * Creates a new resource from form parameters.
+	 * @param params supplied form parameters
+	 * @return id of created resource
+	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public UUID create(MultivaluedMap<String, String> params) {

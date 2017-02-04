@@ -36,4 +36,24 @@ public class UserSession {
 		}
 		return tokenBuilder.toString();
 	}
+
+	/** @return user owning session */
+	public User getUser() {
+		return user;
+	}
+
+	/** @return session start time */
+	public Timestamp getStart() {
+		return start;
+	}
+
+	/** @return time from session start until expiration in milliseconds */
+	public long getLifetime() {
+		return lifetime;
+	}
+
+	/** @return session access token */
+	public String getToken() {
+		return token;
+	}
 }
