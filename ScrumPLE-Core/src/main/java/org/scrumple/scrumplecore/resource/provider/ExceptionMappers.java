@@ -16,7 +16,6 @@ import javax.ws.rs.ext.Provider;
 /**
  * Contains all exception mappers.
  */
-@SuppressWarnings("synthetic-access")
 public final class ExceptionMappers {
 	private static final Logger log = Logger.getLogger(ExceptionMappers.class.getName(), Level.DEBUG);
 
@@ -29,6 +28,12 @@ public final class ExceptionMappers {
 		}
 	}
 
+	@Provider
+	private static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
+		public AuthenticationExceptionMapper() {
+			super(401);
+		}
+	}
 	@Provider
 	private static class AuthorizationExceptionMapper extends ExceptionMapperLogger<AuthorizationException> {
 		public AuthorizationExceptionMapper() {
