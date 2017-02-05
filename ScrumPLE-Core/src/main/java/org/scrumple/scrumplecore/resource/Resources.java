@@ -1,6 +1,9 @@
 package org.scrumple.scrumplecore.resource;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
+import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.auth.Authorizers;
+import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.bean.Project;
 import org.scrumple.scrumplecore.bean.User;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
@@ -63,8 +66,8 @@ public class Resources {
 		 * @return users resource under project matching {@code id}
 		 */
 		@Path("{uuid}/users")
-		public UsersResource getUsers(@PathParam("uuid") UUID id) {
-			Project project = retrieve(id);
+		public UsersResource getUsers(@PathParam("uuid") UUID id) throws AuthorizationException {
+			Project project = retrieve(id, null);
 			return project == null ? null : new UsersResource(project);
 		}
 	}
@@ -78,7 +81,7 @@ public class Resources {
 		 * @param project scope of users to handle
 		 */
 		public UsersResource(Project project) {
-			super(SqlobDAOFactory.getDAOUnderProject(User.class, project));
+			super(SqlobDAOFactory.getDAOUnderProject(User.class, project), Authorizers.onlyUsersInDAO(SqlobDAOFactory.getDAOUnderProject(User.class, project)));	// TODO Use same DAO
 		}
 
 		@Override
@@ -86,7 +89,7 @@ public class Resources {
 			String handle = params.getFirst("handle"),
 					password = params.getFirst("password");
 
-			return new User(handle, password, null);	// TODO Null role for now
+			return new User(new Credentials(handle, password), null);	// TODO Null role for now
 		}
 
 		@Override

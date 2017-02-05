@@ -13,10 +13,18 @@ public class AuthorizationException extends Exception {
 		this(null);
 	}
 	/**
-	 * Constructs a new exception with a custom message.
-	 * @param message exception message
+	 * Constructs a new exception with a message referencing failed authorization for certain credentials.
+	 * @param credentials credentials failing authorization
 	 */
-	public AuthorizationException(String message) {
-		super(message);
+	public AuthorizationException(Credentials credentials) {
+		super("Credentials not authorized: " + credentials);
+	}
+	/**
+	 * Constructs a new exception with a message reference failed authorization for a credentials-action pair.
+	 * @param credentials credentials failing authorization
+	 * @param action action unauthorized for {@code credentials}
+	 */
+	public AuthorizationException(Credentials credentials, String action) {
+		super("Credentials not authorized for " + action + ": " + credentials);
 	}
 }

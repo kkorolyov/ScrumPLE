@@ -1,13 +1,16 @@
 package org.scrumple.scrumplecore.resource;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
+import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.auth.Authorizer;
+import org.scrumple.scrumplecore.auth.Authorizers;
+import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,36 +21,51 @@ import java.util.UUID;
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public abstract class CRUDResource<T> {
 	private final DAO<T> dao;
+	private final Authorizer authorizer;
 	
 	/**
-	 * Constructs a new resource backed by a {@code DAO}.
+	 * Constructs a new CRUD resource with the {@link org.scrumple.scrumplecore.auth.Authorizers#ALWAYS} authorizer.
 	 * @param dao data access object for resource data
 	 */
 	public CRUDResource(DAO<T> dao) {
+		this(dao, Authorizers.ALWAYS);
+	}
+
+	/**
+	 * Constructs a new CRUD resource.
+	 * @param dao object providing access to resource data
+	 * @param authorizer method authorizer
+	 */
+	public CRUDResource(DAO<T> dao, Authorizer authorizer) {
 		this.dao = dao;
+		this.authorizer = authorizer;
 	}
 	
 	/**
 	 * Creates a new resource.
 	 * @param obj resource to create
+	 * @param headers request's HTTP headers
 	 * @return id of created resource
 	 */
 	@POST
-	public UUID create(T obj) {
+	public UUID create(T obj, @Context HttpHeaders headers) throws AuthorizationException {
+		Credentials credentials = extractCredentials(headers);
+		if (!authorizer.canPOST(credentials)) {
+			throw new AuthorizationException(credentials, "POST");
+		}
 		return dao.add(obj);
 	}
-
 	/**
 	 * Creates a new resource from form parameters.
 	 * @param params supplied form parameters
+	 * @param headers request's HTTP headers
 	 * @return id of created resource
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public UUID create(MultivaluedMap<String, String> params) {
-		return create(parseForm(params));
+	public UUID create(MultivaluedMap<String, String> params, @Context HttpHeaders headers) throws AuthorizationException {
+		return create(parseForm(params), headers);
 	}
-
 	/**
 	 * Constructs an instance of {@code T} from form parameters.
 	 * @param params supplied form parameters
@@ -58,20 +76,30 @@ public abstract class CRUDResource<T> {
 	/**
 	 * Retrieves a resource.
 	 * @param id id of resource to retrieve
+	 * @param headers request's HTTP headers
 	 * @return retrieved resource
 	 */
 	@GET
 	@Path("{uuid}")
-	public T retrieve(@PathParam("uuid") UUID id) {
+	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
+		Credentials credentials = extractCredentials(headers);
+		if (!authorizer.canGET(credentials)) {
+			throw new AuthorizationException(credentials, "GET");
+		}
 		return dao.get(id);
 	}
 	/**
 	 * Retrieves a collection of resources.
 	 * @param uriInfo request URI info
+	 * @param headers request's HTTP headers
 	 * @return optionally-filtered collection of resources
 	 */
 	@GET
-	public Map<UUID, T> retrieve(@Context UriInfo uriInfo) {
+	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) throws AuthorizationException {
+		Credentials credentials = extractCredentials(headers);
+		if (!authorizer.canGET(credentials)) {
+			throw new AuthorizationException(credentials, "GET");
+		}
 		return dao.get(buildRetrieveCondition(uriInfo.getQueryParameters()));
 	}
 	/**
@@ -85,21 +113,36 @@ public abstract class CRUDResource<T> {
 	 * Updates a resource.
 	 * @param id id of resource to update
 	 * @param replacement replacement resource
+	 * @param headers request's HTTP headers
 	 */
 	@PUT
 	@Path("{uuid}")
-	public void update(@PathParam("uuid") UUID id, T replacement) {
+	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) throws AuthorizationException {
+		Credentials credentials = extractCredentials(headers);
+		if (!authorizer.canPUT(credentials)) {
+			throw new AuthorizationException(credentials, "PUT");
+		}
 		dao.update(id, replacement);
 	}
 	
 	/**
 	 * Deletes a resource.
 	 * @param id id of resource to delete
+	 * @param headers request's HTTP headers
 	 * @return deleted resource
 	 */
 	@DELETE
 	@Path("{uuid}")
-	public T delete(@PathParam("uuid") UUID id) {
+	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
+		Credentials credentials = extractCredentials(headers);
+		if (!authorizer.canDELETE(credentials)) {
+			throw new AuthorizationException(credentials, "DELETE");
+		}
 		return dao.remove(id);
+	}
+
+	private Credentials extractCredentials(HttpHeaders headers) {
+		List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+		return authHeaders.isEmpty() ? null : new Credentials(authHeaders.iterator().next().replace("BASIC ", ""));
 	}
 }
