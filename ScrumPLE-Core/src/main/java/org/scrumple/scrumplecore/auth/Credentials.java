@@ -8,6 +8,7 @@ import java.util.Base64;
 public class Credentials {
 	private String encoded;
 
+	public Credentials(){}
 	/**
 	 * Constructs new credentials from an unencoded handle and password.
 	 * @param handle credentials handle

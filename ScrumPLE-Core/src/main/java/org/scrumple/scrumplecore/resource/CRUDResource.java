@@ -142,7 +142,7 @@ public abstract class CRUDResource<T> {
 	}
 
 	private Credentials extractCredentials(HttpHeaders headers) {
-		List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-		return authHeaders.isEmpty() ? null : new Credentials(authHeaders.iterator().next().replace("BASIC ", ""));
+		List<String> authHeaders = headers == null ? null : headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+		return (authHeaders == null || authHeaders.isEmpty()) ? null : new Credentials(authHeaders.iterator().next().replaceFirst("^.*?\\s+", ""));	// Remove all before space
 	}
 }

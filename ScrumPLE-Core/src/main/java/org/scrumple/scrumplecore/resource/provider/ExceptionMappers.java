@@ -3,6 +3,7 @@ package org.scrumple.scrumplecore.resource.provider;
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.auth.AuthorizationException;
 import org.scrumple.scrumplecore.database.DataAccessException;
 
 import javax.persistence.EntityExistsException;
@@ -29,8 +30,8 @@ public final class ExceptionMappers {
 	}
 
 	@Provider
-	private static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
-		public AuthenticationExceptionMapper() {
+	private static class AuthorizationExceptionMapper extends ExceptionMapperLogger<AuthorizationException> {
+		public AuthorizationExceptionMapper() {
 			super(401);
 		}
 
