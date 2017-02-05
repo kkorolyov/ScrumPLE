@@ -1,6 +1,4 @@
-package org.scrumple.scrumplecore.bean;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package org.scrumple.scrumplecore.scrum;
 
 public class Role {
 	private String value;

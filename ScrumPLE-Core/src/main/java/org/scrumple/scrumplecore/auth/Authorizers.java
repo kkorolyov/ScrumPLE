@@ -1,7 +1,7 @@
 package org.scrumple.scrumplecore.auth;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
-import org.scrumple.scrumplecore.bean.User;
+import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.database.DAO;
 
 /**

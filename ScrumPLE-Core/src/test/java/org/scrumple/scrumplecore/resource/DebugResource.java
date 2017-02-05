@@ -11,9 +11,9 @@ import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import org.scrumple.scrumplecore.bean.Project;
-import org.scrumple.scrumplecore.bean.Role;
-import org.scrumple.scrumplecore.bean.User;
+import org.scrumple.scrumplecore.scrum.Project;
+import org.scrumple.scrumplecore.scrum.Role;
+import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.database.DataSourcePool;
 

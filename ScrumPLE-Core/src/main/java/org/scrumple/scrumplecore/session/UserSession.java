@@ -1,4 +1,6 @@
-package org.scrumple.scrumplecore.bean;
+package org.scrumple.scrumplecore.session;
+
+import org.scrumple.scrumplecore.scrum.User;
 
 import java.sql.Timestamp;
 import java.util.Random;

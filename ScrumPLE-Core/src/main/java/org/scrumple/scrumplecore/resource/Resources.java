@@ -4,8 +4,8 @@ import dev.kkorolyov.sqlob.persistence.Condition;
 import org.scrumple.scrumplecore.auth.AuthorizationException;
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.auth.Credentials;
-import org.scrumple.scrumplecore.bean.Project;
-import org.scrumple.scrumplecore.bean.User;
+import org.scrumple.scrumplecore.scrum.Project;
+import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 
 import javax.ws.rs.Path;

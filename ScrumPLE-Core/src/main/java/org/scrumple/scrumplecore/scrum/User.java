@@ -1,4 +1,4 @@
-package org.scrumple.scrumplecore.bean;
+package org.scrumple.scrumplecore.scrum;
 
 import org.scrumple.scrumplecore.auth.Credentials;
 

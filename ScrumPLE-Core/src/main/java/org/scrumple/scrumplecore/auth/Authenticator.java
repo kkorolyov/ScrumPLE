@@ -3,9 +3,9 @@ package org.scrumple.scrumplecore.auth;
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 import dev.kkorolyov.sqlob.persistence.Condition;
-import org.scrumple.scrumplecore.bean.Project;
-import org.scrumple.scrumplecore.bean.User;
-import org.scrumple.scrumplecore.bean.UserSession;
+import org.scrumple.scrumplecore.scrum.Project;
+import org.scrumple.scrumplecore.scrum.User;
+import org.scrumple.scrumplecore.session.UserSession;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 
 import java.io.PrintWriter;

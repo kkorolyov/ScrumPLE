@@ -1,4 +1,4 @@
-package org.scrumple.scrumplecore.bean;
+package org.scrumple.scrumplecore.scrum;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

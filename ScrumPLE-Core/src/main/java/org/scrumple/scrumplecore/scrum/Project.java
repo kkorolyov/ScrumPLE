@@ -1,4 +1,4 @@
-package org.scrumple.scrumplecore.bean;
+package org.scrumple.scrumplecore.scrum;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

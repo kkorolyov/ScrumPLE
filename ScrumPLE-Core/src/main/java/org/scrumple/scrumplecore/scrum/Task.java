@@ -1,9 +1,4 @@
-package org.scrumple.scrumplecore.bean;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import dev.kkorolyov.sqlob.annotation.Transient;
+package org.scrumple.scrumplecore.scrum;
 
 public class Task {
 	private int taskType;  //Is it a feature, bug, etc.  Do we need a Label class, or can we just include it as a String field in Task? Current save method will require that we have a Label class.
