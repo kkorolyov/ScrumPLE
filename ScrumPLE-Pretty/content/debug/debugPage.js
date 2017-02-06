@@ -1,6 +1,22 @@
 "use strict";
 
-var restRoot = "http://localhost:8080/scrumple/rest/";
+var restRoot = "http://192.168.1.195:8080/scrumple/rest/";
+populateRestRoots();
+
+function populateRestRoots() {
+	var elements = document.getElementsByClassName('missingRestRoot');
+	for (var i = 0; i < elements.length; i++) {
+		var element = elements[i];
+		switch (element.nodeName) {
+			case 'A':
+				element.setAttribute('href', restRoot + element.getAttribute('href'));
+				break;
+			case 'FORM':
+				element.setAttribute('action', restRoot + element.getAttribute('action'));
+				break;
+		}
+	}
+}
 
 function ajaxReady(method, url, handler) {	// Main REST invocation
 	var xhttp = new XMLHttpRequest();
@@ -79,3 +95,5 @@ function showUsers(projectId, container) {
 function createUser(projectId, handle, password) {
 	
 }
+
+
