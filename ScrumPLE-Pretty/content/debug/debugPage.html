@@ -13,10 +13,23 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 
-	<div class="round" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects(projectsList)">
+	<div class="roundLeft" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects(projectsList)">
 		<h3>PROJECTS</h3>
 		<a class="missingRestRoot" href="projects">Direct</a>
 
+		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;" onclick="event.stopPropagation()">
+			<fieldset>
+				<legend>Login</legend>
+				
+				Username:<br>
+				<input type="text" name="handle"><br>
+				Password:<br>
+				<input type="password" name="password"><br>
+				
+				<input type="submit" value="Log In">
+			</fieldset>
+		</form>
+		
 		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST" onclick="event.stopPropagation()">
 			<fieldset>
 				<legend>Create</legend>
@@ -37,12 +50,12 @@
 	<div class="round" id="usersBox">
 		<h3>USERS</h3>
 		<a class="missingRestRoot" href="users">Direct</a>
+		
+		<div id="usersList" onclick="event.stopPropagation()"></div>
 	</div>
 
-	<div class="round" id="rawSection">
-		<pre>
-			<code id="raw">RAW</code>
-		</pre>
+	<div class="roundRight" id="rawSection">
+		<pre id="raw">RAW</pre>
 	</div>
 
 	<script src="debug/debugPage.js"></script>

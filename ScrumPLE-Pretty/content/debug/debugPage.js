@@ -1,6 +1,8 @@
 "use strict";
 
 var restRoot = "https://192.168.1.195:8443/scrumple/rest/";
+var credentials = null;
+
 populateRestRoots();
 
 function populateRestRoots() {
@@ -16,6 +18,11 @@ function populateRestRoots() {
 				break;
 		}
 	}
+}
+
+function login(handle, password) {
+	credentials = btoa(handle + ":" + password);
+	console.log("Logged in as: " + handle);
 }
 
 function ajax(method, url, content, responseHandler) {	// Main REST invocation
@@ -35,7 +42,9 @@ function ajax(method, url, content, responseHandler) {	// Main REST invocation
 		}
 	}
 	xhttp.open(method, restRoot + url, true);
-	
+	if (credentials != null) {
+		xhttp.setRequestHeader("Authorization", "Basic " + credentials);
+	}
 	if (content != null) {
 		xhttp.setRequestHeader("Content-type", "application/json");
 	}
@@ -64,6 +73,7 @@ function showProjects(container) {	// Creates project boxes inside 'container'
 		
 		for (var key in projects) {
 			var entry = container.appendChild(createEntry(container));
+			entry.setAttribute('onclick', "showUsers('" + key + "', usersList)");
 			entry.appendChild(document.createElement('h4')).appendChild(document.createTextNode("Project: " + key));
 			
 			var attributes = entry.appendChild(document.createElement('p'));
@@ -94,7 +104,17 @@ function deleteProject(projectId) {
 }
 
 function showUsers(projectId, container) {
+	container.innerHTML = "Getting users for project: " + projectId + "...";
 	
+	ajax("GET", "projects/" + projectId + "/users", null, function(users) {
+		displayRaw(users);
+		
+		container.innerHTML = "";
+		
+		for (var key in users) {
+			
+		}
+	});
 }
 function createUser(projectId, handle, password) {
 	
