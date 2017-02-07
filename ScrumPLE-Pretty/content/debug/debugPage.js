@@ -1,6 +1,6 @@
 "use strict";
 
-var restRoot = "http://192.168.1.195:8080/scrumple/rest/";
+var restRoot = "https://192.168.1.195:8080/scrumple/rest/";
 populateRestRoots();
 
 function populateRestRoots() {
@@ -18,30 +18,28 @@ function populateRestRoots() {
 	}
 }
 
-function ajaxReady(method, url, handler) {	// Main REST invocation
+function ajax(method, url, content, responseHandler) {	// Main REST invocation
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState === 4) {
-			var response = JSON.parse(this.responseText);
-			
-			displayRaw(response);
-			handler(response);
+	
+	if (responseHandler != null) {
+		xhttp.onreadystatechange = function() {
+			if (this.readyState === 4) {
+				var response = this.responseText;
+				try {
+					response = JSON.parse(response);
+				} catch (e) {
+					console.log(e.message);
+				}
+				responseHandler(response);
+			}
 		}
 	}
 	xhttp.open(method, restRoot + url, true);
 	
-	return xhttp;
-}
-function get(url, handler) {
-	ajaxReady("GET", url, handler).send();
-}
-function post(url, content, handler) {
-	var xhttp = ajaxReady("POST", url, handler);
-	xhttp.setRequestHeader("Content-type", "application/json");
+	if (content != null) {
+		xhttp.setRequestHeader("Content-type", "application/json");
+	}
 	xhttp.send(content);
-}
-function del(url, id, handler) {
-	ajaxReady("DELETE", url + "/" + id, handler).send();
 }
 
 function displayRaw(response) {	// For debug
@@ -59,7 +57,9 @@ function createEntry() { // Appends new, empty entry to container, returns entry
 function showProjects(container) {	// Creates project boxes inside 'container'
 	container.innerHTML = "Getting Projects...";
 	
-	get("projects", function(projects) {
+	ajax("GET", "projects", null, function(projects) {
+		displayRaw(projects);
+		
 		container.innerHTML = "";
 		
 		for (var key in projects) {
@@ -83,10 +83,14 @@ function createProject(name, description, isPrivate) {
 			"description": description,
 			"isPrivate": isPrivate};
 	
-	post("projects", JSON.stringify(project), function(response){});
+	ajax("POST", "projects", JSON.stringify(project), function(response) {
+		displayRaw(response);
+	});
 }
 function deleteProject(projectId) {
-	del("projects", projectId, function(response){});
+	ajax("DELETE", "projects", projectId, function(response) {
+		displayRaw(response);
+	});
 }
 
 function showUsers(projectId, container) {
@@ -95,5 +99,6 @@ function showUsers(projectId, container) {
 function createUser(projectId, handle, password) {
 	
 }
-
-
+function deleteUser(projectId, userId) {
+	
+}
