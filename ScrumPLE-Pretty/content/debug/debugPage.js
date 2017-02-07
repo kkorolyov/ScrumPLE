@@ -1,6 +1,6 @@
 "use strict";
 
-var restRoot = "https://192.168.1.195:8080/scrumple/rest/";
+var restRoot = "https://192.168.1.195:8443/scrumple/rest/";
 populateRestRoots();
 
 function populateRestRoots() {
@@ -88,7 +88,7 @@ function createProject(name, description, isPrivate) {
 	});
 }
 function deleteProject(projectId) {
-	ajax("DELETE", "projects", projectId, function(response) {
+	ajax("DELETE", "projects/" + projectId, null, function(response) {
 		displayRaw(response);
 	});
 }
