@@ -2,11 +2,12 @@ package org.scrumple.scrumplecore.resource;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.auth.Credentials;
+import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -81,7 +82,11 @@ public class Resources {
 		 * @param project scope of users to handle
 		 */
 		public UsersResource(Project project) {
-			super(SqlobDAOFactory.getDAOUnderProject(User.class, project), Authorizers.onlyUsersInDAO(SqlobDAOFactory.getDAOUnderProject(User.class, project)));	// TODO Use same DAO
+			super(SqlobDAOFactory.getDAOUnderProject(User.class, project));	// TODO Use same DAO
+
+			Authorizer restrict = Authorizers.onlyUsersInDAO(getDAO());
+
+			setAuthorizers(restrict, Authorizers.NONE, restrict, restrict);
 		}
 
 		@Override

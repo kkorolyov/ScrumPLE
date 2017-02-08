@@ -21,26 +21,16 @@ import java.util.UUID;
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public abstract class CRUDResource<T> {
 	private final DAO<T> dao;
-	private final Authorizer authorizer;
+	private final Map<String, Authorizer> authorizers = new HashMap<>();
 	
-	/**
-	 * Constructs a new CRUD resource with the {@link org.scrumple.scrumplecore.auth.Authorizers#ALWAYS} authorizer.
-	 * @param dao data access object for resource data
-	 */
-	public CRUDResource(DAO<T> dao) {
-		this(dao, Authorizers.ALWAYS);
-	}
-
 	/**
 	 * Constructs a new CRUD resource.
 	 * @param dao object providing access to resource data
-	 * @param authorizer method authorizer
 	 */
-	public CRUDResource(DAO<T> dao, Authorizer authorizer) {
+	public CRUDResource(DAO<T> dao) {
 		this.dao = dao;
-		this.authorizer = authorizer;
 	}
-	
+
 	/**
 	 * Creates a new resource.
 	 * @param obj resource to create
@@ -49,10 +39,8 @@ public abstract class CRUDResource<T> {
 	 */
 	@POST
 	public UUID create(T obj, @Context HttpHeaders headers) throws AuthorizationException {
-		Credentials credentials = extractCredentials(headers);
-		if (!authorizer.canPOST(credentials)) {
-			throw new AuthorizationException(credentials, "POST");
-		}
+		getAuthorizer("POST").process(extractCredentials(headers));
+
 		return dao.add(obj);
 	}
 	/**
@@ -82,10 +70,8 @@ public abstract class CRUDResource<T> {
 	@GET
 	@Path("{uuid}")
 	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
-		Credentials credentials = extractCredentials(headers);
-		if (!authorizer.canGET(credentials)) {
-			throw new AuthorizationException(credentials, "GET");
-		}
+		getAuthorizer("GET").process(extractCredentials(headers));
+
 		return dao.get(id);
 	}
 	/**
@@ -96,10 +82,8 @@ public abstract class CRUDResource<T> {
 	 */
 	@GET
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) throws AuthorizationException {
-		Credentials credentials = extractCredentials(headers);
-		if (!authorizer.canGET(credentials)) {
-			throw new AuthorizationException(credentials, "GET");
-		}
+		getAuthorizer("GET").process(extractCredentials(headers));
+
 		return dao.get(buildRetrieveCondition(uriInfo.getQueryParameters()));
 	}
 	/**
@@ -118,10 +102,8 @@ public abstract class CRUDResource<T> {
 	@PUT
 	@Path("{uuid}")
 	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) throws AuthorizationException {
-		Credentials credentials = extractCredentials(headers);
-		if (!authorizer.canPUT(credentials)) {
-			throw new AuthorizationException(credentials, "PUT");
-		}
+		getAuthorizer("PUT").process(extractCredentials(headers));
+
 		dao.update(id, replacement);
 	}
 	
@@ -134,15 +116,43 @@ public abstract class CRUDResource<T> {
 	@DELETE
 	@Path("{uuid}")
 	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
-		Credentials credentials = extractCredentials(headers);
-		if (!authorizer.canDELETE(credentials)) {
-			throw new AuthorizationException(credentials, "DELETE");
-		}
+		getAuthorizer("DELETE").process(extractCredentials(headers));
+
 		return dao.remove(id);
+	}
+
+	/** @return data accessor used by this resource */
+	public DAO<T> getDAO() {
+		return dao;
+	}
+
+	/**
+	 * Sets the authorizers used by this resource. {@code null} values are simply ignored.
+	 * @param POST authorizer for {@code POST} requests
+	 * @param GET authorizer for {@code GET} requests
+	 * @param PUT authorizer for {@code PUT} requests
+	 * @param DELETE authorizer for {@code DELETE} requests
+	 */
+	public void setAuthorizers(Authorizer POST, Authorizer GET, Authorizer PUT, Authorizer DELETE) {
+		setAuthorizer("POST", POST);
+		setAuthorizer("GET", GET);
+		setAuthorizer("PUT", PUT);
+		setAuthorizer("DELETE", DELETE);
+	}
+	private void setAuthorizer(String identifier, Authorizer authorizer) {
+		if (authorizer != null)
+			authorizers.put(identifier, authorizer);
 	}
 
 	private Credentials extractCredentials(HttpHeaders headers) {
 		List<String> authHeaders = headers == null ? null : headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 		return (authHeaders == null || authHeaders.isEmpty()) ? null : new Credentials(authHeaders.iterator().next().replaceFirst("^.*?\\s+", ""));	// Remove all before space
+	}
+
+	private Authorizer getAuthorizer(String identifier) {
+		Authorizer authorizer = authorizers.get(identifier);
+		if (authorizer == null)
+			authorizer = Authorizers.NONE;
+		return authorizer;
 	}
 }

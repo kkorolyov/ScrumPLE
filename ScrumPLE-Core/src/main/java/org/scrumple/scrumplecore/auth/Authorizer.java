@@ -1,18 +1,14 @@
 package org.scrumple.scrumplecore.auth;
 
 /**
- * Authorizes credentials to invoke REST methods.
+ * Provides an interface to process credentials before handling secure actions.
  */
+@FunctionalInterface
 public interface Authorizer {
-	/** @return {@code true} if {@code credentials} can invoke GET */
-	boolean canGET(Credentials credentials);
-
-	/** @return {@code true} if {@code credentials} can invoke POST */
-	boolean canPOST(Credentials credentials);
-
-	/** @return {@code true} if {@code credentials} can invoke PUT */
-	boolean canPUT(Credentials credentials);
-
-	/** @return {@code true} if {@code credentials} can invoke DELETE */
-	boolean canDELETE(Credentials credentials);
+	/**
+	 * Processes credentials, determining whether they are valid in some context.
+	 * @param credentials credentials to process
+	 * @throws AuthorizationException if {@code credentials} is unauthorized
+	 */
+	void process(Credentials credentials) throws AuthorizationException;
 }

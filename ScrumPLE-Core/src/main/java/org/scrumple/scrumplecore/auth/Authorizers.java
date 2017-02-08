@@ -8,72 +8,20 @@ import org.scrumple.scrumplecore.database.DAO;
  * A collection of basic {@link Authorizer} implementations.
  */
 public class Authorizers {
-	/** An authorizer which returns {@code true} for all REST methods. */
-	public static Authorizer ALWAYS = new Authorizer() {
-		@Override
-		public boolean canGET(Credentials credentials) {
-			return true;
-		}
-		@Override
-		public boolean canPOST(Credentials credentials) {
-			return true;
-		}
-		@Override
-		public boolean canPUT(Credentials credentials) {
-			return true;
-		}
-		@Override
-		public boolean canDELETE(Credentials credentials) {
-			return true;
-		}
-	};
-	/** An authorizer which returns {@code false} for all REST methods. */
-	public static Authorizer NEVER = new Authorizer() {
-		@Override
-		public boolean canGET(Credentials credentials) {
-			return false;
-		}
-		@Override
-		public boolean canPOST(Credentials credentials) {
-			return false;
-		}
-		@Override
-		public boolean canPUT(Credentials credentials) {
-			return false;
-		}
-		@Override
-		public boolean canDELETE(Credentials credentials) {
-			return false;
-		}
-	};
+	/** An authorizer which does no credentials processing. */
+	public static Authorizer NONE = credentials -> {};
+	/** An authorizer which always throws an {@code AuthorizationException}. */
+	public static Authorizer FORBIDDEN = credentials -> {throw new AuthorizationException(credentials);};
 
 	/**
-	 * Constructs an authorizer which allows only credentials found in a collection of users.
-	 * @param users user collection defining credentials to allow
+	 * Constructs an authorizer which throws an {@code AuthorizationException} if credentials are not found in a collection of users.
+	 * @param users user collection defining valid credentials
 	 * @return authorizer allowing only credentials matching {@code users}
 	 */
 	public static Authorizer onlyUsersInDAO(DAO<User> users) {
-		return new Authorizer() {
-			@Override
-			public boolean canGET(Credentials credentials) {
-				return credentialsInProject(credentials);
-			}
-			@Override
-			public boolean canPOST(Credentials credentials) {
-				return credentialsInProject(credentials);
-			}
-			@Override
-			public boolean canPUT(Credentials credentials) {
-				return credentialsInProject(credentials);
-			}
-			@Override
-			public boolean canDELETE(Credentials credentials) {
-				return credentialsInProject(credentials);
-			}
-
-			private boolean credentialsInProject(Credentials credentials) {
-				return !users.get(new Condition("credentials", "=", credentials)).isEmpty();
-			}
+		return credentials -> {
+			if (users.get(new Condition("credentials", "=", credentials)).isEmpty())
+				throw new AuthorizationException(credentials);
 		};
 	}
 }
