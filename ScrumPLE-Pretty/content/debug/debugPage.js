@@ -1,7 +1,6 @@
 "use strict";
 
 var restRoot = "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/";
-var credentials = null;
 
 populateRestRoots();
 
@@ -20,11 +19,25 @@ function populateRestRoots() {
 	}
 }
 
+var credentials = null;
+/**
+ * Changes the current value of the 'credentials' global.
+ * Credentials are combined into a single string (HANDLE:PASSWORD) and Base64 encoded.
+ * @param (string) handle - User handle
+ * @param (string) password - User password
+ */
 function login(handle, password) {
 	credentials = btoa(handle + ":" + password);
 	console.log("Logged in as: " + handle);
 }
 
+/**
+ * Runs a request.
+ * @param (string) method - Request method
+ * @param (string) url - Partial request URL after the 'restRoot' global
+ * @param (string) content - Optional request content
+ * @param (function(response)) responseHandler - Function invoked after server responds
+ */
 function ajax(method, url, content, responseHandler) {	// Main REST invocation
 	var xhttp = new XMLHttpRequest();
 	
@@ -51,11 +64,16 @@ function ajax(method, url, content, responseHandler) {	// Main REST invocation
 	xhttp.send(content);
 }
 
+/**
+ * Displays raw server response in 'raw' element.
+ * @param (object) response - Response to display
+ */
 function displayRaw(response) {	// For debug
 	document.getElementById('raw').innerHTML = JSON.stringify(response, null, 2);
 }
 
-function createEntry() { // Appends new, empty entry to container, returns entry
+/** Creates and returns a custom, empty 'div' meant to encapsulate a single entry. */
+function createEntry() {
 	var entry = document.createElement('div');
 	entry.setAttribute('class', "entry round");
 	entry.setAttribute('title', "Click to expand");
@@ -63,16 +81,18 @@ function createEntry() { // Appends new, empty entry to container, returns entry
 	return entry;
 }
 
-function showProjects(container) {	// Creates project boxes inside 'container'
-	container.innerHTML = "Getting Projects...";
+/** Retrieves and displays all projects in the 'projectList' element. */
+function showProjects(projectsList) {
+	var projectsList = document.getElementById('projectsList');
+	projectsList.innerHTML = "Getting Projects...";
 	
 	ajax("GET", "projects", null, function(projects) {
 		displayRaw(projects);
 		
-		container.innerHTML = "";
+		projectsList.innerHTML = "";
 		
 		for (var key in projects) {
-			var entry = container.appendChild(createEntry(container));
+			var entry = projectsList.appendChild(createEntry());
 			entry.setAttribute('onclick', "showUsers('" + key + "', usersList)");
 			entry.appendChild(document.createElement('h4')).appendChild(document.createTextNode("Project: " + key));
 			
