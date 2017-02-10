@@ -127,7 +127,14 @@ public abstract class CRUDResource<T> {
 	}
 
 	/**
-	 * Sets the authorizers used by this resource. {@code null} values are simply ignored.
+	 * Sets a common authorizer for all methods.
+	 * @param authorizer authorizer for all methods, does nothing if {@code null}
+	 */
+	public void setAuthorizers(Authorizer authorizer) {
+		setAuthorizers(authorizer, authorizer, authorizer, authorizer);
+	}
+	/**
+	 * Sets the authorizers used by this resource. {@code null} values do nothing.
 	 * @param POST authorizer for {@code POST} requests
 	 * @param GET authorizer for {@code GET} requests
 	 * @param PUT authorizer for {@code PUT} requests

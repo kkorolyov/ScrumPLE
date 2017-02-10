@@ -13,7 +13,6 @@ import org.scrumple.scrumplecore.scrum.User;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MultivaluedMap;
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 /**
@@ -68,26 +67,20 @@ public class Resources {
 		
 		/**
 		 * @param id project id
-		 * @return users resource under project matching {@code id}
+		 * @return users resource under project {@code id}
 		 */
 		@Path("{uuid}/users")
 		public UsersResource getUsers(@PathParam("uuid") UUID id) {
-			Project project = retrieve(id, null);
-			return project == null ? null : new UsersResource(project);
-		}
-		public MeetingsResource getMeetings(@PathParam("uuid") UUID id) {
-			Project project = retrieve(id, null);
-			return project == null ? null : new MeetingsResource(project);
+			return new UsersResource(retrieve(id, null));
 		}
 
-		private <T> CRUDResource<T> getSubResource(UUID id, Class<CRUDResource<T>> c) {
-			Project project = retrieve(id, null);
-			try {
-				return project == null ? null : c.getConstructor(Project.class).newInstance(project);
-			} catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-				log.exception(e);
-				return null;
-			}
+		/**
+		 * @param id project id
+		 * @return meetings resource under project {@code id}
+		 */
+		@Path("{uuid}/meetings")
+		public MeetingsResource getMeetings(@PathParam("uuid") UUID id) {
+			return new MeetingsResource(retrieve(id, null));
 		}
 	}
 	
@@ -123,6 +116,8 @@ public class Resources {
 	public static class MeetingsResource extends CRUDResource<Meeting> {
 		public MeetingsResource(Project project) {
 			super(SqlobDAOFactory.getDAOUnderProject(Meeting.class, project));
+
+			setAuthorizers(Authorizers.onlyUsersInDAO(SqlobDAOFactory.getDAOUnderProject(User.class, project)));
 		}
 
 		@Override
