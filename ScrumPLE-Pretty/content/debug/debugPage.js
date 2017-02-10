@@ -137,7 +137,7 @@ function deleteProject(projectId) {
  */
 function showUsers(projectId)
 	var usersList = document.getElementById('usersList');
-	container.innerHTML = "Getting users for project: " + projectId + "...";
+	usersList.innerHTML = "Getting users for project: " + projectId + "...";
 	
 	var url = "projects/" + projectId + "/users";
 	ajax("GET", url, null, function(users) {
