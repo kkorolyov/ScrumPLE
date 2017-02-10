@@ -3,7 +3,7 @@ package org.scrumple.scrumplecore.auth;
 /**
  * Exception thrown when attempting to execute an unauthorized request.
  */
-public class AuthorizationException extends Exception {
+public class AuthorizationException extends RuntimeException {
 	private static final long serialVersionUID = -6594406721203830328L;
 	
 	/**
