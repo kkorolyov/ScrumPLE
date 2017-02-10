@@ -91,10 +91,12 @@ function createEntry(name, properties) {
 	return entry;
 }
 function createButton(name, action) {
-	var button = entry.appendChild(document.createElement('button'));
+	var button = document.createElement('button');
 	button.setAttribute('type', 'button')
 	button.setAttribute('onclick', action);
 	button.appendChild(document.createTextNode(name));
+	
+	return button;
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */
@@ -110,7 +112,7 @@ function showProjects() {
 		
 		for (var key in projects) {
 			var entry = projectsList.appendChild(createEntry("Project: " + key, projects[key]));
-			entry.setAttribute('onclick', "showUsers('" + key + "', usersList)");
+			entry.setAttribute('onclick', "showUsers('" + key + "')");
 			
 			entry.appendChild(createButton("DELETE", "ajax('DELETE', '" + url + "/" + key + "', null, function(response) {displayRaw(response);});"));
 		}
@@ -143,6 +145,7 @@ function showUsers(projectId) {
 	ajax("GET", url, null, function(users) {
 		displayRaw(users);
 		
+		document.getElementById('usersDirect').setAttribute('href', restRoot + url);
 		usersList.innerHTML = "Project: " + projectId;
 		
 		for (var key in users) {
