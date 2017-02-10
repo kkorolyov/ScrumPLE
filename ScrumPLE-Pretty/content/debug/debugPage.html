@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" href="debug/debugPage.css">
+	<script src="lib/rest.js"></script>
+	<script src="debug/debugPage.js"></script>
 
 	<title>ScrumPLE REST Debug Page</title>
 </head>
@@ -47,9 +49,9 @@
 		<div id="projectsList" onclick="event.stopPropagation();"></div>
 	</div>
 
-	<div class="round" id="usersBox">
+	<div class="round" id="usersBox" style="display: none">
 		<h3>USERS</h3>
-		<a class="missingRestRoot" id="usersDirect" href="users">Direct</a>
+		<a id="usersDirect" href="#">Direct</a>
 		
 		<div id="usersList" onclick="event.stopPropagation();"></div>
 	</div>
@@ -57,7 +59,5 @@
 	<div class="roundRight" id="rawSection">
 		<pre id="raw">RAW</pre>
 	</div>
-
-	<script src="debug/debugPage.js"></script>
 </body>
 </html>
