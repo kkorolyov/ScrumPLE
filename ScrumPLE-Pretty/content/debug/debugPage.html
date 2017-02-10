@@ -13,11 +13,11 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 
-	<div class="roundLeft" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects(projectsList)">
+	<div class="roundLeft" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects();">
 		<h3>PROJECTS</h3>
 		<a class="missingRestRoot" href="projects">Direct</a>
 
-		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;" onclick="event.stopPropagation()">
+		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;" onclick="event.stopPropagation();">
 			<fieldset>
 				<legend>Login</legend>
 				
@@ -30,7 +30,7 @@
 			</fieldset>
 		</form>
 		
-		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST" onclick="event.stopPropagation()">
+		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST" onclick="event.stopPropagation();">
 			<fieldset>
 				<legend>Create</legend>
 
@@ -44,14 +44,14 @@
 			</fieldset>
 		</form>
 
-		<div id="projectsList" onclick="event.stopPropagation()"></div>
+		<div id="projectsList" onclick="event.stopPropagation();"></div>
 	</div>
 
 	<div class="round" id="usersBox">
 		<h3>USERS</h3>
 		<a class="missingRestRoot" href="users">Direct</a>
 		
-		<div id="usersList" onclick="event.stopPropagation()"></div>
+		<div id="usersList" onclick="event.stopPropagation();"></div>
 	</div>
 
 	<div class="roundRight" id="rawSection">

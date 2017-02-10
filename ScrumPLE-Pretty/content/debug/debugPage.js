@@ -72,39 +72,47 @@ function displayRaw(response) {	// For debug
 	document.getElementById('raw').innerHTML = JSON.stringify(response, null, 2);
 }
 
-/** Creates and returns a custom, empty 'div' meant to encapsulate a single entry. */
-function createEntry() {
+/**
+ * Creates and returns a custom, empty 'div' meant to encapsulate a single entry.
+ * @param (string) name - Entry name
+ * @param (object) properties - Entry properties
+ */
+function createEntry(name, properties) {
 	var entry = document.createElement('div');
 	entry.setAttribute('class', "entry round");
 	entry.setAttribute('title', "Click to expand");
+	entry.appendChild(document.createElement('h4')).appendChild(document.createTextNode(name));
 	
+	var attributes = entry.appendChild(document.createElement('p'));
+	for (var name in properties) {
+		attributes.appendChild(document.createTextNode(name + "=" + properties[name]));
+		attributes.appendChild(document.createElement('br'));
+	}
 	return entry;
+}
+function createButton(name, action) {
+	var button = entry.appendChild(document.createElement('button'));
+	button.setAttribute('type', 'button')
+	button.setAttribute('onclick', action);
+	button.appendChild(document.createTextNode(name));
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */
-function showProjects(projectsList) {
+function showProjects() {
 	var projectsList = document.getElementById('projectsList');
 	projectsList.innerHTML = "Getting Projects...";
 	
-	ajax("GET", "projects", null, function(projects) {
+	var url = "projects";
+	ajax("GET", url, null, function(projects) {
 		displayRaw(projects);
 		
 		projectsList.innerHTML = "";
 		
 		for (var key in projects) {
-			var entry = projectsList.appendChild(createEntry());
+			var entry = projectsList.appendChild(createEntry("Project: " + key, projects[key]));
 			entry.setAttribute('onclick', "showUsers('" + key + "', usersList)");
-			entry.appendChild(document.createElement('h4')).appendChild(document.createTextNode("Project: " + key));
 			
-			var attributes = entry.appendChild(document.createElement('p'));
-			for (var value in projects[key]) {
-				attributes.appendChild(document.createTextNode(value + "=" + projects[key][value]));
-				attributes.appendChild(document.createElement('br'));
-			}
-			var button = entry.appendChild(document.createElement('button'));
-			button.setAttribute('type', 'button')
-			button.setAttribute('onclick', "deleteProject('" + key + "')");
-			button.appendChild(document.createTextNode("DELETE"));
+			entry.appendChild(createButton("DELETE", "ajax('DELETE', '" + url + "/" + key + "', null, function(response) {displayRaw(response);});"));
 		}
 	});
 }
@@ -123,16 +131,23 @@ function deleteProject(projectId) {
 	});
 }
 
-function showUsers(projectId, container) {
+/**
+ * Retrieves and displays all users under a project in the 'usersList' element.
+ * @param (string) projectId - ID of project owning users
+ */
+function showUsers(projectId)
+	var usersList = document.getElementById('usersList');
 	container.innerHTML = "Getting users for project: " + projectId + "...";
 	
-	ajax("GET", "projects/" + projectId + "/users", null, function(users) {
+	var url = "projects/" + projectId + "/users";
+	ajax("GET", url, null, function(users) {
 		displayRaw(users);
 		
-		container.innerHTML = "";
+		usersList.innerHTML = "Project: " + projectId;
 		
 		for (var key in users) {
-			
+			var entry = usersList.appendChild(createEntry("User: " + key, users[key]));
+			entry.appendChild(createButton("DELETE", "ajax('DELETE', '" + url + "/" + key + "', null, function(response) {displayRaw(response);});"));
 		}
 	});
 }
