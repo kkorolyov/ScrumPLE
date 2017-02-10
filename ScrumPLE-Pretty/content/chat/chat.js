@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.get('/', function(req, res){
-    res.sendFile('F:\\SJSU\\ScrumPLE\\src\\main\\webapp\\chat.html');
+    res.sendFile('/opt/git/scrumple/ScrumPLE-Pretty/content/chat/chat.html');
 });
 
 io.on('connection', function(socket){
