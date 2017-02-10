@@ -135,7 +135,7 @@ function deleteProject(projectId) {
  * Retrieves and displays all users under a project in the 'usersList' element.
  * @param (string) projectId - ID of project owning users
  */
-function showUsers(projectId)
+function showUsers(projectId) {
 	var usersList = document.getElementById('usersList');
 	usersList.innerHTML = "Getting users for project: " + projectId + "...";
 	
