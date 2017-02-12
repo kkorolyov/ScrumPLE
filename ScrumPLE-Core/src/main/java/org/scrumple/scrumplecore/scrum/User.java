@@ -1,12 +1,13 @@
 package org.scrumple.scrumplecore.scrum;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.scrumple.scrumplecore.auth.Credentials;
 
 public class User {
 	@JsonProperty
 	private Credentials credentials;
-	@JsonProperty
+	@JsonIgnore
 	private Role role;
 	
 	public User(){}
