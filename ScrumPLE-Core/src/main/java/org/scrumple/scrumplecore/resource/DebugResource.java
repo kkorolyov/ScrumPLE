@@ -30,46 +30,6 @@ public class DebugResource {
 	private String systemDB = Assets.get(SYSTEM_DB);
 	private DataSource systemDS = DataSourcePool.get(systemDB);
 	
-	/** @return	all projects */
-	@GET
-	@Path("projects")
-	public Set<Project> getProjects() throws SQLException {
-		try (Session s = new Session(systemDS)) {
-			return s.get(Project.class, (Condition) null);
-		}
-	}
-	/** @return project specified by {@code uuid} */
-	@GET
-	@Path("projects/{uuid}")
-	public Project getProject(@PathParam("uuid") String uuid) throws SQLException {
-		try (Session s = new Session(systemDS)) {
-			return s.get(Project.class, UUID.fromString(uuid));
-		}
-	}
-	
-	@GET
-	@Path("projects/byName")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getProjectUUID(@QueryParam("name") String name) throws SQLException {
-		try (Session s = new Session(systemDS)) {
-			Project project = s.get(Project.class, new Condition("projectName", "=", name)).iterator().next();
-			return s.put(project).toString();
-		}
-	}
-	
-	/** @return users under project specified by {@code uuid} */
-	@GET
-	@Path("projects/{uuid}/users")
-	public Set<User> getUsers(@PathParam("uuid") String uuid) throws SQLException {
-		try (Session s = new Session(systemDS)) {
-			String projectDB = s.get(Project.class, UUID.fromString(uuid)).getName();
-
-			try (Session s2 = new Session(DataSourcePool.get(projectDB))) {
-				return s2.get(User.class, (Condition) null);
-			}
-		}
-	}
-	
 	/**
 	 * Resets test database.
 	 */
