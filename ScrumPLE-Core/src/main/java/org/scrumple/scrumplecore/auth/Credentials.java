@@ -1,11 +1,14 @@
 package org.scrumple.scrumplecore.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Base64;
 
 /**
  * A handle-password pair encoded in Base64.
  */
 public class Credentials {
+	@JsonProperty
 	private String encoded;
 
 	public Credentials(){}
