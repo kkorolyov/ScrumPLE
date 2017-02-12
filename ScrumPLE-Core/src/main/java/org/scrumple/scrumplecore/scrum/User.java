@@ -23,9 +23,11 @@ public class User {
 		this.credentials = credentials;
 	}
 
+	@JsonIgnore
 	public Role getRole() {
 		return this.role;
 	}
+	@JsonIgnore
 	public void setRole(Role roleIDX) {
 		this.role = roleIDX;
 	}
