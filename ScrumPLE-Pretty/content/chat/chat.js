@@ -31,6 +31,7 @@ io.on('connection', function(socket){
 			console.log('user disconnected');
 			io.emit('chat message', name + ' has disconnected');
 		});
+	});
 });
 
 httpsServer.listen(3000, function(){
