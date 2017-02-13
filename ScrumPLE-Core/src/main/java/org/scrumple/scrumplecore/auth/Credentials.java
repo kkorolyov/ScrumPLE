@@ -37,7 +37,7 @@ public class Credentials {
 	}
 
 	/** @return handle or login name */
-	@JsonProperty
+	@JsonIgnore
 	public String getHandle() {
 		return decode()[0];
 	}
