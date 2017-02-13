@@ -67,11 +67,6 @@ function createProject(name, description, isPrivate) {
 		displayRaw(response);
 	});
 }
-function deleteProject(projectId) {
-	ajax("DELETE", "projects/" + projectId, null, function(response) {
-		displayRaw(response);
-	});
-}
 
 /**
  * Retrieves and displays all users under a project in the 'usersList' element.
@@ -97,7 +92,7 @@ function showUsers(projectId) {
 	});
 }
 function createUser(projectId, handle, password) {
-	
+	var user = {}
 }
 function deleteUser(projectId, userId) {
 	

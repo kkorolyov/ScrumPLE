@@ -4,8 +4,6 @@ import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Set;
-import java.util.UUID;
 
 import javax.sql.DataSource;
 import javax.ws.rs.*;
@@ -13,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.scrum.Project;
-import org.scrumple.scrumplecore.scrum.Role;
 import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.database.DataSourcePool;
@@ -67,7 +64,7 @@ public class DebugResource {
 				}
 				try (Session session2 = new Session(DataSourcePool.get(projectDB))) {
 					for (int i = 0; i < numUsers; i++)
-						session2.put(new User(new Credentials("User" + i, "PASSWORD" + i), new Role("Role" + i)));
+						session2.put(new User(new Credentials("User" + i, "PASSWORD" + i), "Role" + i));
 				}
 			}
 		}

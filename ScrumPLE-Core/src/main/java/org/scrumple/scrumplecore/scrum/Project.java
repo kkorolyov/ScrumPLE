@@ -1,54 +1,62 @@
 package org.scrumple.scrumplecore.scrum;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Base Scrum entity.
+ */
 public class Project {
-	@JsonProperty
-	private String name;
-	@JsonProperty
-	private String description;
-	@JsonProperty
-	private boolean isPrivate;
+	private String name,
+			description;
+	private boolean visible;
 
 	public Project(){}
-	public Project(String name, String description, boolean isPrivate) {
+
+	/**
+	 * Constructs a new project.
+	 * @param name project name
+	 * @param description project description
+	 * @param visible public visibility
+	 */
+	public Project(String name, String description, boolean visible) {
 		setName(name);
 		setDescription(description);
-		setPrivate(isPrivate);
+		setVisible(visible);
 	}
-	
+
+	/** @return project name */
 	public String getName() {
 		return this.name;
 	}
-	
+	/** @param name new project name */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	/** @return project description */
 	public String getDescription() {
 		return this.description;
 	}
-	
+	/** @param description new project description */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	
 	/** @return {@code true} if this project is private */
-	@JsonIgnore
-	public boolean isPrivate() {
-		return isPrivate;
+	@JsonProperty("visible")
+	public boolean isVisible() {
+		return visible;
 	}
 	/**
 	 * Sets this project's {@code private} status.
-	 * @param isPrivate whether this project is private
+	 * @param visible whether this project is publicly visible
 	 */
-	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	@Override
 	public String toString() {
-		return name + ", " + description + ", " + isPrivate;
+		return name + ", " + description + ", " + visible;
 	}
 }

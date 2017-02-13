@@ -37,7 +37,7 @@ public class Resources {
 		protected Project parseForm(MultivaluedMap<String, String> params) {
 			String name = params.getFirst("name"),
 					description = params.getFirst("description"),
-					isPrivate = params.getFirst("isPrivate");
+					isPrivate = params.getFirst("visible");
 
 			if (name == null || description == null)
 				throw new IllegalArgumentException("Missing some form parameters: name = " + name + ", description = " + description);
@@ -51,7 +51,7 @@ public class Resources {
 			Condition cond = null;
 			
 			if (names == null || !names.iterator().hasNext())
-				cond = new Condition("isPrivate", "=", false);
+				cond = new Condition("visible", "=", false);
 			else {
 				for (String name : names) {
 					Condition currentCond = new Condition("name", "=", name);
@@ -104,7 +104,7 @@ public class Resources {
 			String handle = params.getFirst("handle"),
 					password = params.getFirst("password");
 
-			return new User(new Credentials(handle, password), null);	// TODO Null role for now
+			return new User(new Credentials(handle, password));
 		}
 
 		@Override

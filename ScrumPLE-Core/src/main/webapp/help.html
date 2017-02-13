@@ -15,7 +15,7 @@
 	name: (string),
 	description: (string),
 	owner: (User),
-	isPrivate: (boolean)
+	visible: (boolean)
 }
 ```
 ### GET
@@ -23,10 +23,11 @@
 `/rest/projects/{ID}` retrieves the project referenced by `ID`
 
 ### POST
-Project object to `/rest/projects` creates a new project **if a project of the same name does not yet exist** and returns its UUID
+`/rest/projects` with a project object creates a new project **if a project of the same name does not yet exist** and returns its UUID
+	* Form params with names mathching a project object's properties are also accepted
 
 ### PUT
-Project object to `/rest/projects/{ID}` updates the project referenced by `ID`
+`/rest/projects/{ID}` with a project object updates the project referenced by `ID`
 
 ### DELETE - Requires **project owner** authorization
 `/rest/projects/{ID}` deletes the project referenced by `ID`
@@ -35,12 +36,16 @@ Project object to `/rest/projects/{ID}` updates the project referenced by `ID`
 # User
 ```
 {
+	credentials: (string), // Only for POST & PUT
 	displayName: (string),
 	role: (string)
 }
 ```
 ### GET
-`rest/projects/{ID}/users` retrieves all users local to the project referenced by `ID`
+`/rest/projects/{ID}/users` retrieves all users local to the project referenced by `ID`
+
+### POST
+`/rest/projects/{ID}/users` 
 
 ---
 # Meeting
@@ -52,7 +57,7 @@ Project object to `/rest/projects/{ID}` updates the project referenced by `ID`
 }
 ```
 ### GET
-`rest/projects/{ID}/meetings` retrieves all meetings local to the project referenced by `ID`
+`/rest/projects/{ID}/meetings` retrieves all meetings local to the project referenced by `ID`
 	
 </xmp>
 <script src="lib/strapdown.js"></script>
