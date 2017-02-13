@@ -4,45 +4,57 @@
 	<meta charset="UTF-8">
 	<title>ScrumPLE-Core Help</title>
 </head>
-<body>
-	<header>
-		<h1>ScrumPLE-Core Help</h1>
-	</header>
 
-	<ul>
-		<li>`POST` to `rest/projects` creates a new project</li>
-		<li>XML `project` object with 2 attributes:</li>
-		<li>`name` = project name</li>
-		<li>`description` = project description</li>
-		<li>Returns the UUID of the new project</li>
-		<li>`DELETE` to `rest/projects/{uuid}` deletes the project matching `uuid`</li>
-		<li>Returns the deleted project in XML</li>
-		<li>`GET` to `rest/projects` returns all public projects or the project exactly matching optional parameters</li>
-		<li>1 optional parameter:</li>
-		<li>`name` = project name</li>
-		<li>`GET` to `rest/projects/{uuid}` returns the project matching `uuid`</li>
-		<li>`GET` to `rest/projects/{uuid}/users` returns basic information on all users in the project matching `uuid`</li>
-		<li>`GET` to `rest/projects/{uuid}/tasks` returns all tasks in the project matching `uuid`</li>
-		<li>*`GET` to `rest/project/{uuid}/tasks/similar` will fetch tasks of a similar category</li>
-		<li>1 parameter</li>
-		<li>`type=` the integer representation of task type</li>
-		<li>`POST` to `rest/projects/{uuid}/tasks` creates a new task in the project matching `uuid`</li>
-		<li>3 attributes:</li>
-		<li>`userStory` = string representation of a userstory</li>
-		<li>`taskType=` the integer representation of task type</li>
-		<li>`taskDescription=` description of the task</li>
-		<li>`PUT` to `rest/projects/{uuid}/tasks/{taskUUID}` will update the corresponding task</li>
-		<li>3 attributes:</li>
-		<li>`userStory` = string representation of a userstory</li>
-		<li>`taskType` = the integer representation of task type</li>
-		<li>`taskDescription` = description of the task</li>
-		<li>*Returns the updated task in XML</li>
-		<li>*`DELETE` to `rest/projects/{uuid}/tasks/{taskUUID}` will delete the corresponding task</li>
-		<li>*Returns the deleted task in XML</li>
-		<li>`GET` to `rest/projects/{uuid}/userstories` returns all userstories in the project matching `uuid`</li>
-		<li>`POST` to `rest/projects/{uuid}/userstories` creates a new userstory in the project matching `uuid`</li>
-		<li>Form Data with 1 attribute:</li>
-		<li>`userStory` = The story</li>
-	</ul>
+<body>
+<xmp theme="simplex" style="display: none">
+**Note: Returned collections are UUID->object maps**
+
+# Project
+```
+{
+	name: (string),
+	description: (string),
+	owner: (User),
+	isPrivate: (boolean)
+}
+```
+### GET
+`/rest/projects` retrieves all **public** projects  
+`/rest/projects/{ID}` retrieves the project referenced by `ID`
+
+### POST
+Project object to `/rest/projects` creates a new project **if a project of the same name does not yet exist** and returns its UUID
+
+### PUT
+Project object to `/rest/projects/{ID}` updates the project referenced by `ID`
+
+### DELETE - Requires **project owner** authorization
+`/rest/projects/{ID}` deletes the project referenced by `ID`
+
+---
+# User
+```
+{
+	displayName: (string),
+	role: (string)
+}
+```
+### GET
+`rest/projects/{ID}/users` retrieves all users local to the project referenced by `ID`
+
+---
+# Meeting
+```
+{
+	type: (string),
+	start: (long),
+	end: (long)
+}
+```
+### GET
+`rest/projects/{ID}/meetings` retrieves all meetings local to the project referenced by `ID`
+	
+</xmp>
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 </body>
 </html>
