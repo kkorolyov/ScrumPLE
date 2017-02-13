@@ -17,6 +17,7 @@
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
+	  <input id="n" autocomplete="off" /><button>Join</button>
     </form>
 	  <script src="https://52.10.231.227:3000/socket.io/socket.io.js"></script>
 	  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -25,6 +26,8 @@
 		$('form').submit(function(){
 			socket.emit('chat message', $('#m').val());
 			$('#m').val('');
+			socket.emit('join', $('#n').val());
+			$('#n').val('');
 			return false;
 		});
 		socket.on('chat message', function(msg){
