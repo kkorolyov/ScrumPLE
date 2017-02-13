@@ -54,7 +54,7 @@ public class Resources {
 			Condition cond = null;
 			
 			if (names == null || !names.iterator().hasNext())
-				cond = new Condition("visible", "=", false);
+				cond = new Condition("visible", "=", true);
 			else {
 				for (String name : names) {
 					Condition currentCond = new Condition("name", "=", name);
