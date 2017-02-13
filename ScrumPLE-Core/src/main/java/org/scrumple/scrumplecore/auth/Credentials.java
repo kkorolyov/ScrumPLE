@@ -10,8 +10,8 @@ import java.util.Base64;
  */
 public class Credentials {
 	private String value;
-	private String handle,	// TODO Use these instead
-			hashedPass;
+	//private String handle,	// TODO Use these instead
+	//		hashedPass;
 
 	public Credentials(){}
 	/**
