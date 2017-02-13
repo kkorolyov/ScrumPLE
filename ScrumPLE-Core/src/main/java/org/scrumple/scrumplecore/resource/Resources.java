@@ -44,7 +44,8 @@ public class Resources {
 			if (name == null || description == null || ownerHandle == null || ownerPassword == null)
 				throw new IllegalArgumentException("Missing some form parameters");
 
-			return new Project(name, description, visible != null);
+			User owner = new User(new Credentials(ownerHandle, ownerPassword));
+			return new Project(name, description, visible != null, owner);
 		}
 
 		@Override

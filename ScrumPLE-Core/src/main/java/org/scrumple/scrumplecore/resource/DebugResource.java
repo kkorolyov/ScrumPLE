@@ -48,7 +48,7 @@ public class DebugResource {
 		}
 		try (Session session = new Session(systemDS)) {
 			for (int i = 0; i < numProjects; i++)
-				session.put(new Project("Project" + i, "Description" + i, (i % 3 != 0)));
+				session.put(new Project("Project" + i, "Description" + i, (i % 3 != 0), new User(new Credentials("Owner", "OWNER"))));
 			
 			session.flush();
 			

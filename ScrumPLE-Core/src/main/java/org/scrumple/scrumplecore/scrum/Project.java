@@ -72,7 +72,9 @@ public class Project {
 	}
 	/** @param owner new project owner */
 	public void setOwner(User owner) {
-		owner.setRole("owner");
+		if (owner != null)
+			owner.setRole("owner");
+		
 		this.owner = owner;
 	}
 
