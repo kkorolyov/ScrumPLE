@@ -14,38 +14,47 @@
 {
 	name: (string),
 	description: (string),
-	owner: (User),
-	visible: (boolean)
+	visible: (boolean),
+	owner: (User)
 }
 ```
 ### GET
 `/rest/projects` retrieves all **public** projects  
-`/rest/projects/{ID}` retrieves the project referenced by `ID`
+`/rest/projects/{projectID}` retrieves the project referenced by `projectID`
 
 ### POST
 `/rest/projects` with a project object creates a new project **if a project of the same name does not yet exist** and returns its UUID
 	* Form params with names mathching a project object's properties are also accepted
 
 ### PUT
-`/rest/projects/{ID}` with a project object updates the project referenced by `ID`
+`/rest/projects/{projectID}` with a project object updates the project referenced by `projectID`
 
 ### DELETE - Requires **project owner** authorization
-`/rest/projects/{ID}` deletes the project referenced by `ID`
+`/rest/projects/{projectID}` deletes the project referenced by `projectID`
 
 ---
 # User
 ```
 {
-	credentials: (string), // Only for POST & PUT
+	credentials: {	// Only on POST & PUT
+		handle: (string),
+		password: (string)
+	},
 	displayName: (string),
 	role: (string)
 }
 ```
 ### GET
-`/rest/projects/{ID}/users` retrieves all users local to the project referenced by `ID`
+`/rest/projects/{projectID}/users` retrieves all users local to the project referenced by `projectID`
 
 ### POST
-`/rest/projects/{ID}/users` 
+`/rest/projects/{projectID}/users` with a user object creates a new user under the project referenced by `projectID`
+
+### PUT
+`/rest/projects/{projectID}/users/{userID}` with a user object updates the user referenced by `userID`
+
+### DELETE - Requires **same user or project owner** authorization
+`/rest/projects/{projectID}/users/{userID}` deletes the user referenced by `userID`
 
 ---
 # Meeting
@@ -57,7 +66,7 @@
 }
 ```
 ### GET
-`/rest/projects/{ID}/meetings` retrieves all meetings local to the project referenced by `ID`
+`/rest/projects/{projectID}/meetings` retrieves all meetings local to the project referenced by `projectID`
 	
 </xmp>
 <script src="lib/strapdown.js"></script>
