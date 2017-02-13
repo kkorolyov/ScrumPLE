@@ -1,5 +1,6 @@
 package org.scrumple.scrumplecore.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,7 +20,8 @@ public class Credentials {
 	 * @param handle credentials handle
 	 * @param password credentials password
 	 */
-	public Credentials(String handle, String password) {
+	@JsonCreator
+	public Credentials(@JsonProperty String handle, @JsonProperty String password) {
 		setCredentials(handle, password);
 	}
 
@@ -37,7 +39,6 @@ public class Credentials {
 	}
 
 	/** @return handle or login name */
-	@JsonIgnore
 	public String getHandle() {
 		return decode()[0];
 	}
@@ -52,7 +53,6 @@ public class Credentials {
 	 * @param handle credentials handle or login name
 	 * @param password credentials password
 	 */
-	@JsonProperty
 	public void setCredentials(String handle, String password) {
 		String credentials = handle + ":" + password;
 		byte[] encodedBytes = Base64.getEncoder().encode(credentials.getBytes());

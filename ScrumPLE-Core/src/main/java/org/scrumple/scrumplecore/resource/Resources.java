@@ -37,12 +37,12 @@ public class Resources {
 		protected Project parseForm(MultivaluedMap<String, String> params) {
 			String name = params.getFirst("name"),
 					description = params.getFirst("description"),
-					isPrivate = params.getFirst("visible");
+					visible = params.getFirst("visible");	// TODO Parse a Use
 
 			if (name == null || description == null)
 				throw new IllegalArgumentException("Missing some form parameters: name = " + name + ", description = " + description);
 
-			return new Project(name, description, isPrivate != null);
+			return new Project(name, description, visible.equalsIgnoreCase("true"));
 		}
 
 		@Override
