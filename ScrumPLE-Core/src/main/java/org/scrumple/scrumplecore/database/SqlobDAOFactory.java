@@ -11,6 +11,7 @@ import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.assets.Assets;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
+import org.scrumple.scrumplecore.scrum.User;
 
 /**
  * Provides custom {@link SqlobDAO} implementations.
@@ -28,6 +29,7 @@ public final class SqlobDAOFactory {
 					throw new EntityExistsException("A project of the same name already exists: " + projectName);
 				
 				createDatabase(projectName);
+				getDAOUnderProject(User.class, obj).add(obj.getOwner());
 				
 				return super.add(obj);
 			}
