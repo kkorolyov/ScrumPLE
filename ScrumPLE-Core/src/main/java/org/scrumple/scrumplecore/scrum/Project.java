@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.scrum;
 
+import dev.kkorolyov.sqlob.annotation.Transient;
+
 /**
  * Base Scrum entity.
  */
@@ -7,6 +9,7 @@ public class Project {
 	private String name,
 			description;
 	private boolean visible;
+	@Transient
 	private User owner;
 
 	public Project(){}
@@ -69,6 +72,7 @@ public class Project {
 	}
 	/** @param owner new project owner */
 	public void setOwner(User owner) {
+		owner.setRole("owner");
 		this.owner = owner;
 	}
 
