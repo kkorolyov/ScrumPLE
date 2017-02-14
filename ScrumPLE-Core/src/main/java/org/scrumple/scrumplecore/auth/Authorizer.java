@@ -1,14 +1,14 @@
 package org.scrumple.scrumplecore.auth;
 
 /**
- * Provides an interface to process credentials before handling secure actions.
+ * Processes credentials and throws an {@link AuthorizationException} if credentials are unauthorized.
  */
 @FunctionalInterface
 public interface Authorizer {
 	/**
 	 * Processes credentials, determining whether they are valid in some context.
 	 * @param credentials credentials to process
-	 * @throws AuthorizationException if {@code credentials} is unauthorized
+	 * @throws AuthorizationException if {@code credentials} unauthorized
 	 */
-	void process(Credentials credentials) throws AuthorizationException;
+	void process(Credentials credentials);
 }

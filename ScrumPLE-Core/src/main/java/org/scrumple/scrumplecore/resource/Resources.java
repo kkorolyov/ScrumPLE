@@ -49,7 +49,7 @@ public class Resources {
 		}
 
 		@Override
-		protected Condition buildRetrieveCondition(MultivaluedMap<String, String> queryParams) {
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 			Iterable<String> names = queryParams.get("name");
 			Condition cond = null;
 			
@@ -87,19 +87,17 @@ public class Resources {
 		}
 	}
 	
-	/**
-	 * Resource handler for users.
-	 */
 	public static class UsersResource extends CRUDResource<User> {
 		/**
 		 * Constructs a new users resource.
-		 * @param project scope of users to handle
+		 * @param project users scope
 		 */
 		public UsersResource(Project project) {
 			super(SqlobDAOFactory.getDAOUnderProject(User.class, project));
 
-			Authorizer restrict = Authorizers.onlyUsersInDAO(getDAO());
-			setAuthorizers(restrict, Authorizers.NONE, restrict, restrict);
+			Authorizer onlyOwner = Authorizers.onlyOwner(project);
+
+			setAuthorizers(onlyOwner, Authorizers.ALL, onlyOwner, onlyOwner);
 		}
 
 		@Override
@@ -111,16 +109,20 @@ public class Resources {
 		}
 
 		@Override
-		protected Condition buildRetrieveCondition(MultivaluedMap<String, String> queryParams) {
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 			return null;
 		}
 	}
 
 	public static class MeetingsResource extends CRUDResource<Meeting> {
+		/**
+		 * Constructs a new meetings resource.
+		 * @param project meetings scope
+		 */
 		public MeetingsResource(Project project) {
 			super(SqlobDAOFactory.getDAOUnderProject(Meeting.class, project));
 
-			setAuthorizers(Authorizers.onlyUsersInDAO(SqlobDAOFactory.getDAOUnderProject(User.class, project)));
+			setAuthorizers(Authorizers.onlyUsers(project));
 		}
 
 		@Override
@@ -129,7 +131,7 @@ public class Resources {
 		}
 
 		@Override
-		protected Condition buildRetrieveCondition(MultivaluedMap<String, String> queryParams) {
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 			return null;
 		}
 	}

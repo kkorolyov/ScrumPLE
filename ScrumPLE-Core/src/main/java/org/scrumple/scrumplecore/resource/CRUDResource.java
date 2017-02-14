@@ -84,14 +84,14 @@ public abstract class CRUDResource<T> {
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) throws AuthorizationException {
 		getAuthorizer("GET").process(extractCredentials(headers));
 
-		return dao.get(buildRetrieveCondition(uriInfo.getQueryParameters()));
+		return dao.get(parseQuery(uriInfo.getQueryParameters()));
 	}
 	/**
-	 * Builds and returns an optional retrieval filter/condition in response to query parameters.
+	 * Constructs an optional retrieval filter/condition from query parameters.
 	 * @param queryParams query parameters passed in request
 	 * @return appropriate filter
 	 */
-	protected abstract Condition buildRetrieveCondition(MultivaluedMap<String, String> queryParams);
+	protected abstract Condition parseQuery(MultivaluedMap<String, String> queryParams);
 	
 	/**
 	 * Updates a resource.
@@ -159,7 +159,7 @@ public abstract class CRUDResource<T> {
 	private Authorizer getAuthorizer(String identifier) {
 		Authorizer authorizer = authorizers.get(identifier);
 		if (authorizer == null)
-			authorizer = Authorizers.NONE;
+			authorizer = Authorizers.ALL;
 		return authorizer;
 	}
 }
