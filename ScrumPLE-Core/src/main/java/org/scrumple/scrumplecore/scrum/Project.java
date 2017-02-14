@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.scrum;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.kkorolyov.sqlob.annotation.Transient;
 
 /**
@@ -67,14 +69,16 @@ public class Project {
 	}
 
 	/** @return project owner */
+	@JsonIgnore
 	public User getOwner() {
 		return owner;
 	}
 	/** @param owner new project owner */
+	@JsonProperty
 	public void setOwner(User owner) {
 		if (owner != null)
 			owner.setRole("owner");
-		
+
 		this.owner = owner;
 	}
 
