@@ -12,6 +12,10 @@ function displayRaw(response) {	// For debug
 	document.getElementById('raw').innerHTML = JSON.stringify(response, null, 2);
 }
 
+function debugReset() {
+	ajax("GET", "debug/reset", null, function(response) {displayRaw(response)});
+}
+
 /**
  * Creates and returns a custom, empty 'div' meant to encapsulate a single entry.
  * @param (string) name - Entry name

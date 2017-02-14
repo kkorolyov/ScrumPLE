@@ -1,4 +1,4 @@
-var restRoot = "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/";
+var restRoot = "https://" + window.location.hostname + ":8443/scrumple/rest/";
 var credentials = null;
 
 /**

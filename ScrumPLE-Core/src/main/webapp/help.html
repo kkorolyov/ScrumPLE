@@ -12,10 +12,17 @@
 # Project
 ```
 {
-	name: (string),
-	description: (string),
-	visible: (boolean),
-	owner: (User)
+	"name": (string),
+	"description": (string),
+	"visible": (boolean),
+	"owner": {	// Send-only
+		"credentials": {
+			"handle": (string),
+			"password": (string)
+		},
+		"displayName": (string),
+		"role": (string)
+	}
 }
 ```
 ### GET
@@ -23,8 +30,8 @@
 `/rest/projects/{projectID}` retrieves the project referenced by `projectID`
 
 ### POST
-`/rest/projects` with a project object creates a new project **if a project of the same name does not yet exist** and returns its UUID
-	* Form params with names mathching a project object's properties are also accepted
+`/rest/projects` with a project object creates a new project **if a project of the same name does not yet exist** and returns its UUID  
+Form params with names matching a project object's properties are also accepted
 
 ### PUT
 `/rest/projects/{projectID}` with a project object updates the project referenced by `projectID`
@@ -36,12 +43,12 @@
 # User
 ```
 {
-	credentials: {	// Only on POST & PUT
-		handle: (string),
-		password: (string)
+	"credentials": {	// Send-only
+		"handle": (string),
+		"password": (string)
 	},
-	displayName: (string),
-	role: (string)
+	"displayName": (string),
+	"role": (string)
 }
 ```
 ### GET
@@ -60,9 +67,9 @@
 # Meeting
 ```
 {
-	type: (string),
-	start: (long),
-	end: (long)
+	"type": (string),
+	"start": (long),
+	"end": (long)
 }
 ```
 ### GET

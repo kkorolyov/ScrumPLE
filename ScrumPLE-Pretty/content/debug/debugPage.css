@@ -14,10 +14,14 @@ h3 {
 .roundLeft {
 	border-radius: 8px 32px 32px 8px;
 	padding: 10px;
+	float: left;
+	clear: both;
 }
 .roundRight {
 	border-radius: 32px 8px 8px 32px;
 	padding: 10px;
+	float: right;
+	clear: both;
 }
 
 .entry {
