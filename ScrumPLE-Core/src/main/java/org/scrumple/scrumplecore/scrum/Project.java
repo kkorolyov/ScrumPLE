@@ -1,17 +1,19 @@
 package org.scrumple.scrumplecore.scrum;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import dev.kkorolyov.sqlob.annotation.Transient;
 
 /**
  * Base Scrum entity.
  */
 public class Project {
-	private String name,
-			description;
+	private String name;
+	private String description;
 	private boolean visible;
 	@Transient
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private User owner;
 
 	public Project(){}
@@ -69,12 +71,10 @@ public class Project {
 	}
 
 	/** @return project owner */
-	@JsonIgnore
 	public User getOwner() {
 		return owner;
 	}
 	/** @param owner new project owner */
-	@JsonProperty
 	public void setOwner(User owner) {
 		if (owner != null)
 			owner.setRole("owner");

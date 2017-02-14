@@ -4,12 +4,15 @@ import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.auth.Credentials;
+import org.scrumple.scrumplecore.database.DAO;
+import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.assets.Assets;
@@ -33,39 +36,25 @@ public class DebugResource {
 	@GET
 	@Path("reset")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users) throws SQLException {	// Test stub for populating projects
+	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users) {	// Test stub for populating projects
 		long start = System.nanoTime();
 		
 		int numProjects = Integer.parseInt(projects),
 				numUsers = Integer.parseInt(users);
 		
-		try (Connection conn = DataSourcePool.get("").getConnection()) {
-			conn.createStatement().executeUpdate("DROP DATABASE IF EXISTS " + systemDB);
-			conn.createStatement().executeUpdate("CREATE DATABASE IF NOT EXISTS " + systemDB);
-			
-			if (!conn.getAutoCommit())
-				conn.commit();
-		}
-		try (Session session = new Session(systemDS)) {
-			for (int i = 0; i < numProjects; i++)
-				session.put(new Project("Project" + i, "Description" + i, (i % 3 != 0), new User(new Credentials("Owner", "OWNER"))));
-			
-			session.flush();
-			
-			for (Project project : session.get(Project.class, (Condition) null)) {
-				String projectDB = project.getName();
+		DAO<Project> projectDAO = SqlobDAOFactory.getProjectDAO();
 
-				try (Connection conn = DataSourcePool.get("").getConnection()) {
-					conn.createStatement().executeUpdate("DROP DATABASE IF EXISTS " + projectDB);
-					conn.createStatement().executeUpdate("CREATE DATABASE IF NOT EXISTS " + projectDB);
-					
-					if (!conn.getAutoCommit())
-						conn.commit();
-				}
-				try (Session session2 = new Session(DataSourcePool.get(projectDB))) {
-					for (int i = 0; i < numUsers; i++)
-						session2.put(new User(new Credentials("User" + i, "PASSWORD" + i), "Role" + i));
-				}
+		for (UUID id : projectDAO.getAll().keySet()) {
+			projectDAO.remove(id);
+		}
+		for (int i = 0; i < numProjects; i++) {
+			Project project = new Project("Project" + i, "description" + i, (i % 3 != 0), new User(new Credentials("owner " + i, "")));
+			projectDAO.add(project);
+
+			DAO<User> userDAO = SqlobDAOFactory.getDAOUnderProject(User.class, project);
+
+			for (int j = 0; j < numUsers; j++) {
+				userDAO.add(new User(new Credentials("user" + j, "password" + j), "display" + j, "role" + j));
 			}
 		}
 		long 	end = System.nanoTime(),

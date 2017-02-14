@@ -1,66 +1,85 @@
 package org.scrumple.scrumplecore.auth;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Objects;
+
+import javax.xml.bind.DatatypeConverter;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Base64;
-
 /**
- * A handle-password pair encoded in Base64.
+ * Credentials.
  */
 public class Credentials {
-	private String value;
-	//private String handle,	// TODO Use these instead
-	//		hashedPass;
+	private String handle;
+	private String password;
 
 	public Credentials(){}
 	/**
-	 * Constructs new credentials from an unencoded handle and password.
+	 * Constructs new credentials from a concatenated handle-password pair.
+	 * @param concat64 handle and password concatenated in the form {@code [handle]:[password]} and encoded in Base64
+	 */
+	public Credentials(String concat64) {
+		Base64.Decoder decoder = Base64.getDecoder();
+
+		String decoded = new String(decoder.decode(concat64));
+		String[] split = decoded.split(":");
+
+		setHandle(split[0]);
+		setPassword(split[1]);
+	}
+	/**
+	 * Constructs new credentials from plain handle and password.
 	 * @param handle credentials handle
 	 * @param password credentials password
 	 */
-	@JsonCreator
-	public Credentials(@JsonProperty String handle, @JsonProperty String password) {
-		setCredentials(handle, password);
+	public Credentials(String handle, String password) {
+		setHandle(handle);
+		setPassword(password);
 	}
 
-	/**
-	 * Constructs new credentials from a string which, when Base64-decoded, matches the form: {@code handle:password}.
-	 * @param value value credentials
-	 */
-	public Credentials(String value) {
-		this.value = value;
-	}
-
-	private String[] decode() {
-		byte[] decodedBytes = Base64.getDecoder().decode(value);
-		return new String(decodedBytes).split(":");
-	}
-
-	/** @return handle or login name */
+	/** @return credentials handle */
 	public String getHandle() {
-		return decode()[0];
+		return handle;
 	}
-	/** @return password */
-	@JsonIgnore
-	public String getPassword() {
-		return decode()[1];
+	/** @param handle new handle */
+	public void setHandle(String handle) {
+		this.handle = handle;
 	}
 
-	/**
-	 * Sets credentials.
-	 * @param handle credentials handle or login name
-	 * @param password credentials password
-	 */
-	public void setCredentials(String handle, String password) {
-		String credentials = handle + ":" + password;
-		byte[] encodedBytes = Base64.getEncoder().encode(credentials.getBytes());
-		value = new String(encodedBytes);
+	/** @param password new password */
+	public void setPassword(String password) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-512");
+			byte[] passwordBytes = md.digest(password.getBytes("UTF-8"));
+
+			this.password = DatatypeConverter.printHexBinary(passwordBytes);
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			this.password = password;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(handle, password);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj.getClass() != Credentials.class) return false;
+
+		Credentials other = (Credentials) obj;
+		return Objects.equals(handle, other.handle)
+				&& Objects.equals(password, other.password);
 	}
 
 	@Override
 	public String toString() {
-		return getHandle();
+		return handle;
 	}
 }

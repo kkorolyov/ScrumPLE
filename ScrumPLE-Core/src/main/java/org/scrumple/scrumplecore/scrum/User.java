@@ -1,19 +1,19 @@
 package org.scrumple.scrumplecore.scrum;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.scrumple.scrumplecore.auth.Credentials;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A user and member of a project team.
  */
 public class User {
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Credentials credentials;
-	private String displayName,
-			role;
+	private String displayName;
+	private String role;
 	
 	public User(){}
-
 	/**
 	 * Constructs a new user with display name matching credentials handle and a {@code null} role.
 	 * @param credentials authorization credentials
@@ -42,12 +42,10 @@ public class User {
 	}
 
 	/** @return authorization credentials */
-	@JsonIgnore
 	public Credentials getCredentials() {
 		return credentials;
 	}
 	/** @param credentials new authorization credentials */
-	@JsonProperty
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
 	}
