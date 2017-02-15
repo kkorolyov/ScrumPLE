@@ -28,6 +28,9 @@ h3 {
 	clear: both;
 }
 
+.entryBox {
+	float: left;
+}
 .entry {
 	background-color: lime;
 	margin: 5px 0px 5px 5px;
@@ -35,12 +38,12 @@ h3 {
 
 #projectsBox {
 	background-color: cyan;
-	float: left;
 }
-
 #usersBox {
 	background-color: orange;
-	float: left;
+}
+#meetingsBox {
+	background-color: pink;
 }
 
 #rawSection {

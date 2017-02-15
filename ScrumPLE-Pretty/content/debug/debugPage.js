@@ -4,16 +4,10 @@ window.addEventListener('load', applyEventListeners);
 
 function applyEventListeners() {
 	document.getElementById('debugResetButton').addEventListener('click', function(event) {
-		if (event.target === this) {
-			debugReset();
-			event.stopPropagation();
-		}
+		if (event.target === this) debugReset();
 	})
 	document.getElementById('projectsBox').addEventListener('click', function(event) {
-		if (event.target === this) {
-			showProjects();
-			event.stopPropagation();
-		}
+		if (event.target === this) showProjects();
 	});
 }
 
@@ -26,7 +20,7 @@ function displayRaw(response) {	// For debug
 }
 
 function debugReset() {
-	ajax("GET", "debug/reset", null, function(response) {displayRaw(response)});
+	ajax("GET", "debug/reset", null, function(response) { displayRaw(response) });
 }
 
 /**
@@ -50,15 +44,16 @@ function createEntry(name, properties) {
 function createButton(name, action) {
 	var button = document.createElement('button');
 	button.setAttribute('type', 'button')
-	button.addEventListener('click', function(event) {
-		if (event.target === this) {
-			action();
-			event.stopPropagation();
-		}
-	});
+	button.addEventListener('click', function(event) { if (event.target === this) action() });
 	button.appendChild(document.createTextNode(name));
 
 	return button;
+}
+
+function populateEntryBox(entryBox) {
+	entryBox.style.display = 'block';
+
+	var entryList;
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */
@@ -76,28 +71,18 @@ function showProjects() {
 			(function(url, key) {
 				var entry = projectsList.appendChild(createEntry("Project: " + key, projects[key]));
 				entry.addEventListener('click', function(event) {
-					showUsers(key);
-					event.stopPropagation();
+					if (event.target === this) {
+						showUsers(key);
+						showMeetings(key);
+					}
 				});
 				entry.appendChild(createButton("DELETE", function() {
-					ajax('DELETE', url + "/" + key, null, function(response) {
-						displayRaw(response);
-					});
+					ajax('DELETE', url + "/" + key, null, function(response) { displayRaw(response) });
 				}));
 			})(url, key);
 		}
 	});
 }
-function createProject(name, description, isPrivate) {
-	var project = {"name": name,
-			"description": description,
-			"isPrivate": isPrivate};
-
-	ajax("POST", "projects", JSON.stringify(project), function(response) {
-		displayRaw(response);
-	});
-}
-
 /**
  * Retrieves and displays all users under a project in the 'usersList' element.
  * @param (string) projectId - ID of project owning users
@@ -127,6 +112,15 @@ function showUsers(projectId) {
 		}
 	});
 }
+function showMeetings(projectId) {
+	document.getElementById('meetingsBox').style.display = "block";
+
+	var meetingsList = document.getElementById('meetingsList');
+	meetingsList.innerHTML = "Getting meetings for project: " + projectId + "...";
+
+
+}
+
 function createUser(projectId, handle, password) {
 	var user = {}
 }
