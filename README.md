@@ -1,7 +1,7 @@
 # ScrumPLE
+[![Build Status](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/buildStatus/icon?job=ScrumPLE)](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/job/ScrumPLE/)
 Collaborative development environment tailored to the Scrum framework
 
-[![Build Status](https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/jenkins/buildStatus/icon?job=ScrumPLE)](https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/jenkins/job/ScrumPLE/)
 ## Dev Setup
 ### Required Tools
 * [Maven](https://maven.apache.org/)
