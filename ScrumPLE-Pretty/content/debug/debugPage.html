@@ -14,27 +14,27 @@
 	<header>
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
-	
-	<button class="roundLeft" id="debugResetButton" onclick="debugReset();">Debug RESET</button>
 
-	<div class="roundLeft" id="projectsBox" title="Click to show projects" style="cursor: pointer" onclick="showProjects();">
+	<button class="roundLeft" id="debugResetButton">Debug RESET</button>
+
+	<div class="roundLeft" id="projectsBox" title="Click to show projects" style="cursor: pointer">
 		<h3>PROJECTS</h3>
 		<a class="missingRestRoot" href="projects">Direct</a>
 
-		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;" onclick="event.stopPropagation();">
+		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;">
 			<fieldset>
 				<legend>Login</legend>
-				
+
 				Username:<br>
 				<input type="text" name="handle"><br>
 				Password:<br>
 				<input type="password" name="password"><br>
-				
+
 				<input type="submit" value="Log In">
 			</fieldset>
 		</form>
-		
-		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST" onclick="event.stopPropagation();">
+
+		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST">
 			<fieldset>
 				<legend>Create</legend>
 
@@ -53,14 +53,21 @@
 			</fieldset>
 		</form>
 
-		<div id="projectsList" onclick="event.stopPropagation();"></div>
+		<div id="projectsList"></div>
 	</div>
 
-	<div class="round" id="usersBox" style="display: none">
+	<div class="round hidden" id="usersBox">
 		<h3>USERS</h3>
 		<a id="usersDirect" href="#">Direct</a>
-		
-		<div id="usersList" onclick="event.stopPropagation();"></div>
+
+		<div id="usersList"></div>
+	</div>
+
+	<div class="round hidden" id="meetingsBox">
+		<h3>MEETINGS</h3>
+		<a id="meetingsDirect" href="#">Direct</a>
+
+		<div id="meetingsList"></div>
 	</div>
 
 	<div class="roundRight" id="rawSection">

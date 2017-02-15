@@ -1,6 +1,8 @@
 var restRoot = "https://" + window.location.hostname + ":8443/scrumple/rest/";
 var credentials = null;
 
+window.addEventListener('load', populateRestRoots("missingRestRoot"))
+
 /**
  * Runs a request.
  * @param (string) method - Request method
@@ -10,7 +12,7 @@ var credentials = null;
  */
 function ajax(method, url, content, responseHandler) {	// Main REST invocation
 	var xhttp = new XMLHttpRequest();
-	
+
 	if (responseHandler != null) {
 		xhttp.onreadystatechange = function() {
 			if (this.readyState === 4) {
@@ -25,7 +27,7 @@ function ajax(method, url, content, responseHandler) {	// Main REST invocation
 		}
 	}
 	xhttp.open(method, restRoot + url, true);
-	
+
 	if (credentials != null) {
 		xhttp.setRequestHeader("Authorization", "Basic " + credentials);
 	}

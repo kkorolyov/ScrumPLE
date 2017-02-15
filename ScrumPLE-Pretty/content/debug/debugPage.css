@@ -7,6 +7,10 @@ h3 {
 	margin: 0px;
 }
 
+.hidden {
+	display: none;
+}
+
 .round {
 	border-radius: 32px;
 	padding: 10px;
