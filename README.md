@@ -1,6 +1,8 @@
 # ScrumPLE
 Collaborative development environment tailored to the Scrum framework
 
+[![Build Status](https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/jenkins/job/ScrumPLE/badge/icon)](https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/jenkins/job/ScrumPLE/)
+
 ## Dev Setup
 ### Required Tools
 * [Maven](https://maven.apache.org/)
