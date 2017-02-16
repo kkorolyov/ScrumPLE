@@ -1,5 +1,5 @@
 {
-  "name": "ScrumPLE Chat",
+  "name": "scrumple_chat",
   "version": "0.0.1",
   "description": "ScrumPLE chat server",
   "dependencies": {
