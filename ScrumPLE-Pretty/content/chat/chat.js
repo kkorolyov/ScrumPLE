@@ -8,7 +8,7 @@ var credentials = {key: privateKey, cert: certificate};
 
 var httpsServer = https.createServer(credentials, app);
 var io = require('socket.io')(httpsServer);
-
+var msgLog = [];
 var people = {};
 
 app.get('/', function(req, res){
@@ -21,11 +21,15 @@ io.on('connection', function(socket){
 		people[socket.userID] = name;
 		if(name != ''){
 			io.emit("chat message", name + ' has joined the lobby.');
+			msgLog.forEach(function(msg){
+				socket.emit(msg);
+			}); 
 		}
 	
 		socket.on('chat message', function(msg){
 			console.log('message: ' + msg);
 			io.emit('chat message', name + ': ' + msg);
+			msgLog.push(msg);
 		});
 		socket.on('disconnect', function(){
 			console.log('user disconnected');
