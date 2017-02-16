@@ -1,12 +1,12 @@
-var restRoot = "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/";
 var credentials = null;
 
-window.addEventListener('load', populateRestRoots("missingRestRoot"))
-
+var getUrl = function(url) {
+	return "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/" + url;
+}
 /**
  * Runs a request.
  * @param (string) method - Request method
- * @param (string) url - Partial request URL after the 'restRoot' global
+ * @param (string) url - Request URL starting from the rest root
  * @param (string) content - Optional request content
  * @param (function(response)) responseHandler - Function invoked after server responds
  */
@@ -26,7 +26,7 @@ function ajax(method, url, content, responseHandler) {	// Main REST invocation
 			}
 		}
 	}
-	xhttp.open(method, restRoot + url, true);
+	xhttp.open(method, getUrl(url), true);
 
 	if (credentials != null) {
 		xhttp.setRequestHeader("Authorization", "Basic " + credentials);
@@ -46,23 +46,4 @@ function ajax(method, url, content, responseHandler) {	// Main REST invocation
 function login(handle, password) {
 	credentials = btoa(handle + ":" + password);
 	console.log("Logged in as: " + handle);
-}
-
-/**
- * Prepends the 'restRoot' global to the link attribute of a class of elements.
- * @param (string) className - Name of the class defining elements to invoke this function on
- */
-function populateRestRoots(className) {
-	var elements = document.getElementsByClassName(className);
-	for (var i = 0; i < elements.length; i++) {
-		var element = elements[i];
-		switch (element.nodeName) {
-			case 'A':
-				element.setAttribute('href', restRoot + element.getAttribute('href'));
-				break;
-			case 'FORM':
-				element.setAttribute('action', restRoot + element.getAttribute('action'));
-				break;
-		}
-	}
 }

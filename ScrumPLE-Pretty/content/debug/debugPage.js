@@ -1,16 +1,21 @@
 "use strict";
 
-window.addEventListener('load', applyEventListeners);
+window.addEventListener('load', init);
 
+function init() {
+	var projectsBox = createEntryBox('projectsBox', "Projects", getUrl("projects"));
+	console.log(projectsBox);
+	projectsBox.addEventListener('click', function(event) {
+		console.log("test " + this);
+		if (event.target === this) showProjects();
+	});
+	applyEventListeners();
+}
 function applyEventListeners() {
 	document.getElementById('debugResetButton').addEventListener('click', function(event) {
 		if (event.target === this) debugReset();
 	})
-	document.getElementById('projectsBox').addEventListener('click', function(event) {
-		if (event.target === this) showProjects();
-	});
 }
-
 /**
  * Displays raw server response in 'raw' element.
  * @param (object) response - Response to display
@@ -50,10 +55,16 @@ function createButton(name, action) {
 	return button;
 }
 
-function populateEntryBox(entryBox) {
-	entryBox.style.display = 'block';
+function createEntryBox(id, title, direct) {
+	var template = document.getElementById('entryBox').content,
+	div = template.querySelectorAll('div')[0];
+	div.setAttribute('id', id);	// Set inner div's ID
+	console.log(div);
 
-	var entryList;
+	template.getElementById('boxTitle').innerHTML = title;
+	template.getElementById('boxDirect').href = direct;
+
+	return document.getElementsByTagName('body')[0].appendChild(document.importNode(template.querySelectorAll('div')[0], true));
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */

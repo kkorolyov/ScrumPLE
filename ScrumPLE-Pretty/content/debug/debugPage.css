@@ -7,8 +7,8 @@ h3 {
 	margin: 0px;
 }
 
-.hidden {
-	display: none;
+.clickable {
+	cursor: pointer;
 }
 
 .round {
@@ -34,6 +34,10 @@ h3 {
 .entry {
 	background-color: lime;
 	margin: 5px 0px 5px 5px;
+}
+
+#debugResetButton {
+	float: left;
 }
 
 #projectsBox {

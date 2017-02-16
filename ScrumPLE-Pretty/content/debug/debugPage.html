@@ -15,9 +15,27 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 
-	<button class="roundLeft" id="debugResetButton">Debug RESET</button>
+	<button id="debugResetButton">Debug RESET</button>
 
-	<div class="roundLeft entryBox" id="projectsBox" title="Click to show projects" style="cursor: pointer">
+	<template id="entryBox">
+		<div class="round entryBox clickable">
+			<h3 id="boxTitle"></h3>
+			<a id="boxDirect">Direct</a>
+
+			<form id="boxCreatePost">
+				<fieldset>
+					<legend>Create (POST)</legend>
+				</fieldset>
+			</form>
+			<form id="boxCreateJson">
+				<fieldSet>
+					<legend>Create (JSON)</legend>
+				</fieldSet>
+			</form>
+		</div>
+	</template>
+
+	<div class="roundLeft entryBox" title="Click to show projects" style="cursor: pointer">
 		<h3>PROJECTS</h3>
 		<a class="missingRestRoot" href="projects">Direct</a>
 
