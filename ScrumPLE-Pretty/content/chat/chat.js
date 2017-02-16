@@ -30,6 +30,9 @@ io.on('connection', function(socket){
 			console.log('message: ' + msg);
 			io.emit('chat message', name + ': ' + msg);
 			msgLog.push(msg);
+			msgLog.forEach(function(msg) {
+				console.log(msg);
+			});
 		});
 		socket.on('disconnect', function(){
 			console.log('user disconnected');
