@@ -3,7 +3,8 @@
 header {
 	text-align: center;
 }
-h3 {
+
+.title {
 	margin: 0px;
 }
 
@@ -36,17 +37,21 @@ h3 {
 	margin: 5px 0px 5px 5px;
 }
 
-#debugResetButton {
+#debugReset {
 	float: left;
 }
 
-#projectsBox {
+#login {
+	background-color: DarkSeaGreen;
+}
+
+.projectsBox {
 	background-color: cyan;
 }
-#usersBox {
+.usersBox {
 	background-color: orange;
 }
-#meetingsBox {
+.meetingsBox {
 	background-color: pink;
 }
 

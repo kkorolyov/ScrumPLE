@@ -3,16 +3,20 @@
 window.addEventListener('load', init);
 
 function init() {
-	var projectsBox = createEntryBox('projectsBox', "Projects", getUrl("projects"));
-	console.log(projectsBox);
+	var projectsBox = createEntryBox('projectsBox', "Projects", "projects", {
+		name: 'text',
+		description: 'text',
+		visible: 'checkbox',
+		ownerHandle: 'text',
+		ownerPassword: 'password'
+	});
 	projectsBox.addEventListener('click', function(event) {
-		console.log("test " + this);
 		if (event.target === this) showProjects();
 	});
 	applyEventListeners();
 }
 function applyEventListeners() {
-	document.getElementById('debugResetButton').addEventListener('click', function(event) {
+	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) debugReset();
 	})
 }
@@ -55,16 +59,32 @@ function createButton(name, action) {
 	return button;
 }
 
-function createEntryBox(id, title, direct) {
-	var template = document.getElementById('entryBox').content,
-	div = template.querySelectorAll('div')[0];
-	div.setAttribute('id', id);	// Set inner div's ID
-	console.log(div);
+function createEntryBox(className, title, url, properties) {
+	var box = document.getElementById('entryBox').content.querySelector('.entryBox');
+	box.className += " " + className;
 
-	template.getElementById('boxTitle').innerHTML = title;
-	template.getElementById('boxDirect').href = direct;
+	box.getElementsByClassName('title')[0].innerHTML = title;
+	box.getElementsByClassName('direct')[0].href = getUrl(url);
 
-	return document.getElementsByTagName('body')[0].appendChild(document.importNode(template.querySelectorAll('div')[0], true));
+	var createPost = box.getElementsByClassName('createPost')[0];
+	createPost.action = getUrl(url);
+	createPost.method = 'POST';
+
+	var createPostFieldset = createPost.getElementsByTagName('fieldset')[0];
+	for (var property in properties) {
+		createPostFieldset.appendChild(document.createTextNode(property + ": "));
+
+		var input = createPostFieldset.appendChild(document.createElement('input'));
+		input.name = property;
+		input.type = properties[property];
+
+		createPostFieldset.appendChild(document.createElement('br'));
+	}
+	var createPostSubmit = createPostFieldset.appendChild(document.createElement('input'));
+	createPostSubmit.type = 'submit';
+	createPostSubmit.value = "Submit";
+
+	return document.getElementsByTagName('body')[0].appendChild(document.importNode(box, true));
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */

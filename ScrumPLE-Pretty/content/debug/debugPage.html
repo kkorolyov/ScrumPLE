@@ -15,22 +15,57 @@
 		<h1>ScrumPLE REST Debug</h1>
 	</header>
 
-	<button id="debugResetButton">Debug RESET</button>
+	<button id="debugReset">Debug RESET</button>
+
+	<div id="login" class="roundLeft">
+		<form id="loginForm">
+			<fieldset>
+				<legend>Login</legend>
+				Handle: <input type="text" name="handle"><br>
+				Password: <input type="password" name="password"><br>
+				<input type="submit" value="Log In">
+			</fieldset>
+		</form>
+	</div>
+
+	<div id="rawSection" class="roundRight">
+		<pre id="raw">RAW</pre>
+	</div>
 
 	<template id="entryBox">
-		<div class="round entryBox clickable">
-			<h3 id="boxTitle"></h3>
-			<a id="boxDirect">Direct</a>
+		<div class="entryBox round clickable">
+			<h3 class="title"></h3>
+			<a class="direct">Direct</a>
 
-			<form id="boxCreatePost">
+			<form class="createPost">
 				<fieldset>
 					<legend>Create (POST)</legend>
 				</fieldset>
 			</form>
-			<form id="boxCreateJson">
+			<form class="createJson">
 				<fieldSet>
 					<legend>Create (JSON)</legend>
 				</fieldSet>
+			</form>
+		</div>
+	</template>
+
+	<template id="entry">
+		<div class="entry round clickable">
+			<h4 class="title"></h4>
+			<a class="direct">Direct</a>
+
+			<p class="attributes"></p>
+
+			<form class="updatePost">
+				<fieldset>
+					<legend>Update (POST)</legend>
+				</fieldset>
+			</form>
+			<form class="updateJson">
+				<fieldset>
+					<legend>Update (JSON)</legend>
+				</fieldset>
 			</form>
 		</div>
 	</template>
@@ -72,24 +107,6 @@
 		</form>
 
 		<div id="projectsList"></div>
-	</div>
-
-	<div class="round hidden entryBox" id="usersBox">
-		<h3>USERS</h3>
-		<a id="usersDirect" href="#">Direct</a>
-
-		<div id="usersList"></div>
-	</div>
-
-	<div class="round hidden entryBox" id="meetingsBox">
-		<h3>MEETINGS</h3>
-		<a id="meetingsDirect" href="#">Direct</a>
-
-		<div id="meetingsList"></div>
-	</div>
-
-	<div class="roundRight" id="rawSection">
-		<pre id="raw">RAW</pre>
 	</div>
 </body>
 </html>
