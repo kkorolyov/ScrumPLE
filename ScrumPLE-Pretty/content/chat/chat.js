@@ -21,15 +21,16 @@ io.on('connection', function(socket){
 		people[socket.userID] = name;
 		if(name != ''){
 			io.emit("chat message", name + ' has joined the lobby.');
-			msgLog.forEach(function(msg){
-				socket.emit(msg);
-			}); 
 		}
-	
+
+		msgLog.forEach(function(msg){
+			socket.emit('chat message', msg);
+		}); 
+		
 		socket.on('chat message', function(msg){
 			console.log('message: ' + msg);
 			io.emit('chat message', name + ': ' + msg);
-			msgLog.push(msg);
+			msgLog.push(name + ': ' + msg);
 			msgLog.forEach(function(msg) {
 				console.log(msg);
 			});
