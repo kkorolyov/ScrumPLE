@@ -7,8 +7,14 @@ function init() {
 		name: 'text',
 		description: 'text',
 		visible: 'checkbox',
-		ownerHandle: 'text',
-		ownerPassword: 'password'
+		owner: {
+			credentials: {
+				ownerHandle: 'text',
+				ownerPassword: 'password'
+			},
+			displayName: 'text',
+			role: 'text'
+		}
 	});
 	projectsBox.addEventListener('click', function(event) {
 		if (event.target === this) showProjects();
@@ -71,20 +77,31 @@ function createEntryBox(className, title, url, properties) {
 	createPost.method = 'POST';
 
 	var createPostFieldset = createPost.getElementsByTagName('fieldset')[0];
-	for (var property in properties) {
-		createPostFieldset.appendChild(document.createTextNode(property + ": "));
+	appendFields(createPostFieldset, properties);
 
-		var input = createPostFieldset.appendChild(document.createElement('input'));
-		input.name = property;
-		input.type = properties[property];
-
-		createPostFieldset.appendChild(document.createElement('br'));
-	}
 	var createPostSubmit = createPostFieldset.appendChild(document.createElement('input'));
 	createPostSubmit.type = 'submit';
 	createPostSubmit.value = "Submit";
 
 	return document.getElementsByTagName('body')[0].appendChild(document.importNode(box, true));
+}
+function appendFields(form, properties) {
+	for (var property in properties) {
+		if (typeof properties[property] === 'object') {
+			var nextForm = form.appendChild(document.createElement('fieldset'));
+			nextForm.appendChild(document.createElement('legend')).appendChild(document.createTextNode(property));
+
+			appendFields(nextForm, properties[property]);
+		} else {
+			form.appendChild(document.createTextNode(property + ": "));
+
+			var input = form.appendChild(document.createElement('input'));
+			input.name = property;
+			input.type = properties[property];
+
+			form.appendChild(document.createElement('br'));
+		}
+	}
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */
