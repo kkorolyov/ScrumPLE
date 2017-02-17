@@ -16,9 +16,6 @@ function init() {
 			role: 'text'
 		}
 	});
-	projectsBox.addEventListener('click', function(event) {
-		if (event.target === this) showProjects();
-	});
 	applyEventListeners();
 }
 function applyEventListeners() {
@@ -81,8 +78,30 @@ function createEntryBox(className, title, url, properties) {
 						document.getElementById('entryBox').content.querySelector('.entryBox'), true));	// Import, append, assign live node
 	
 	box.className += " " + className;
+	box.addEventListener('click', function(event) {
+		if (event.target === this) {
+			var list = box.getElementsByClassName('entryList')[0];
+			list.textContent = "Retrieving " + title + "...";
 
-	box.getElementsByClassName('title')[0].innerHTML = title;
+			ajax('GET', url, null, response => {
+				list.textContent = "";
+
+				displayRaw(response);
+
+				if (typeof response === 'object') {
+					for (var key in response) {
+						(function(key) {
+							var entry = list.appendChild(createEntry(title + ": " + key, response[key]));
+							entry.appendChild(createButton("DELETE", () => {
+								ajax('DELETE', url + "/" + key, null, response => displayRaw(response));
+							}));
+						})(key);
+					}
+				}
+			});
+		}
+	});
+	box.getElementsByClassName('title')[0].textContent = title;
 	box.getElementsByClassName('direct')[0].href = getUrl(url);
 
 	var createForm = box.getElementsByClassName('createForm')[0];
@@ -103,50 +122,59 @@ function createEntryBox(className, title, url, properties) {
 	submitJson.value = "Submit (JSON)";
 	submitJson.addEventListener('click', function(event) {
 		var object = formToObject(createFormFieldset);
-		console.log(object);
-		displayRaw(object);
-		// ajax('POST', url, object, function(response) { displayRaw(response) });
+		ajax('POST', url, JSON.stringify(object), function(response) { displayRaw(response) });
 	});
 	return box;
 }
-function appendFields(form, properties) {
-	for (var property in properties) {
-		if (typeof properties[property] === 'object') {
-			var nextForm = form.appendChild(document.createElement('fieldset'));
-			nextForm.appendChild(document.createElement('legend'))
-							.appendChild(document.createTextNode(property));
+/**
+ * Appends all fields in an object to a fieldset.
+ * 
+ * @param {Node} fieldset element to append to
+ * @param {Object} object object with fields to append
+ */
+function appendFields(fieldset, object) {
+	for (var property in object) {
+		if (typeof object[property] === 'object') {
+			var nextForm = fieldset.appendChild(document.createElement('fieldset'));
+			nextForm.name = property;	// ID new form by property name
+			nextForm.appendChild(document.createElement('legend')).textContent = property;
 
-			appendFields(nextForm, properties[property]);
+			appendFields(nextForm, object[property]);	// Apply inner object's properties to new form
 		} else {
-			form.appendChild(document.createTextNode(property + ": "));
+			fieldset.appendChild(document.createTextNode(property + ": "));
 
-			var input = form.appendChild(document.createElement('input'));
+			var input = fieldset.appendChild(document.createElement('input'));
 			input.name = property;
-			input.type = properties[property];
+			input.type = object[property];
 
 		}
-		form.appendChild(document.createElement('br'));
+		fieldset.appendChild(document.createElement('br'));
 	}
 }
 /**
- * Constructs an object from form inputs
+ * Constructs an object from fieldset inputs.
  * 
- * @param {Node} form node containing 'input' elements
+ * @param {Node} fieldset node containing 'input' elements
  */
-function formToObject(form) {
-	var inputs = form.getElementsByTagName('input');
-	var object = {};	// Empty object
+function formToObject(fieldset) {
+	var object = {};
 
-	for (var i = 0; i < inputs.length; i++) {
-		var input = inputs[i];
-		switch (input.type) {
-			case 'text':
-				object[input.name] = input.value;
+	for (var i = 0; i < fieldset.childNodes.length; i++) {
+		var childNode = fieldset.childNodes[i];
+		switch (childNode.tagName) {
+			case 'FIELDSET':
+				object[childNode.name] = formToObject(childNode)
 				break;
-			case 'checkbox':
-				object[input.name] = input.checked;
-				break;
-			default:
+			case 'INPUT':
+				switch (childNode.type) {
+					case 'text':
+					case 'password':
+						object[childNode.name] = childNode.value;
+						break;
+					case 'checkbox':
+						object[childNode.name] = childNode.checked;
+						break;
+				}
 				break;
 		}
 	}
