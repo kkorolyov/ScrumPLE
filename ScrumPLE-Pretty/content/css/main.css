@@ -1,0 +1,146 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	background: #7fccf6;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+li {
+	list-style-type: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+img {
+	border: none;
+}
+
+#mywrapper {
+	width: 1000px;
+	margin: 0 auto;
+	padding-top: 30px;
+}
+
+#mymain {
+	position: relative;
+}
+
+#mymain .myheader {
+	overflow: hidden;
+	text-align: right;
+}
+
+#mymain .myheader .logo {
+	float: left;
+	color: #d0d502;
+	font-size: 50px;
+	font-weight: bold;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
+}
+
+#mymain .myheader input {
+	margin-top: 10px;
+	height: 30px;
+	padding-left: 5px;
+	border: 2px solid #7fccf6;
+	box-sizing: border-box;
+}
+
+#mymain .myheader .signbutton {
+	background: #7fccf6;
+	border: 1px solid #ccc;
+	color: white;
+	cursor: pointer;
+	margin-top: 10px;
+	padding: 5px 10px;
+	height: 30px;
+	box-sizing: border-box;
+}
+
+#mymain .mycontent {
+	margin-top: 30px;
+}
+
+
+
+#mymain .mycontent .table {
+	float: center;
+	width: 75%;
+}
+
+#mymain .mycontent .table table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #666;
+}
+
+#mymain .mycontent .table table td {
+	height: 100px;
+}
+
+#mymain .mycontent .table table td, #mymain .mycontent .table table th {
+	border: 1px solid #666;
+}
+
+#chat_button {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	cursor: pointer;
+	font-size: 25px;
+	height: 30px;
+	border:2px solid #ccc;
+	width: 200px;
+	padding:0px 10px;
+}
+
+#chat_button:hover {
+	color: gray;
+}
+
+#chat_frame {
+	position: fixed;
+	bottom: 54px;
+	right: 20px;
+	border: 2px solid black;
+	background: white;
+	padding: 10px;
+	padding-top: 0px;
+	display: none;
+	width: 200px;
+}
+
+#chat_frame .first {
+	background: #6d84b3;
+	overflow: hidden;
+	color: #eee;
+	margin-right: -10px;
+	margin-left: -10px;
+	padding-left: 5px;
+}
+
+#chat_frame .first .close {
+	float: right;
+	font-size: 20px;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+#chat_frame .first .close:hover {
+	color: pink;
+}
+
+#chat_frame .sec {
+	background: #ccc;
+	font-weight: bold;
+	margin-right: -10px;
+	margin-left: -10px;
+	padding-left: 5px;
+	margin-bottom: 10px;
+}

@@ -1,0 +1,278 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	background: #7fccf6;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+li {
+	list-style-type: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+img {
+	border: none;
+}
+
+#mywrapper {
+	width: 1000px;
+	margin: 0 auto;
+	padding-top: 30px;
+}
+
+#myhome {
+	position: relative;
+}
+
+#myhome .myheader {
+	overflow: hidden;
+	text-align: right;
+}
+
+#myhome .myheader .logo {
+	float: left;
+	color: #d0d502;
+	font-size: 50px;
+	font-weight: bold;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
+}
+
+#myhome .myheader .signbutton {
+	border: 2px solid black;
+	background: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+#myhome .form {
+	margin-top: 300px;
+	text-align: center;
+}
+
+#myhome .form input {
+	height: 35px;
+	border: 2px solid black;
+	width: 250px;
+	box-sizing: border-box;
+	padding-left: 5px;
+}
+
+#myhome .form button {
+	height: 35px;
+	border: 2px solid black;
+	box-sizing: border-box;
+	cursor: pointer;
+	background: none;
+}
+
+#myhome .mypop {
+	position: absolute;
+	width: 600px;
+	border: 2px solid black;
+	top: 300px;
+	left: 50%;
+	margin-left: -300px;
+	background: white;
+	display: none;
+}
+
+#myhome .mypop .mycontent {
+	width: 400px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+#myhome .mypop .mycontent .item {
+	margin-top: 20px;
+}
+
+#myhome .mypop .mycontent .item.center {
+	text-align: center;
+}
+
+#myhome .mypop .mycontent .item .title {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#myhome .mypop .mycontent .item input {
+	width: 100%;
+	text-align: center;
+	height: 30px;
+	border: 2px solid #aed0de;
+	border-radius: 5px;
+}
+
+#myhome .mypop .mycontent .item button {
+	border: 2px solid black;
+	background: none;
+	padding: 5px 20px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+#mymain {
+	position: relative;
+}
+
+#mymain .myheader {
+	overflow: hidden;
+	text-align: right;
+}
+
+#mymain .myheader .logo {
+	float: left;
+	color: #d0d502;
+	font-size: 50px;
+	font-weight: bold;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
+}
+
+#mymain .myheader input {
+	margin-top: 10px;
+	height: 30px;
+	padding-left: 5px;
+	border: 2px solid #7fccf6;
+	box-sizing: border-box;
+}
+
+#mymain .myheader .signbutton {
+	background: #7fccf6;
+	border: 1px solid #ccc;
+	color: white;
+	cursor: pointer;
+	margin-top: 10px;
+	padding: 5px 10px;
+	height: 30px;
+	box-sizing: border-box;
+}
+
+#mymain .mycontent {
+	margin-top: 30px;
+}
+
+#mymain .mycontent .nav {
+	float: left;
+	width: 20%;
+	background: #7fccf6;
+	min-height: 500px;
+}
+
+#mymain .mycontent .nav li {
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+#mymain .mycontent .nav li a {
+	color: white;
+	text-decoration: underline;
+	font-size: 25px;
+}
+
+#mymain .mycontent .nav li a:hover {
+	color: gray;
+}
+
+#mymain .mycontent .table {
+	float: right;
+	width: 75%;
+}
+
+#mymain .mycontent .table table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #666;
+}
+
+#mymain .mycontent .table table td {
+	height: 100px;
+}
+
+#mymain .mycontent .table table td, #mymain .mycontent .table table th {
+	border: 1px solid #666;
+}
+
+#mycreate {
+	position: relative;
+}
+
+#mycreate .myheader {
+	overflow: hidden;
+	text-align: right;
+}
+
+#mycreate .myheader .logo {
+	float: left;
+	color: #d0d502;
+	font-size: 50px;
+	font-weight: bold;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
+}
+
+#mycreate .mycontent {
+	width: 350px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+#mycreate .mycontent input {
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #7fccf6;
+	outline: none;
+}
+
+#mycreate .mycontent select {
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #7fccf6;
+	outline: none;
+	color: gray;
+}
+
+#mycreate .mycontent .item.center {
+	text-align: center;
+}
+
+#mycreate .mycontent button {
+	border-radius: 16px;
+	background: #9dca6d;
+	color: white;
+	outline: none;
+	border: none;
+	margin-top: 30px;
+	cursor: pointer;
+	padding: 10px 20px;
+}
+
+#mycreate .mycontent input.first {
+	width: 49%;
+	float: left;
+}
+
+#mycreate .mycontent input.last {
+	width: 49%;
+	float: right;
+}
+
+#mycreate .mycontent .item {
+	margin-bottom: 15px;
+}
+
+#mycreate .mycontent .item .stitle {
+	font-size: 20px;
+}

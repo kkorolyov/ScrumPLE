@@ -1,0 +1,129 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	background: #7fccf6;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+li {
+	list-style-type: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+img {
+	border: none;
+}
+
+#mywrapper {
+	width: 1000px;
+	margin: 0 auto;
+	padding-top: 30px;
+}
+
+#myhome {
+	position: relative;
+}
+
+#myhome .myheader {
+	overflow: hidden;
+	text-align: right;
+}
+
+#myhome .myheader .logo {
+	float: left;
+	color: #d0d502;
+	font-size: 50px;
+	font-weight: bold;
+	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
+}
+
+#myhome .myheader .signbutton {
+	border: 2px solid black;
+	background: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+#myhome .form {
+	margin-top: 300px;
+	text-align: center;
+}
+
+#myhome .form input {
+	height: 35px;
+	border: 2px solid black;
+	width: 250px;
+	box-sizing: border-box;
+	padding-left: 5px;
+}
+
+#myhome .form button {
+	height: 35px;
+	border: 2px solid black;
+	box-sizing: border-box;
+	cursor: pointer;
+	background: none;
+}
+
+#myhome .mypop {
+	position: absolute;
+	width: 600px;
+	border: 2px solid black;
+	top: 300px;
+	left: 50%;
+	margin-left: -300px;
+	background: white;
+	display: none;
+}
+
+#myhome .mypop .mycontent {
+	width: 400px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+#myhome .mypop .mycontent .item {
+	margin-top: 20px;
+}
+
+#myhome .mypop .mycontent .item.center {
+	text-align: center;
+}
+
+#myhome .mypop .mycontent .item .title {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+#myhome .mypop .mycontent .item input {
+	width: 100%;
+	text-align: center;
+	height: 30px;
+	border: 2px solid #aed0de;
+	border-radius: 5px;
+	box-sizing:border-box;
+}
+
+#myhome .mypop .mycontent .item select {
+	width: 100%;
+	text-align: center;
+	height: 30px;
+	border: 2px solid #aed0de;
+	border-radius: 5px;
+}
+
+#myhome .mypop .mycontent .item button {
+	border: 2px solid black;
+	background: none;
+	padding: 5px 20px;
+	cursor: pointer;
+	margin-top: 10px;
+}
