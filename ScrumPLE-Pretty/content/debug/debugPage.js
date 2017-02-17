@@ -3,19 +3,20 @@
 window.addEventListener('load', init);
 
 function init() {
-	var projectsBox = createEntryBox('projectsBox', "Projects", "projects", {
-		name: 'text',
-		description: 'text',
-		visible: 'checkbox',
-		owner: {
-			credentials: {
-				handle: 'text',
-				password: 'password'
-			},
-			displayName: 'text',
-			role: 'text'
-		}
-	});
+	document.getElementsByTagName('body')[0].appendChild(
+		createEntryBox('projectsBox', "Projects", "projects", {
+			name: 'text',
+			description: 'text',
+			visible: 'checkbox',
+			owner: {
+				credentials: {
+					handle: 'text',
+					password: 'password'
+				},
+				displayName: 'text',
+				role: 'text'
+			}
+		}));
 	applyEventListeners();
 }
 function applyEventListeners() {
@@ -36,24 +37,7 @@ function debugReset() {
 	ajax("GET", "debug/reset", null, function(response) { displayRaw(response) });
 }
 
-/**
- * Creates and returns a custom, empty 'div' meant to encapsulate a single entry.
- * @param (string) name - Entry name
- * @param (object) properties - Entry properties
- */
-function createEntry(name, properties) {
-	var entry = document.createElement('div');
-	entry.setAttribute('class', "entry round");
-	entry.setAttribute('title', "Click to expand");
-	entry.appendChild(document.createElement('h4')).appendChild(document.createTextNode(name));
 
-	var attributes = entry.appendChild(document.createElement('p'));
-	for (var name in properties) {
-		attributes.appendChild(document.createTextNode(name + "=" + properties[name]));
-		attributes.appendChild(document.createElement('br'));
-	}
-	return entry;
-}
 function createButton(name, action) {
 	var button = document.createElement('button');
 	button.setAttribute('type', 'button')
@@ -64,8 +48,8 @@ function createButton(name, action) {
 }
 
 /**
- * Creates a new entry box at the end of document.
- * Returns the created entry box.
+ * Creates and returns a new entry box.
+ * 
  * @param {string} className class identifier
  * @param {string} title displayed title
  * @param {string} url url to box action
@@ -73,9 +57,8 @@ function createButton(name, action) {
  * @returns
  */
 function createEntryBox(className, title, url, properties) {
-	var box = document.getElementsByTagName('body')[0].appendChild(
-						document.importNode(
-						document.getElementById('entryBox').content.querySelector('.entryBox'), true));	// Import, append, assign live node
+	var box = document.importNode(
+						document.getElementById('entryBox').content.querySelector('.entryBox'), true);	// Get live clone
 	
 	box.className += " " + className;
 	box.addEventListener('click', function(event) {
@@ -108,62 +91,73 @@ function createEntryBox(className, title, url, properties) {
 	createForm.action = getUrl(url);
 	createForm.method = 'POST';
 
-	var createFormFieldset = createForm.getElementsByTagName('fieldset')[0];
-	appendFields(createFormFieldset, properties);
+	var createFormFieldset = createForm.elements['root'];
+	formify(createFormFieldset, properties);
 
-	var submitForm = createFormFieldset.appendChild(document.createElement('input'));
-	submitForm.type = 'submit';
-	submitForm.name = 'submitForm';
-	submitForm.value = "Submit (Form)";
-
-	var submitJson = createFormFieldset.appendChild(document.createElement('input'));
-	submitJson.type = 'button';
-	submitJson.name = 'submitJson';
-	submitJson.value = "Submit (JSON)";
-	submitJson.addEventListener('click', function(event) {
-		var object = formToObject(createFormFieldset);
-		ajax('POST', url, JSON.stringify(object), function(response) { displayRaw(response) });
+	createForm.elements['submitJson'].addEventListener('click', function(event) {
+		ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), function(response) { displayRaw(response) });
+		createForm.reset();
 	});
 	return box;
 }
 /**
- * Appends all fields in an object to a fieldset.
+ * Constructs and returns a new entry.
  * 
- * @param {Node} fieldset element to append to
- * @param {Object} object object with fields to append
+ * @param {any} name entry name
+ * @param {any} object object to transform to entry
+ * @returns
  */
-function appendFields(fieldset, object) {
+function createEntry(name, object) {
+	var entry = document.importNode(
+							document.getElementById('entry').contentEditable.querySelector('.entry'), true);	// Get live clone
+	entry.getElementsByClassName('title')[0].textContent = name;
+
+	var attributes = entry.getElementsByClassName('attributes');
+	for (var property in object) {
+		attributes.appendChild(document.createTextNode(property + "=" + object[property]));
+		attributes.appendChild(document.createElement('br'));
+	}
+	return entry;
+}
+
+/**
+ * Transforms an object into a set of fields within a fieldset.
+ * 
+ * @param {Node} fieldset fieldset to apply object to
+ * @param {Object} object object to apply
+ */
+function formify(fieldset, object) {
 	for (var property in object) {
 		if (typeof object[property] === 'object') {
 			var nextForm = fieldset.appendChild(document.createElement('fieldset'));
 			nextForm.name = property;	// ID new form by property name
 			nextForm.appendChild(document.createElement('legend')).textContent = property;
 
-			appendFields(nextForm, object[property]);	// Apply inner object's properties to new form
+			formify(nextForm, object[property]);	// Apply inner object's properties to new form
 		} else {
 			fieldset.appendChild(document.createTextNode(property + ": "));
 
 			var input = fieldset.appendChild(document.createElement('input'));
 			input.name = property;
 			input.type = object[property];
-
 		}
 		fieldset.appendChild(document.createElement('br'));
 	}
 }
 /**
- * Constructs an object from fieldset inputs.
+ * Transforms a fieldset into an object.
  * 
- * @param {Node} fieldset node containing 'input' elements
+ * @param {Node} fieldset fieldset with fieldset or input elements to transform to object
+ * @returns
  */
-function formToObject(fieldset) {
+function objectify(fieldset) {
 	var object = {};
 
 	for (var i = 0; i < fieldset.childNodes.length; i++) {
 		var childNode = fieldset.childNodes[i];
 		switch (childNode.tagName) {
 			case 'FIELDSET':
-				object[childNode.name] = formToObject(childNode)
+				object[childNode.name] = objectify(childNode)
 				break;
 			case 'INPUT':
 				switch (childNode.type) {
