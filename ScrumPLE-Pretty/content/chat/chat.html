@@ -23,12 +23,12 @@
 	  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	  <script> 
 		var socket = io("https://52.10.231.227:3000");
-		document.getElementById("sendbtn").submit(function(){
+		document.getElementById("sendbtn").onclick(function(){
 			socket.emit('chat message', $('#m').val());
 			$('#m').val('');
       return false;
     });
-    document.getElementById("joinbtn").submit(function(){
+    document.getElementById("joinbtn").onclick(function(){
 			socket.emit('join', $('#n').val());
 			$('#n').val('');
 			return false;
