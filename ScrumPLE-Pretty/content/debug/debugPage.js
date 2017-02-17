@@ -9,8 +9,8 @@ function init() {
 		visible: 'checkbox',
 		owner: {
 			credentials: {
-				ownerHandle: 'text',
-				ownerPassword: 'password'
+				handle: 'text',
+				password: 'password'
 			},
 			displayName: 'text',
 			role: 'text'
@@ -26,12 +26,13 @@ function applyEventListeners() {
 		if (event.target === this) debugReset();
 	})
 }
+
 /**
  * Displays raw server response in 'raw' element.
  * @param (object) response - Response to display
  */
 function displayRaw(response) {	// For debug
-	document.getElementById('raw').innerHTML = JSON.stringify(response, null, 2);
+	document.getElementById('raw').innerHTML = (typeof response === 'string') ? response : JSON.stringify(response, null, 2);
 }
 
 function debugReset() {
@@ -65,31 +66,55 @@ function createButton(name, action) {
 	return button;
 }
 
+/**
+ * Creates a new entry box at the end of document.
+ * Returns the created entry box.
+ * @param {string} className class identifier
+ * @param {string} title displayed title
+ * @param {string} url url to box action
+ * @param {Object} properties {name, input type} pairs defining the objects created by this box
+ * @returns
+ */
 function createEntryBox(className, title, url, properties) {
-	var box = document.getElementById('entryBox').content.querySelector('.entryBox');
+	var box = document.getElementsByTagName('body')[0].appendChild(
+						document.importNode(
+						document.getElementById('entryBox').content.querySelector('.entryBox'), true));	// Import, append, assign live node
+	
 	box.className += " " + className;
 
 	box.getElementsByClassName('title')[0].innerHTML = title;
 	box.getElementsByClassName('direct')[0].href = getUrl(url);
 
-	var createPost = box.getElementsByClassName('createPost')[0];
-	createPost.action = getUrl(url);
-	createPost.method = 'POST';
+	var createForm = box.getElementsByClassName('createForm')[0];
+	createForm.action = getUrl(url);
+	createForm.method = 'POST';
 
-	var createPostFieldset = createPost.getElementsByTagName('fieldset')[0];
-	appendFields(createPostFieldset, properties);
+	var createFormFieldset = createForm.getElementsByTagName('fieldset')[0];
+	appendFields(createFormFieldset, properties);
 
-	var createPostSubmit = createPostFieldset.appendChild(document.createElement('input'));
-	createPostSubmit.type = 'submit';
-	createPostSubmit.value = "Submit";
+	var submitForm = createFormFieldset.appendChild(document.createElement('input'));
+	submitForm.type = 'submit';
+	submitForm.name = 'submitForm';
+	submitForm.value = "Submit (Form)";
 
-	return document.getElementsByTagName('body')[0].appendChild(document.importNode(box, true));
+	var submitJson = createFormFieldset.appendChild(document.createElement('input'));
+	submitJson.type = 'button';
+	submitJson.name = 'submitJson';
+	submitJson.value = "Submit (JSON)";
+	submitJson.addEventListener('click', function(event) {
+		var object = formToObject(createFormFieldset);
+		console.log(object);
+		displayRaw(object);
+		// ajax('POST', url, object, function(response) { displayRaw(response) });
+	});
+	return box;
 }
 function appendFields(form, properties) {
 	for (var property in properties) {
 		if (typeof properties[property] === 'object') {
 			var nextForm = form.appendChild(document.createElement('fieldset'));
-			nextForm.appendChild(document.createElement('legend')).appendChild(document.createTextNode(property));
+			nextForm.appendChild(document.createElement('legend'))
+							.appendChild(document.createTextNode(property));
 
 			appendFields(nextForm, properties[property]);
 		} else {
@@ -99,9 +124,33 @@ function appendFields(form, properties) {
 			input.name = property;
 			input.type = properties[property];
 
-			form.appendChild(document.createElement('br'));
+		}
+		form.appendChild(document.createElement('br'));
+	}
+}
+/**
+ * Constructs an object from form inputs
+ * 
+ * @param {Node} form node containing 'input' elements
+ */
+function formToObject(form) {
+	var inputs = form.getElementsByTagName('input');
+	var object = {};	// Empty object
+
+	for (var i = 0; i < inputs.length; i++) {
+		var input = inputs[i];
+		switch (input.type) {
+			case 'text':
+				object[input.name] = input.value;
+				break;
+			case 'checkbox':
+				object[input.name] = input.checked;
+				break;
+			default:
+				break;
 		}
 	}
+	return object;
 }
 
 /** Retrieves and displays all projects in the 'projectList' element. */
