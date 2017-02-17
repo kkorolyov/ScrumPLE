@@ -22,17 +22,19 @@
 	  <script src="https://52.10.231.227:3000/socket.io/socket.io.js"></script>
 	  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	  <script> 
-		var socket = io("https://52.10.231.227:3000");
-		document.getElementById("sendbtn").onclick(function(){
+    function sendMsg(){
 			socket.emit('chat message', $('#m').val());
 			$('#m').val('');
       return false;
-    });
-    document.getElementById("joinbtn").onclick(function(){
+    }
+    function joinChat(){
 			socket.emit('join', $('#n').val());
 			$('#n').val('');
 			return false;
-		});
+    }
+		var socket = io("https://52.10.231.227:3000");
+		document.getElementById("sendbtn").onclick=sendMsg;
+    document.getElementById("joinbtn").onclick=joinChat;
 		socket.on('chat message', function(msg){
 		$('#messages').append($('<li>').text(msg));
 		});
