@@ -21,12 +21,15 @@ function init() {
 }
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
-		if (event.target === this) debugReset();
-	})
+		if (event.target === this) {
+			rest.ajax("GET", "debug/reset", null, function(response) { displayRaw(response) });
+		}
+	});
 	document.getElementById('loginForm').addEventListener('submit', function(event) {
 		event.preventDefault();
-		login(this.elements['handle'].value, this.elements['password'].value);
-	})
+		rest.login(this.elements['handle'].value, this.elements['password'].value);
+		this.reset();
+	});
 }
 
 /**
@@ -34,21 +37,7 @@ function applyEventListeners() {
  * @param (object) response - Response to display
  */
 function displayRaw(response) {	// For debug
-	document.getElementById('raw').innerHTML = (typeof response === 'string') ? response : JSON.stringify(response, null, 2);
-}
-
-function debugReset() {
-	ajax("GET", "debug/reset", null, function(response) { displayRaw(response) });
-}
-
-
-function createButton(name, action) {
-	var button = document.createElement('button');
-	button.setAttribute('type', 'button')
-	button.addEventListener('click', function(event) { if (event.target === this) action() });
-	button.appendChild(document.createTextNode(name));
-
-	return button;
+	document.getElementById('raw').textContent = (typeof response === 'string') ? response : JSON.stringify(response, null, 2);
 }
 
 /**
@@ -57,7 +46,7 @@ function createButton(name, action) {
  * @param {string} className class identifier
  * @param {string} title displayed title
  * @param {string} url url to box actions
- * @param {object} properties {name, input type} pairs defining the objects created by this box
+ * @param {Object} properties {name, input type} pairs defining the objects created by this box
  * @returns
  */
 function createEntryBox(className, title, url, properties) {
@@ -70,7 +59,7 @@ function createEntryBox(className, title, url, properties) {
 			var list = box.getElementsByClassName('entryList')[0];
 			list.textContent = "Retrieving " + title + "...";
 
-			ajax('GET', url, null, response => {
+			rest.ajax('GET', url, null, response => {
 				displayRaw(response);
 
 				list.textContent = "";
@@ -84,17 +73,17 @@ function createEntryBox(className, title, url, properties) {
 		}
 	});
 	box.getElementsByClassName('title')[0].textContent = title;
-	box.getElementsByClassName('direct')[0].href = getUrl(url);
+	box.getElementsByClassName('direct')[0].href = rest.getUrl(url);
 
 	var createForm = box.getElementsByClassName('createForm')[0];
-	createForm.action = getUrl(url);
+	createForm.action = rest.getUrl(url);
 	createForm.method = 'POST';
 
 	var createFormFieldset = createForm.elements['root'];
 	formify(createFormFieldset, properties);
 
 	createForm.elements['submitJson'].addEventListener('click', event => {
-		ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => { displayRaw(response) });
+		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => { displayRaw(response) });
 		createForm.reset();
 	});
 	return box;
@@ -104,14 +93,14 @@ function createEntryBox(className, title, url, properties) {
  * 
  * @param {string} name entry name
  * @param {string} url url to entry actions
- * @param {object} object object to transform to entry
+ * @param {Object} object object to transform to entry
  * @returns
  */
 function createEntry(name, url, object) {
 	var entry = document.importNode(
 							document.getElementById('entry').content.querySelector('.entry'), true);	// Get live clone
 	entry.getElementsByClassName('title')[0].textContent = name;
-	entry.getElementsByClassName('direct')[0].href = getUrl(url);
+	entry.getElementsByClassName('direct')[0].href = rest.getUrl(url);
 
 	var updateForm = entry.getElementsByClassName('updateForm')[0];
 	var updateFormFieldset = updateForm.elements['root'];
@@ -119,10 +108,10 @@ function createEntry(name, url, object) {
 
 	updateForm.addEventListener('submit', event => {
 		event.preventDefault();
-		ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => { displayRaw(response) });
+		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => { displayRaw(response) });
 	});
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
-		ajax('DELETE', url, null, response => displayRaw(response));
+		rest.ajax('DELETE', url, null, response => displayRaw(response));
 	});
 	return entry;
 }
@@ -131,7 +120,7 @@ function createEntry(name, url, object) {
  * Transforms an object into a set of fields within a fieldset.
  * 
  * @param {Node} fieldset fieldset to apply object to
- * @param {object} object object to apply
+ * @param {Object} object object to apply
  */
 function formify(fieldset, object) {
 	for (var property in object) {
@@ -191,33 +180,6 @@ function objectify(fieldset) {
 	return object;
 }
 
-/** Retrieves and displays all projects in the 'projectList' element. */
-function showProjects() {
-	var projectsList = document.getElementById('projectsList');
-	projectsList.innerHTML = "Getting Projects...";
-
-	var url = "projects";
-	ajax("GET", url, null, function(projects) {
-		displayRaw(projects);
-
-		projectsList.innerHTML = "";
-
-		for (var key in projects) {
-			(function(url, key) {
-				var entry = projectsList.appendChild(createEntry("Project: " + key, projects[key]));
-				entry.addEventListener('click', function(event) {
-					if (event.target === this) {
-						showUsers(key);
-						showMeetings(key);
-					}
-				});
-				entry.appendChild(createButton("DELETE", function() {
-					ajax('DELETE', url + "/" + key, null, function(response) { displayRaw(response) });
-				}));
-			})(url, key);
-		}
-	});
-}
 /**
  * Retrieves and displays all users under a project in the 'usersList' element.
  * @param (string) projectId - ID of project owning users
@@ -229,7 +191,7 @@ function showUsers(projectId) {
 	usersList.innerHTML = "Getting users for project: " + projectId + "...";
 
 	var url = "projects/" + projectId + "/users";
-	ajax("GET", url, null, function(users) {
+	rest.ajax("GET", url, null, function(users) {
 		displayRaw(users);
 
 		document.getElementById('usersDirect').setAttribute('href', restRoot + url);
@@ -239,7 +201,7 @@ function showUsers(projectId) {
 			(function(url, key) {
 				var entry = usersList.appendChild(createEntry("User: " + key, users[key]));
 				entry.appendChild(createButton("DELETE", function() {
-					ajax('DELETE', url + "/" + key, null, function(response) {
+					rest.ajax('DELETE', url + "/" + key, null, function(response) {
 						displayRaw(response);
 					});
 				}));
