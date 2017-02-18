@@ -39,7 +39,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@POST
 	public UUID create(T obj, @Context HttpHeaders headers) {
-		getAuthorizer("POST").process(extractCredentials(headers));
+		getAuthorizer("POST").process(Credentials.fromHeaders(headers));
 
 		return dao.add(obj);
 	}
@@ -70,7 +70,7 @@ public abstract class CRUDResource<T> {
 	@GET
 	@Path("{uuid}")
 	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(extractCredentials(headers));
+		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
 
 		return dao.get(id);
 	}
@@ -82,7 +82,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@GET
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(extractCredentials(headers));
+		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
 
 		return dao.get(parseQuery(uriInfo.getQueryParameters()));
 	}
@@ -102,7 +102,7 @@ public abstract class CRUDResource<T> {
 	@PUT
 	@Path("{uuid}")
 	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) {
-		getAuthorizer("PUT").process(extractCredentials(headers));
+		getAuthorizer("PUT").process(Credentials.fromHeaders(headers));
 
 		dao.update(id, replacement);
 	}
@@ -116,7 +116,7 @@ public abstract class CRUDResource<T> {
 	@DELETE
 	@Path("{uuid}")
 	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("DELETE").process(extractCredentials(headers));
+		getAuthorizer("DELETE").process(Credentials.fromHeaders(headers));
 
 		return dao.remove(id);
 	}
@@ -149,11 +149,6 @@ public abstract class CRUDResource<T> {
 	private void setAuthorizer(String identifier, Authorizer authorizer) {
 		if (authorizer != null)
 			authorizers.put(identifier, authorizer);
-	}
-
-	private Credentials extractCredentials(HttpHeaders headers) {
-		List<String> authHeaders = headers == null ? null : headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
-		return (authHeaders == null || authHeaders.isEmpty()) ? null : new Credentials(authHeaders.iterator().next().replaceFirst("^.*?\\s+", ""));	// Remove all before space
 	}
 
 	private Authorizer getAuthorizer(String identifier) {

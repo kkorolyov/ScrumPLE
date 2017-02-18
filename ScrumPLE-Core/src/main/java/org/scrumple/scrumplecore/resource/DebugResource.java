@@ -8,8 +8,12 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
@@ -27,6 +31,9 @@ import dev.kkorolyov.sqlob.persistence.Session;
 @Path("debug")
 @Produces({MediaType.APPLICATION_XML})
 public class DebugResource {
+	private static final Credentials debugger = new Credentials("d@bugg3r", "d3bug1t!");
+	private static final Authorizer debuggerOnly = credentials -> {if (!credentials.equals(debugger)) throw new AuthorizationException(credentials);};
+
 	private String systemDB = Assets.get(SYSTEM_DB);
 	private DataSource systemDS = DataSourcePool.get(systemDB);
 	
@@ -36,7 +43,9 @@ public class DebugResource {
 	@GET
 	@Path("reset")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users) {	// Test stub for populating projects
+	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users, @Context HttpHeaders headers) {	// Test stub for populating projects
+		debuggerOnly.process(Credentials.fromHeaders(headers));
+
 		long start = System.nanoTime();
 		
 		int numProjects = Integer.parseInt(projects),

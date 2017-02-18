@@ -4,12 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.xml.bind.DatatypeConverter;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Credentials.
@@ -18,22 +17,26 @@ public class Credentials {
 	private String handle;
 	private String password;
 
-	public Credentials(){}
 	/**
-	 * Constructs new credentials from a concatenated handle-password pair.
-	 * @param concat64 handle and password concatenated in the form {@code [handle]:[password]} and encoded in Base64
+	 * Parses credentials from HTTP headers.
+	 * @param headers headers to parse credentials from
 	 */
-	public Credentials(String concat64) {
+	public static Credentials fromHeaders(HttpHeaders headers) {
+		List<String> authHeaders = headers == null ? null : headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+		String concat64 = (authHeaders == null || authHeaders.isEmpty()) ? null : authHeaders.iterator().next().replaceFirst("^.*?\\s+", "");	// Remove all before space
+		if (concat64 == null) return null;
+
 		Base64.Decoder decoder = Base64.getDecoder();
 
 		String decoded = new String(decoder.decode(concat64));
 		String[] split = decoded.split(":");
 
-		setHandle(split[0]);
-		setPassword(split[1]);
+		return new Credentials(split[0], split[1]);
 	}
+
+	public Credentials(){}
 	/**
-	 * Constructs new credentials from plain handle and password.
+	 * Constructs new credentials.
 	 * @param handle credentials handle
 	 * @param password credentials password
 	 */
