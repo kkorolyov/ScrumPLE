@@ -2,6 +2,8 @@ package org.scrumple.scrumplecore.resource.provider;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
+
+import org.glassfish.jersey.server.ContainerException;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.auth.AuthorizationException;
 import org.scrumple.scrumplecore.database.DataAccessException;
@@ -60,7 +62,13 @@ public final class ExceptionMappers {
 		public DataAccessExceptionMapper() {
 			super(500);
 		}
+	}
 
+	@Provider
+	private static class ContainerExceptionMapper extends ExceptionMapperLogger<ContainerException> {
+		ContainerExceptionMapper() {
+			super(500);
+		}
 	}
 
 	private static class ExceptionMapperLogger<T extends Throwable> implements ExceptionMapper<T> {
