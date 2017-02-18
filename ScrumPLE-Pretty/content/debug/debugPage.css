@@ -11,6 +11,9 @@ header {
 .clickable {
 	cursor: pointer;
 }
+.selected {
+	background-color: darkslategray !important;
+}
 
 .round {
 	border-radius: 32px;
@@ -42,6 +45,7 @@ header {
 .meetingsBox {
 	background-color: pink;
 }
+
 .entry {
 	background-color: lime;
 	margin: 5px 0px 5px 5px;
@@ -52,7 +56,7 @@ header {
 }
 
 #login {
-	background-color: DarkSeaGreen;
+	background-color: darkseagreen;
 }
 
 #rawSection {

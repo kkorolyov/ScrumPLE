@@ -3,26 +3,45 @@
 window.addEventListener('load', init);
 
 function init() {
-	document.getElementsByTagName('body')[0].appendChild(
-		createEntryBox('projectsBox', "Projects", "projects", {
-			name: "",
-			description: "",
-			visible: true,
-			owner: {
-				credentials: {
-					handle: "",
-					password: ""
-				},
-				displayName: "",
-				role: ""
-			}
-		}));
+	document.getElementsByTagName('body')[0].appendChild(createProjectsBox());
+
 	applyEventListeners();
 }
+
+function createProjectsBox() {
+	return createEntryBox('projectsBox', "Projects", "projects", {
+		name: "",
+		description: "",
+		visible: true,
+		owner: {
+			credentials: {
+				handle: "",
+				password: ""
+			},
+			displayName: "",
+			role: ""
+		}
+	},
+	url => {
+		console.log(url);
+		document.getElementsByTagName('body')[0].appendChild(createUsersBox(url));
+	});
+}
+function createUsersBox(url) {
+	return createEntryBox('usersBox', "Users", url + "/users", {
+		credentials: {
+			handle: "",
+			password: ""
+		},
+		displayName: "",
+		role: ""
+	});
+}
+
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) {
-			rest.ajax("GET", "debug/reset", null, function(response) { displayRaw(response) });
+			rest.ajax("GET", "debug/reset", null, response => displayRaw(response));
 		}
 	});
 	document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -46,31 +65,32 @@ function displayRaw(response) {	// For debug
  * @param {string} className class identifier
  * @param {string} title displayed title
  * @param {string} url url to box actions
- * @param {Object} properties {name, input type} pairs defining the objects created by this box
+ * @param {Object} object object defining box forms
+ * @param {function(string)} [action] action performed on click of entries spawned by this box
  * @returns
  */
-function createEntryBox(className, title, url, properties) {
+function createEntryBox(className, title, url, object, action) {
 	var box = document.importNode(
 						document.getElementById('entryBox').content.querySelector('.entryBox'), true);	// Get live clone
 	
-	box.className += " " + className;
+	box.classList.add(className);
 	box.addEventListener('click', function(event) {
-		if (event.target === this) {
-			var list = box.getElementsByClassName('entryList')[0];
-			list.textContent = "Retrieving " + title + "...";
+		if (event.target !== this) return;
+		
+		var list = box.getElementsByClassName('entryList')[0];
+		list.textContent = "Retrieving " + title + "...";
 
-			rest.ajax('GET', url, null, response => {
-				displayRaw(response);
+		rest.ajax('GET', url, null, response => {
+			displayRaw(response);
 
-				list.textContent = "";
+			list.textContent = "";
 
-				if (typeof response === 'object') {
-					for (var key in response) {
-						list.appendChild(createEntry(title + ": " + key, url + "/" + key, response[key]));
-					}
+			if (typeof response === 'object') {
+				for (var key in response) {
+					list.appendChild(createEntry(title + ": " + key, url + "/" + key, response[key], action));
 				}
-			});
-		}
+			}
+		});
 	});
 	box.getElementsByClassName('title')[0].textContent = title;
 	box.getElementsByClassName('direct')[0].href = rest.getUrl(url);
@@ -80,7 +100,7 @@ function createEntryBox(className, title, url, properties) {
 	createForm.method = 'POST';
 
 	var createFormFieldset = createForm.elements['root'];
-	formify(createFormFieldset, properties);
+	formify(createFormFieldset, object);
 
 	createForm.elements['submitJson'].addEventListener('click', event => {
 		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => { displayRaw(response) });
@@ -94,9 +114,10 @@ function createEntryBox(className, title, url, properties) {
  * @param {string} name entry name
  * @param {string} url url to entry actions
  * @param {Object} object object to transform to entry
+ * @param {function(string)} [action] action performed on entry click
  * @returns
  */
-function createEntry(name, url, object) {
+function createEntry(name, url, object, action) {
 	var entry = document.importNode(
 							document.getElementById('entry').content.querySelector('.entry'), true);	// Get live clone
 	entry.getElementsByClassName('title')[0].textContent = name;
@@ -113,6 +134,14 @@ function createEntry(name, url, object) {
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
 		rest.ajax('DELETE', url, null, response => displayRaw(response));
 	});
+	if (action) {
+		entry.addEventListener('click', function(event) {
+			if (event.target === this) {
+				this.classList.add("selected");
+				action(url);
+			}
+		});
+	}
 	return entry;
 }
 
