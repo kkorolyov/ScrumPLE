@@ -14,6 +14,9 @@ import javax.xml.bind.DatatypeConverter;
  * Credentials.
  */
 public class Credentials {
+	/** Represents empty credentials */
+	public static final Credentials none = new Credentials("", "");
+
 	private String handle;
 	private String password;
 
@@ -24,14 +27,14 @@ public class Credentials {
 	public static Credentials fromHeaders(HttpHeaders headers) {
 		List<String> authHeaders = headers == null ? null : headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 		String concat64 = (authHeaders == null || authHeaders.isEmpty()) ? null : authHeaders.iterator().next().replaceFirst("^.*?\\s+", "");	// Remove all before space
-		if (concat64 == null) return null;
+		if (concat64 == null) return none;
 
 		Base64.Decoder decoder = Base64.getDecoder();
 
 		String decoded = new String(decoder.decode(concat64));
 		String[] split = decoded.split(":");
 
-		return new Credentials(split[0], split[1]);
+		return new Credentials(split.length < 1 ? none.handle : split[0], split.length < 2 ? none.password : split[1]);
 	}
 
 	public Credentials(){}
