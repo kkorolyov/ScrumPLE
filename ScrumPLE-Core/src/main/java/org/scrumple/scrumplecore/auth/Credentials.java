@@ -10,11 +10,14 @@ import java.util.Objects;
 import javax.ws.rs.core.HttpHeaders;
 import javax.xml.bind.DatatypeConverter;
 
+import dev.kkorolyov.sqlob.annotation.Transient;
+
 /**
  * Credentials.
  */
 public class Credentials {
 	/** Represents empty credentials */
+	@Transient
 	public static final Credentials none = new Credentials("", "");
 
 	private String handle;

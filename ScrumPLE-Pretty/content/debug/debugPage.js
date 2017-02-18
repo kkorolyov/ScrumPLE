@@ -41,7 +41,12 @@ function createUsersBox(url) {
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) {
+			var oldCredentials = rest.credentials;
+			rest.login("d@bugg3r", "d3bug1t!");
+
 			rest.ajax("GET", "debug/reset", null, response => displayRaw(response));
+
+			rest.credentials = oldCredentials;
 		}
 	});
 	document.getElementById('loginForm').addEventListener('submit', function(event) {
