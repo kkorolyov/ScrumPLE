@@ -52,7 +52,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	 * @return {@code true} if a persisted object matching {@code cond} exists
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public boolean contains(Condition cond) throws DataAccessException {
+	public boolean contains(Condition cond){
 		return !get(cond).isEmpty();
 	}
 	
@@ -61,7 +61,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	 * @param dbName database name
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public void createDatabase(String dbName) throws DataAccessException {
+	public void createDatabase(String dbName){
 		update("CREATE DATABASE " + dbName);
 	}
 	/**
@@ -69,7 +69,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	 * @param dbName database name
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public void dropDatabase(String dbName) throws DataAccessException {
+	public void dropDatabase(String dbName){
 		update("DROP DATABASE " + dbName);
 	}
 	private void update(String statement) {
@@ -82,7 +82,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	}
 	
 	@Override
-	public T get(UUID id) throws EntityNotFoundException, DataAccessException {
+	public T get(UUID id){
 		try {
 			T result = s.get(c, id);
 			
@@ -96,7 +96,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 		}
 	}
 	@Override
-	public Map<UUID, T> get(Condition cond) throws DataAccessException {
+	public Map<UUID, T> get(Condition cond){
 		try {
 			Map<UUID, T> results = new HashMap<>();
 			for (T result : s.get(c, cond))
@@ -109,12 +109,12 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 		}
 	}
 	@Override
-	public Map<UUID, T> getAll() throws DataAccessException {
+	public Map<UUID, T> getAll(){
 		return get((Condition) null);
 	}
 	
 	@Override
-	public void update(UUID id, T newObj) throws EntityNotFoundException, DataAccessException {
+	public void update(UUID id, T newObj){
 		try {
 			if (s.get(c, id) == null)
 				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
@@ -127,7 +127,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	}
 
 	@Override
-	public UUID add(T obj) throws DataAccessException {
+	public UUID add(T obj){
 		try {
 			return s.put(obj);
 		} catch (SQLException e) {
@@ -136,7 +136,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 		}
 	}
 	@Override
-	public T remove(UUID id) throws EntityNotFoundException, DataAccessException {
+	public T remove(UUID id){
 		try {
 			T result = s.get(c, id);
 			if (result == null)
@@ -152,7 +152,7 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() throws SQLException {
 		s.close();
 	}
 }

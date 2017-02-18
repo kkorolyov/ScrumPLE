@@ -18,19 +18,19 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public T get(UUID id) throws EntityNotFoundException, DataAccessException;
+	public T get(UUID id);
 	/** 
 	 * @param cond filter restricting returned objects, {@code null} implies no filter
 	 * @return all persisted objects matching {@code cond} as <code>{id, object}</code> pairs
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public Map<UUID, T> get(Condition cond) throws DataAccessException;
+	public Map<UUID, T> get(Condition cond);
 	/**
 	 * @return all persisted objects of type {@code T} as <code>{id, object}</code> pairs
 	 * @throws DataAccessException if an issue occurs during data access
 	 * @see #get(Condition)
 	 */
-	public Map<UUID, T> getAll() throws DataAccessException;
+	public Map<UUID, T> getAll();
 	
 	/**
 	 * Updates a persisted object with a new instance.
@@ -39,7 +39,7 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public void update(UUID id, T newObj) throws EntityNotFoundException, DataAccessException;
+	public void update(UUID id, T newObj);
 	
 	/**
 	 * Persists an object.
@@ -47,7 +47,7 @@ public interface DAO<T> {
 	 * @return persisted object identifier
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public UUID add(T obj) throws DataAccessException;
+	public UUID add(T obj);
 	/**
 	 * Removes a persisted object.
 	 * @param id object identifier
@@ -55,5 +55,5 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public T remove(UUID id) throws EntityNotFoundException, DataAccessException;
+	public T remove(UUID id);
 }

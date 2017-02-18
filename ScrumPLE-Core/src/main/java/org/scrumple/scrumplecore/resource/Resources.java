@@ -68,7 +68,7 @@ public class Resources {
 			}
 			return cond;
 		}
-		
+
 		/**
 		 * @param id project id
 		 * @return users resource under project {@code id}

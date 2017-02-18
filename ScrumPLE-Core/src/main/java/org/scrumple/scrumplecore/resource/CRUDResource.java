@@ -38,7 +38,7 @@ public abstract class CRUDResource<T> {
 	 * @return id of created resource
 	 */
 	@POST
-	public UUID create(T obj, @Context HttpHeaders headers) throws AuthorizationException {
+	public UUID create(T obj, @Context HttpHeaders headers) {
 		getAuthorizer("POST").process(extractCredentials(headers));
 
 		return dao.add(obj);
@@ -51,7 +51,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public UUID create(MultivaluedMap<String, String> params, @Context HttpHeaders headers) throws AuthorizationException {
+	public UUID create(MultivaluedMap<String, String> params, @Context HttpHeaders headers) {
 		return create(parseForm(params), headers);
 	}
 	/**
@@ -69,7 +69,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@GET
 	@Path("{uuid}")
-	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
+	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
 		getAuthorizer("GET").process(extractCredentials(headers));
 
 		return dao.get(id);
@@ -81,7 +81,7 @@ public abstract class CRUDResource<T> {
 	 * @return optionally-filtered collection of resources
 	 */
 	@GET
-	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) throws AuthorizationException {
+	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 		getAuthorizer("GET").process(extractCredentials(headers));
 
 		return dao.get(parseQuery(uriInfo.getQueryParameters()));
@@ -101,7 +101,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@PUT
 	@Path("{uuid}")
-	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) throws AuthorizationException {
+	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) {
 		getAuthorizer("PUT").process(extractCredentials(headers));
 
 		dao.update(id, replacement);
@@ -115,7 +115,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@DELETE
 	@Path("{uuid}")
-	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) throws AuthorizationException {
+	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
 		getAuthorizer("DELETE").process(extractCredentials(headers));
 
 		return dao.remove(id);
