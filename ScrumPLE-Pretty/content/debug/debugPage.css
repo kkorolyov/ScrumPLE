@@ -1,4 +1,4 @@
-@CHARSET "UTF-8";
+@charset "UTF-8";
 
 header {
 	text-align: center;
@@ -32,6 +32,16 @@ header {
 .entryBox {
 	float: left;
 }
+.projectsBox {
+	background-color: cyan;
+	clear: both;
+}
+.usersBox {
+	background-color: orange;
+}
+.meetingsBox {
+	background-color: pink;
+}
 .entry {
 	background-color: lime;
 	margin: 5px 0px 5px 5px;
@@ -43,16 +53,6 @@ header {
 
 #login {
 	background-color: DarkSeaGreen;
-}
-
-.projectsBox {
-	background-color: cyan;
-}
-.usersBox {
-	background-color: orange;
-}
-.meetingsBox {
-	background-color: pink;
 }
 
 #rawSection {

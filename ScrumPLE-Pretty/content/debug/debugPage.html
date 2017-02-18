@@ -23,7 +23,7 @@
 				<legend>Login</legend>
 				Handle: <input type="text" name="handle"><br>
 				Password: <input type="password" name="password"><br>
-				<input type="submit" value="Log In">
+				<input type="submit" name="login" value="Log In">
 			</fieldset>
 		</form>
 	</div>
@@ -60,51 +60,12 @@
 				<fieldset name="root">
 					<legend>Update</legend>
 				</fieldset>
-				<input type="button" name="submit" value="Submit">
+				<input type="submit" name="submit" value="Submit">
 				<input type="reset" name="reset" value="Reset">
 			</form>
 			<hr>
 			<input class="delete" type="button" value="Delete">
 		</div>
 	</template>
-
-	<div class="roundLeft entryBox" title="Click to show projects" style="cursor: pointer">
-		<h3>PROJECTS</h3>
-		<a class="missingRestRoot" href="projects">Direct</a>
-
-		<form id="logIn" title=" " style="cursor: default" onsubmit="login(handle.value, password.value); reset(); return false;">
-			<fieldset>
-				<legend>Login</legend>
-
-				Username:<br>
-				<input type="text" name="handle"><br>
-				Password:<br>
-				<input type="password" name="password"><br>
-
-				<input type="submit" value="Log In">
-			</fieldset>
-		</form>
-
-		<form class="missingRestRoot" id="projectCreate" title=" " style="cursor: default" action="projects" method="POST">
-			<fieldset>
-				<legend>Create</legend>
-
-				Name:<br>
-				<input type="text" name="name"><br>
-				Description:<br>
-				<input type="text" size="40" name="description"><br>
-				<input type="checkbox" name="visible" value="true" checked>Visible<br>
-				<hr>
-				Owner Handle:<br>
-				<input type="text" name="ownerHandle"><br>
-				Owner Password:<br>
-				<input type="text" name="ownerPassword"><br>
-
-				<input type="submit" value="Submit">
-			</fieldset>
-		</form>
-
-		<div id="projectsList"></div>
-	</div>
 </body>
 </html>

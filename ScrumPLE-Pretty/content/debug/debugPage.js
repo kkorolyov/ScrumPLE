@@ -23,6 +23,10 @@ function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) debugReset();
 	})
+	document.getElementById('loginForm').addEventListener('submit', function(event) {
+		event.preventDefault();
+		login(this.elements['handle'].value, this.elements['password'].value);
+	})
 }
 
 /**
@@ -113,7 +117,8 @@ function createEntry(name, url, object) {
 	var updateFormFieldset = updateForm.elements['root'];
 	formify(updateFormFieldset, object);
 
-	updateForm.elements['submit'].addEventListener('click', event => {
+	updateForm.addEventListener('submit', event => {
+		event.preventDefault();
 		ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => { displayRaw(response) });
 	});
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
