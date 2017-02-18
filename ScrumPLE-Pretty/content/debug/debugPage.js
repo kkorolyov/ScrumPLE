@@ -5,16 +5,16 @@ window.addEventListener('load', init);
 function init() {
 	document.getElementsByTagName('body')[0].appendChild(
 		createEntryBox('projectsBox', "Projects", "projects", {
-			name: 'text',
-			description: 'text',
-			visible: 'checkbox',
+			name: "",
+			description: "",
+			visible: true,
 			owner: {
 				credentials: {
-					handle: 'text',
-					password: 'password'
+					handle: "",
+					password: ""
 				},
-				displayName: 'text',
-				role: 'text'
+				displayName: "",
+				role: ""
 			}
 		}));
 	applyEventListeners();
@@ -52,8 +52,8 @@ function createButton(name, action) {
  * 
  * @param {string} className class identifier
  * @param {string} title displayed title
- * @param {string} url url to box action
- * @param {Object} properties {name, input type} pairs defining the objects created by this box
+ * @param {string} url url to box actions
+ * @param {object} properties {name, input type} pairs defining the objects created by this box
  * @returns
  */
 function createEntryBox(className, title, url, properties) {
@@ -67,18 +67,13 @@ function createEntryBox(className, title, url, properties) {
 			list.textContent = "Retrieving " + title + "...";
 
 			ajax('GET', url, null, response => {
-				list.textContent = "";
-
 				displayRaw(response);
+
+				list.textContent = "";
 
 				if (typeof response === 'object') {
 					for (var key in response) {
-						(function(key) {
-							var entry = list.appendChild(createEntry(title + ": " + key, response[key]));
-							entry.appendChild(createButton("DELETE", () => {
-								ajax('DELETE', url + "/" + key, null, response => displayRaw(response));
-							}));
-						})(key);
+						list.appendChild(createEntry(title + ": " + key, url + "/" + key, response[key]));
 					}
 				}
 			});
@@ -94,8 +89,8 @@ function createEntryBox(className, title, url, properties) {
 	var createFormFieldset = createForm.elements['root'];
 	formify(createFormFieldset, properties);
 
-	createForm.elements['submitJson'].addEventListener('click', function(event) {
-		ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), function(response) { displayRaw(response) });
+	createForm.elements['submitJson'].addEventListener('click', event => {
+		ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => { displayRaw(response) });
 		createForm.reset();
 	});
 	return box;
@@ -103,20 +98,27 @@ function createEntryBox(className, title, url, properties) {
 /**
  * Constructs and returns a new entry.
  * 
- * @param {any} name entry name
- * @param {any} object object to transform to entry
+ * @param {string} name entry name
+ * @param {string} url url to entry actions
+ * @param {object} object object to transform to entry
  * @returns
  */
-function createEntry(name, object) {
+function createEntry(name, url, object) {
 	var entry = document.importNode(
-							document.getElementById('entry').contentEditable.querySelector('.entry'), true);	// Get live clone
+							document.getElementById('entry').content.querySelector('.entry'), true);	// Get live clone
 	entry.getElementsByClassName('title')[0].textContent = name;
+	entry.getElementsByClassName('direct')[0].href = getUrl(url);
 
-	var attributes = entry.getElementsByClassName('attributes');
-	for (var property in object) {
-		attributes.appendChild(document.createTextNode(property + "=" + object[property]));
-		attributes.appendChild(document.createElement('br'));
-	}
+	var updateForm = entry.getElementsByClassName('updateForm')[0];
+	var updateFormFieldset = updateForm.elements['root'];
+	formify(updateFormFieldset, object);
+
+	updateForm.elements['submit'].addEventListener('click', event => {
+		ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => { displayRaw(response) });
+	});
+	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
+		ajax('DELETE', url, null, response => displayRaw(response));
+	});
 	return entry;
 }
 
@@ -124,7 +126,7 @@ function createEntry(name, object) {
  * Transforms an object into a set of fields within a fieldset.
  * 
  * @param {Node} fieldset fieldset to apply object to
- * @param {Object} object object to apply
+ * @param {object} object object to apply
  */
 function formify(fieldset, object) {
 	for (var property in object) {
@@ -139,7 +141,16 @@ function formify(fieldset, object) {
 
 			var input = fieldset.appendChild(document.createElement('input'));
 			input.name = property;
-			input.type = object[property];
+			input.defaultValue = object[property];
+			input.type = (value => {
+				switch (typeof value) {
+					case 'string': return 'text';
+					case 'boolean': 
+						input.checked = value;	// Hack for checkboxes
+						return 'checkbox';
+					default: return null;
+				}
+			})(object[property]);
 		}
 		fieldset.appendChild(document.createElement('br'));
 	}
