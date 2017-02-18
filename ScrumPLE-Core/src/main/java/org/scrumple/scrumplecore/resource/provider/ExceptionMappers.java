@@ -24,6 +24,13 @@ public final class ExceptionMappers {
 	private ExceptionMappers() {/* Not instantiable */}
 
 	@Provider
+	private static class DebugExceptionMapper extends ExceptionMapperLogger<Exception> {
+		public DebugExceptionMapper() {
+			super(500);
+		}
+	}
+
+	@Provider
 	private static class IllegalArgumentExceptionMapper extends ExceptionMapperLogger<IllegalArgumentException> {
 		public IllegalArgumentExceptionMapper() {
 			super(400);
