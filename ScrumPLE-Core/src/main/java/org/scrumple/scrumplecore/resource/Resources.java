@@ -38,13 +38,14 @@ public class Resources {
 			String name = params.getFirst("name"),
 					description = params.getFirst("description"),
 					visible = params.getFirst("visible"),
-					ownerHandle = params.getFirst("ownerHandle"),
-					ownerPassword = params.getFirst("ownerPassword");
+					ownerHandle = params.getFirst("handle"),
+					ownerPassword = params.getFirst("password"),
+					ownerDisplayName = params.getFirst("displayName");
 
 			if (name == null || description == null || ownerHandle == null || ownerPassword == null)
 				throw new IllegalArgumentException("Missing some form parameters");
 
-			User owner = new User(new Credentials(ownerHandle, ownerPassword));
+			User owner = new User(new Credentials(ownerHandle, ownerPassword), ownerDisplayName, null);
 			return new Project(name, description, visible != null, owner);
 		}
 
