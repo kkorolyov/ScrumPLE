@@ -16,7 +16,7 @@
   <body>
     <ul id="messages"></ul>
     <form action="">
-	    <input id="n" autocomplete="off" /><button onclick="this.style.display='none'" id="joinbtn">Join</button>
+	    <input id="n" autocomplete="off" /><button onclick="document.getElementById('joinbtn').style.display='none'" id="joinbtn">Join</button>
       <input id="m" autocomplete="off" /><button id="sendbtn">Send</button>
     </form>
 	  <script src="https://52.10.231.227:3000/socket.io/socket.io.js"></script>
