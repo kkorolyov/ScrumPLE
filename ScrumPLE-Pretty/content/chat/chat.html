@@ -25,7 +25,7 @@
     <script src="js/joinChat.js"></script>
 	  <script> 
 		var socket = io("https://52.10.231.227:3000");
-		document.getElementById("sendbtn").onclick=sendMsg();
+		document.getElementById("sendbtn").onclick="sendMsg()";
     // document.getElementById("joinbtn").onclick=joinChat();
 		socket.on('chat message', function(msg){
 		$('#messages').append($('<li>').text(msg));
