@@ -21,8 +21,6 @@
     </form>
 	  <script src="https://52.10.231.227:3000/socket.io/socket.io.js"></script>
 	  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="js/sendMsg.js"></script>
-    <script src="js/joinChat.js"></script>
 	  <script> 
 		var socket = io("https://52.10.231.227:3000");
 		document.getElementById("sendbtn").onclick="sendMsg()";
@@ -31,5 +29,7 @@
 		$('#messages').append($('<li>').text(msg));
 		});
 	  </script>
+    <script src="js/sendMsg.js"></script>
+    <script src="js/joinChat.js"></script>
   </body>
 </html>
