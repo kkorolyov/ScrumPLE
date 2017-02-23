@@ -56,7 +56,9 @@ function createUsersBox(name, url) {
 }
 function createMeetingsBox(name, url) {
 	return createEntryBox('meetingsBox', "Meetings: " + name, url + "/meetings", {
-		
+		type: "",
+		start: new Date(),
+		end: new Date()
 	});
 }
 
@@ -177,7 +179,7 @@ function createEntry(name, url, object, action) {
  */
 function formify(fieldset, object) {
 	for (var property in object) {
-		if (typeof object[property] === 'object') {
+		if (typeof object[property] === 'object' && !(object[property] instanceof Date)) {	// TODO Ugly, hacky
 			var nextForm = fieldset.appendChild(document.createElement('fieldset'));
 			nextForm.name = property;	// ID new form by property name
 			nextForm.appendChild(document.createElement('legend')).textContent = property;
@@ -193,8 +195,11 @@ function formify(fieldset, object) {
 				switch (typeof value) {
 					case 'string': return 'text';
 					case 'boolean': 
-						input.defaultChecked = value;	// Hack for checkboxes
+						input.defaultChecked = "";	// Hack for checkboxes
 						return 'checkbox';
+					case 'object':
+						if (value instanceof Date) return 'date';
+						else return null;
 					default: return null;
 				}
 			})(object[property]);
