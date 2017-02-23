@@ -125,15 +125,16 @@ function createEntryBox(className, title, url, object, action) {
 	box.getElementsByClassName('direct')[0].href = rest.getUrl(url);
 
 	var createForm = box.getElementsByClassName('createForm')[0];
-	createForm.action = rest.getUrl(url);
-	createForm.method = 'POST';
-
 	var createFormFieldset = createForm.elements['root'];
 	formify(createFormFieldset, object);
 
-	createForm.elements['submitJson'].addEventListener('click', event => {
-		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => displayRaw(response));
-		createForm.reset();
+	createForm.addEventListener('submit', event => {
+		event.preventDefault();
+
+		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => {
+			displayRaw(response);
+			box.click();
+		});
 	});
 	return box;
 }
@@ -158,7 +159,11 @@ function createEntry(name, url, object, action) {
 
 	updateForm.addEventListener('submit', event => {
 		event.preventDefault();
-		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => displayRaw(response));
+
+		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => {
+			displayRaw(response);
+			entry.click();
+		});
 	});
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
 		rest.ajax('DELETE', url, null, response => displayRaw(response));
@@ -195,7 +200,7 @@ function formify(fieldset, object) {
 				switch (typeof value) {
 					case 'string': return 'text';
 					case 'boolean': 
-						input.defaultChecked = "";	// Hack for checkboxes
+						input.defaultChecked = " ";	// Hack for checkboxes
 						return 'checkbox';
 					case 'object':
 						if (value instanceof Date) return 'date';
