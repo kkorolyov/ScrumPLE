@@ -37,6 +37,11 @@ function createUsersBox(url) {
 		role: ""
 	});
 }
+function createMeetingsBox(url) {
+	return createEntryBox('meetingsBox', "Meetings", url + "/meetings", {
+		
+	});
+}
 
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
@@ -108,7 +113,7 @@ function createEntryBox(className, title, url, object, action) {
 	formify(createFormFieldset, object);
 
 	createForm.elements['submitJson'].addEventListener('click', event => {
-		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => { displayRaw(response) });
+		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => displayRaw(response));
 		createForm.reset();
 	});
 	return box;
@@ -242,19 +247,4 @@ function showUsers(projectId) {
 			})(url, key);
 		}
 	});
-}
-function showMeetings(projectId) {
-	document.getElementById('meetingsBox').style.display = "block";
-
-	var meetingsList = document.getElementById('meetingsList');
-	meetingsList.innerHTML = "Getting meetings for project: " + projectId + "...";
-
-
-}
-
-function createUser(projectId, handle, password) {
-	var user = {}
-}
-function deleteUser(projectId, userId) {
-
 }
