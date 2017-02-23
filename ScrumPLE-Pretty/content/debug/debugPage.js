@@ -3,7 +3,9 @@
 window.addEventListener('load', init);
 
 function init() {
-	document.getElementsByTagName('body')[0].appendChild(createProjectsBox());
+	var body = document.getElementsByTagName('body')[0];
+	body.appendChild(createProjectsBox());
+	body.appendChild(document.createElement('div')).id = 'selectionBox';
 
 	applyEventListeners();
 }
@@ -22,13 +24,28 @@ function createProjectsBox() {
 			role: ""
 		}
 	},
-	url => {
-		console.log(url);
-		document.getElementsByTagName('body')[0].appendChild(createUsersBox(url));
-	});
+	(function() {
+		var selections = [];
+		function select(node) {
+			for (var i = 0; i < selections.length; i++) {
+				selections[i].classList.remove('selected');
+			}
+			node.classList.add('selected');
+			selections.push(node);
+		}
+		return function(object, url) {
+			select(this);
+
+			var box = document.getElementById('selectionBox');
+			while(box.firstChild) box.removeChild(box.firstChild);
+
+			box.appendChild(createUsersBox(object.name, url));
+			box.appendChild(createMeetingsBox(object.name, url));
+		}
+	})());
 }
-function createUsersBox(url) {
-	return createEntryBox('usersBox', "Users", url + "/users", {
+function createUsersBox(name, url) {
+	return createEntryBox('usersBox', "Users: " + name, url + "/users", {
 		credentials: {
 			handle: "",
 			password: ""
@@ -37,8 +54,8 @@ function createUsersBox(url) {
 		role: ""
 	});
 }
-function createMeetingsBox(url) {
-	return createEntryBox('meetingsBox', "Meetings", url + "/meetings", {
+function createMeetingsBox(name, url) {
+	return createEntryBox('meetingsBox', "Meetings: " + name, url + "/meetings", {
 		
 	});
 }
@@ -76,7 +93,7 @@ function displayRaw(response) {	// For debug
  * @param {string} title displayed title
  * @param {string} url url to box actions
  * @param {Object} object object defining box forms
- * @param {function(string)} [action] action performed on click of entries spawned by this box
+ * @param {function(Object, string)} [action] action performed on click of entries spawned by this box
  * @returns
  */
 function createEntryBox(className, title, url, object, action) {
@@ -124,7 +141,7 @@ function createEntryBox(className, title, url, object, action) {
  * @param {string} name entry name
  * @param {string} url url to entry actions
  * @param {Object} object object to transform to entry
- * @param {function(string)} [action] action performed on entry click
+ * @param {function(Object, string)} [action] action performed on entry click
  * @returns
  */
 function createEntry(name, url, object, action) {
@@ -139,17 +156,14 @@ function createEntry(name, url, object, action) {
 
 	updateForm.addEventListener('submit', event => {
 		event.preventDefault();
-		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => { displayRaw(response) });
+		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => displayRaw(response));
 	});
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
 		rest.ajax('DELETE', url, null, response => displayRaw(response));
 	});
 	if (action) {
 		entry.addEventListener('click', function(event) {
-			if (event.target === this) {
-				this.classList.add("selected");
-				action(url);
-			}
+			if (event.target === this) action.apply(this, [object, url]);
 		});
 	}
 	return entry;
@@ -179,7 +193,7 @@ function formify(fieldset, object) {
 				switch (typeof value) {
 					case 'string': return 'text';
 					case 'boolean': 
-						input.checked = value;	// Hack for checkboxes
+						input.defaultChecked = value;	// Hack for checkboxes
 						return 'checkbox';
 					default: return null;
 				}
