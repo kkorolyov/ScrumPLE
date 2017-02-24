@@ -10,13 +10,6 @@ function urlQuery(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-/*function showProject(){
-    var projectId = urlQuery('projectId');
-    const url = "projects/" + projectId;
-    rest.ajax('GET', url, null, response => {
-        document.getElementById('project').innerHTML=response;
-    });
-}*/
 function logIn(){
     // if auth is successful, show project details and hide login form
     document.getElementById('login').style.display='none';
