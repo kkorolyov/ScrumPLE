@@ -10,6 +10,18 @@ function init() {
 	applyEventListeners();
 }
 
+const select = (function () {
+	const selected = 'selected';
+	const selects = [];
+
+	return function (node) {
+		selects.forEach(e => e.classList.remove(selected));
+
+		node.classList.add(selected);
+		selects.push(node);
+	}
+})();
+
 function createProjectsBox() {
 	return createEntryBox('projectsBox', "Projects", "projects", {
 		name: "",
@@ -24,25 +36,15 @@ function createProjectsBox() {
 			role: ""
 		}
 	},
-	(function() {
-		const selections = [];
-		function select(node) {
-			for (let i = 0; i < selections.length; i++) {
-				selections[i].classList.remove('selected');
-			}
-			node.classList.add('selected');
-			selections.push(node);
-		}
-		return function(object, url) {
-			select(this);
+	function (object, url) {
+		select(this);
 
-			const box = document.getElementById('selectionBox');
-			while(box.firstChild) box.removeChild(box.firstChild);
+		const box = document.getElementById('selectionBox');
+		while(box.firstChild) box.removeChild(box.firstChild);
 
-			box.appendChild(createUsersBox(object.name, url));
-			box.appendChild(createMeetingsBox(object.name, url));
-		}
-	})());
+		box.appendChild(createUsersBox(object.name, url));
+		box.appendChild(createMeetingsBox(object.name, url));
+	});
 }
 function createUsersBox(name, url) {
 	return createEntryBox('usersBox', "Users: " + name, url + "/users", {
@@ -65,11 +67,16 @@ function createMeetingsBox(name, url) {
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) {
+			this.disabled = true;
+
 			const oldCredentials = rest.credentials;
 			rest.login("d@bugg3r", "d3bug1t!");
 
-			rest.ajax("GET", "debug/reset", null, response => displayRaw(response));
+			rest.ajax("GET", "debug/reset", null, response => {
+				displayRaw(response);
 
+				this.disabled = false;
+			});
 			rest.credentials = oldCredentials;
 		}
 	});
