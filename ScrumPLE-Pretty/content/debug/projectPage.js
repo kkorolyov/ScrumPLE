@@ -25,7 +25,7 @@ function logIn(){
     const url = "projects/" + projectId;
     rest.ajax('GET', url, null, response => {
         //var projectDetails = JSON.stringify(response,['name', 'description', 'visible']);
-        document.getElementById('projectinfo').value = response; 
+        document.getElementById('projectinfo').value = JSON.stringify(response, null, 2); 
     });
     return false;
 }
