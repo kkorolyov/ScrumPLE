@@ -3,7 +3,7 @@
 window.addEventListener('load', init);
 
 function init() {
-	var body = document.getElementsByTagName('body')[0];
+	const body = document.getElementsByTagName('body')[0];
 	body.appendChild(createProjectsBox());
 	body.appendChild(document.createElement('div')).id = 'selectionBox';
 
@@ -25,9 +25,9 @@ function createProjectsBox() {
 		}
 	},
 	(function() {
-		var selections = [];
+		const selections = [];
 		function select(node) {
-			for (var i = 0; i < selections.length; i++) {
+			for (let i = 0; i < selections.length; i++) {
 				selections[i].classList.remove('selected');
 			}
 			node.classList.add('selected');
@@ -36,7 +36,7 @@ function createProjectsBox() {
 		return function(object, url) {
 			select(this);
 
-			var box = document.getElementById('selectionBox');
+			const box = document.getElementById('selectionBox');
 			while(box.firstChild) box.removeChild(box.firstChild);
 
 			box.appendChild(createUsersBox(object.name, url));
@@ -65,7 +65,7 @@ function createMeetingsBox(name, url) {
 function applyEventListeners() {
 	document.getElementById('debugReset').addEventListener('click', function(event) {
 		if (event.target === this) {
-			var oldCredentials = rest.credentials;
+			const oldCredentials = rest.credentials;
 			rest.login("d@bugg3r", "d3bug1t!");
 
 			rest.ajax("GET", "debug/reset", null, response => displayRaw(response));
@@ -99,14 +99,14 @@ function displayRaw(response) {	// For debug
  * @returns
  */
 function createEntryBox(className, title, url, object, action) {
-	var box = document.importNode(
+	const box = document.importNode(
 						document.getElementById('entryBox').content.querySelector('.entryBox'), true);	// Get live clone
 	
 	box.classList.add(className);
 	box.addEventListener('click', function(event) {
 		if (event.target !== this) return;
 		
-		var list = box.getElementsByClassName('entryList')[0];
+		const list = box.getElementsByClassName('entryList')[0];
 		list.textContent = "Retrieving " + title + "...";
 
 		rest.ajax('GET', url, null, response => {
@@ -115,7 +115,7 @@ function createEntryBox(className, title, url, object, action) {
 			list.textContent = "";
 
 			if (typeof response === 'object') {
-				for (var key in response) {
+				for (let key in response) {
 					list.appendChild(createEntry(title + ": " + key, url + "/" + key, response[key], action));
 				}
 			}
@@ -124,8 +124,8 @@ function createEntryBox(className, title, url, object, action) {
 	box.getElementsByClassName('title')[0].textContent = title;
 	box.getElementsByClassName('direct')[0].href = rest.getUrl(url);
 
-	var createForm = box.getElementsByClassName('createForm')[0];
-	var createFormFieldset = createForm.elements['root'];
+	const createForm = box.getElementsByClassName('createForm')[0];
+	const createFormFieldset = createForm.elements['root'];
 	formify(createFormFieldset, object);
 
 	createForm.addEventListener('submit', event => {
@@ -148,13 +148,13 @@ function createEntryBox(className, title, url, object, action) {
  * @returns
  */
 function createEntry(name, url, object, action) {
-	var entry = document.importNode(
+	const entry = document.importNode(
 							document.getElementById('entry').content.querySelector('.entry'), true);	// Get live clone
 	entry.getElementsByClassName('title')[0].textContent = name;
 	entry.getElementsByClassName('direct')[0].href = rest.getUrl(url);
 
-	var updateForm = entry.getElementsByClassName('updateForm')[0];
-	var updateFormFieldset = updateForm.elements['root'];
+	const updateForm = entry.getElementsByClassName('updateForm')[0];
+	const updateFormFieldset = updateForm.elements['root'];
 	formify(updateFormFieldset, object);
 
 	updateForm.addEventListener('submit', event => {
@@ -183,9 +183,9 @@ function createEntry(name, url, object, action) {
  * @param {Object} object object to apply
  */
 function formify(fieldset, object) {
-	for (var property in object) {
+	for (let property in object) {
 		if (typeof object[property] === 'object' && !(object[property] instanceof Date)) {	// TODO Ugly, hacky
-			var nextForm = fieldset.appendChild(document.createElement('fieldset'));
+			const nextForm = fieldset.appendChild(document.createElement('fieldset'));
 			nextForm.name = property;	// ID new form by property name
 			nextForm.appendChild(document.createElement('legend')).textContent = property;
 
@@ -193,7 +193,7 @@ function formify(fieldset, object) {
 		} else {
 			fieldset.appendChild(document.createTextNode(property + ": "));
 
-			var input = fieldset.appendChild(document.createElement('input'));
+			const input = fieldset.appendChild(document.createElement('input'));
 			input.name = property;
 			input.defaultValue = object[property];
 			input.type = (value => {
@@ -219,10 +219,10 @@ function formify(fieldset, object) {
  * @returns
  */
 function objectify(fieldset) {
-	var object = {};
+	const object = {};
 
-	for (var i = 0; i < fieldset.childNodes.length; i++) {
-		var childNode = fieldset.childNodes[i];
+	for (let i = 0; i < fieldset.childNodes.length; i++) {
+		const childNode = fieldset.childNodes[i];
 		switch (childNode.tagName) {
 			case 'FIELDSET':
 				object[childNode.name] = objectify(childNode)
@@ -250,19 +250,19 @@ function objectify(fieldset) {
 function showUsers(projectId) {
 	document.getElementById('usersBox').style.display = "block";
 
-	var usersList = document.getElementById('usersList');
+	const usersList = document.getElementById('usersList');
 	usersList.innerHTML = "Getting users for project: " + projectId + "...";
 
-	var url = "projects/" + projectId + "/users";
+	const url = "projects/" + projectId + "/users";
 	rest.ajax("GET", url, null, function(users) {
 		displayRaw(users);
 
 		document.getElementById('usersDirect').setAttribute('href', restRoot + url);
 		usersList.innerHTML = "Project: " + projectId;
 
-		for (var key in users) {
+		for (let key in users) {
 			(function(url, key) {
-				var entry = usersList.appendChild(createEntry("User: " + key, users[key]));
+				const entry = usersList.appendChild(createEntry("User: " + key, users[key]));
 				entry.appendChild(createButton("DELETE", function() {
 					rest.ajax('DELETE', url + "/" + key, null, function(response) {
 						displayRaw(response);
