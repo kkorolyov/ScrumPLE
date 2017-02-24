@@ -10,19 +10,23 @@ function urlQuery(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function showProject(){
+/*function showProject(){
     var projectId = urlQuery('projectId');
     const url = "projects/" + projectId;
     rest.ajax('GET', url, null, response => {
         document.getElementById('project').innerHTML=response;
     });
-}
+}*/
 function logIn(){
     // if auth is successful, show project details and hide login form
     document.getElementById('login').style.display='none';
     document.getElementById('project').style.display='block';
+    var projectId = urlQuery('projectId');
+    rest.ajax('GET', url, null, response => {
+        var projectDetails = JSON.stringify(response,['name', 'description', 'visible']);
+        document.getElementById('projectinfo').value =projectDetails; 
+    });
     return false;
 }
 
-document.getElementById("log").onclick=showProject;
 document.getElementById("log").onclick=logIn;
