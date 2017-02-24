@@ -22,11 +22,16 @@ function logIn(){
     document.getElementById('login').style.display='none';
     document.getElementById('project').style.display='block';
     var projectId = urlQuery('projectId');
+    const url = "projects/" + projectId;
     rest.ajax('GET', url, null, response => {
-        var projectDetails = JSON.stringify(response,['name', 'description', 'visible']);
-        document.getElementById('projectinfo').value =projectDetails; 
+        //var projectDetails = JSON.stringify(response,['name', 'description', 'visible']);
+        document.getElementById('projectinfo').value = response; 
     });
     return false;
 }
 
-document.getElementById("log").onclick=logIn;
+document.getElementById("loginform").addEventListener('submit', function(event) {
+    event.preventDefault();
+    logIn();
+    this.reset();
+});
