@@ -24,5 +24,5 @@ function logIn(){
     return false;
 }
 
-document.getElementById("log").onclick=logIn;
 document.getElementById("log").onclick=showProject;
+document.getElementById("log").onclick=logIn;
