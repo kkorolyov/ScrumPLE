@@ -59,7 +59,7 @@ public class Resources {
 			String handle = queryParams.getFirst("handle");
 
 			if (name != null) {
-				return new Condition("name", "=", name);
+				return new Condition("name", "LIKE", "%" + name + "%");
 			} else if (handle != null) {
 				Condition hasHandle = new Condition("uuid", "=", "nope");	// TODO Workaround for no-op condition
 
