@@ -20,6 +20,11 @@ function logIn(){
         //var projectDetails = JSON.stringify(response,['name', 'description', 'visible']);
         document.getElementById('projectinfo').value = JSON.stringify(response, null, 2); 
     });
+    const usersUrl = "projects/" + projectId + "/users";
+    rest.ajax('GET',usersUrl, null, response => {
+        textValue = document.getElementById('projectinfo').value;
+        document.getElementById('projectinfo').value= textValue + JSON.stringify(response, null, 2);
+    });
     return false;
 }
 
