@@ -99,22 +99,29 @@ function displayRaw(response) {	// For debug
  * Creates and returns a new entry box.
  * 
  * @param {string} className class identifier
- * @param {string} title displayed title
+ * @param {string} name box name
  * @param {string} url url to box actions
  * @param {Object} object object defining box forms
  * @param {function(Object, string)} [action] action performed on click of entries spawned by this box
  * @returns
  */
-function createEntryBox(className, title, url, object, action) {
+function createEntryBox(className, name, url, object, action) {
 	const box = document.importNode(
 						document.getElementById('entryBox').content.querySelector('.entryBox'), true);	// Get live clone
-	
+	const title = box.getElementsByClassName('title')[0];
+	const direct = box.getElementsByClassName('direct')[0];
+	const createForm = box.getElementsByClassName('createForm')[0];
+	const createFormFieldset = createForm.elements['root'];
+
 	box.classList.add(className);
-	box.addEventListener('click', function(event) {
+
+	title.textContent = name;
+	title.classList.add('clickable');
+	title.addEventListener('click', function(event) {
 		if (event.target !== this) return;
 		
 		const list = box.getElementsByClassName('entryList')[0];
-		list.textContent = "Retrieving " + title + "...";
+		list.textContent = "Retrieving " + name + "...";
 
 		rest.ajax('GET', url, null, response => {
 			displayRaw(response);
@@ -123,25 +130,19 @@ function createEntryBox(className, title, url, object, action) {
 
 			if (typeof response === 'object') {
 				for (let key in response) {
-					list.appendChild(createEntry(title + ": " + key, url + "/" + key, response[key], action));
+					list.appendChild(createEntry(key, url + "/" + key, response[key], action));
 				}
 			}
 		});
 	});
-	box.getElementsByClassName('title')[0].textContent = title;
-	box.getElementsByClassName('direct')[0].href = rest.getUrl(url);
+	direct.href = rest.getUrl(url);
 
-	const createForm = box.getElementsByClassName('createForm')[0];
-	const createFormFieldset = createForm.elements['root'];
 	formify(createFormFieldset, object);
 
 	createForm.addEventListener('submit', event => {
 		event.preventDefault();
 
-		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => {
-			displayRaw(response);
-			box.click();
-		});
+		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => displayRaw(response));
 	});
 	return box;
 }
@@ -157,26 +158,27 @@ function createEntryBox(className, title, url, object, action) {
 function createEntry(name, url, object, action) {
 	const entry = document.importNode(
 							document.getElementById('entry').content.querySelector('.entry'), true);	// Get live clone
-	entry.getElementsByClassName('title')[0].textContent = name;
-	entry.getElementsByClassName('direct')[0].href = rest.getUrl(url);
-
+	const title = entry.getElementsByClassName('title')[0]
+	const direct = entry.getElementsByClassName('direct')[0];
 	const updateForm = entry.getElementsByClassName('updateForm')[0];
 	const updateFormFieldset = updateForm.elements['root'];
+
+	title.textContent = name;
+	direct.href = rest.getUrl(url);
+
 	formify(updateFormFieldset, object);
 
 	updateForm.addEventListener('submit', event => {
 		event.preventDefault();
 
-		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => {
-			displayRaw(response);
-			entry.click();
-		});
+		rest.ajax('PUT', url, JSON.stringify(objectify(updateFormFieldset)), response => displayRaw(response));
 	});
 	entry.getElementsByClassName('delete')[0].addEventListener('click', () => {
 		rest.ajax('DELETE', url, null, response => displayRaw(response));
 	});
 	if (action) {
-		entry.addEventListener('click', function(event) {
+		title.classList.add('clickable');
+		title.addEventListener('click', function(event) {
 			if (event.target === this) action.apply(this, [object, url]);
 		});
 	}
@@ -207,7 +209,7 @@ function formify(fieldset, object) {
 				switch (typeof value) {
 					case 'string': return 'text';
 					case 'boolean': 
-						input.defaultChecked = " ";	// Hack for checkboxes
+						if (value) input.defaultChecked = " ";	// Hack for checkboxes
 						return 'checkbox';
 					case 'object':
 						if (value instanceof Date) return 'date';

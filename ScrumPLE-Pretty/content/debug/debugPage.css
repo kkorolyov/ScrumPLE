@@ -6,6 +6,8 @@ header {
 
 .title {
 	margin: 0px;
+	border-radius: 32px;
+	padding: 2px;
 }
 
 .clickable {
