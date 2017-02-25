@@ -15,6 +15,7 @@ header {
 }
 .selected {
 	background-color: darkslategray !important;
+	background-image: linear-gradient(to right, lightslategray, darkslategray);
 }
 
 .round {
@@ -36,21 +37,31 @@ header {
 
 .entryBox {
 	float: left;
+
+	box-shadow: 4px 4px 3px gray;
 }
 .projectsBox {
-	background-color: cyan;
 	clear: both;
+
+	background-color: cyan;
+	background-image: linear-gradient(to bottom right, lightblue, cyan);
 }
 .usersBox {
 	background-color: orange;
+	background-image: linear-gradient(to bottom right, orange, orangered);
 }
 .meetingsBox {
 	background-color: pink;
+	background-image: linear-gradient(to bottom right, pink, palevioletred);
 }
 
 .entry {
-	background-color: lime;
 	margin: 5px 0px 5px 5px;
+
+	background-color: lime;
+	background-image: linear-gradient(to bottom right, lime, lightseagreen);
+
+	box-shadow: 3px 3px 2px gray;
 }
 
 #debugReset {
@@ -59,11 +70,16 @@ header {
 
 #login {
 	background-color: darkseagreen;
+	background-image: linear-gradient(to bottom right, darkseagreen, lightseagreen);
+
+	box-shadow: 3px 3px 2px gray;
 }
 
 #rawSection {
-	background-color: silver;
 	position: fixed;
 	top: 0;
 	right: 0;
+
+	box-shadow: 3px 3px 2px gray;
+	background-color: silver;
 }
