@@ -1,18 +1,18 @@
 package org.scrumple.scrumplecore.resource;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
-import org.scrumple.scrumplecore.auth.AuthorizationException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+
 import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import dev.kkorolyov.sqlob.persistence.Condition;
 
 /**
  * Provides for creation, retrieval, update, and deletion of resources via HTML requests.
@@ -20,8 +20,8 @@ import java.util.UUID;
  */
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public abstract class CRUDResource<T> {
-	private final DAO<T> dao;
-	private final Map<String, Authorizer> authorizers = new HashMap<>();
+	final DAO<T> dao;
+	final Map<String, Authorizer> authorizers = new HashMap<>();
 	
 	/**
 	 * Constructs a new CRUD resource.
@@ -119,11 +119,6 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("DELETE").process(Credentials.fromHeaders(headers));
 
 		return dao.remove(id);
-	}
-
-	/** @return data accessor used by this resource */
-	public DAO<T> getDAO() {
-		return dao;
 	}
 
 	/**

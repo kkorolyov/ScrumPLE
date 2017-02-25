@@ -1,19 +1,23 @@
 package org.scrumple.scrumplecore.resource;
 
-import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.sqlob.persistence.Condition;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MultivaluedMap;
+
 import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.auth.Credentials;
+import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Meeting;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MultivaluedMap;
-import java.util.UUID;
+import dev.kkorolyov.simplelogs.Logger;
+import dev.kkorolyov.sqlob.persistence.Condition;
 
 /**
  * Contains all main resource handlers.
@@ -50,12 +54,12 @@ public class Resources {
 		}
 
 		@Override
-		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {	// TODO Betterify
 			Iterable<String> names = queryParams.get("name");
+			String handle = queryParams.getFirst("handle");
 			Condition cond = null;
-			
-			if (names == null || !names.iterator().hasNext())
-				cond = new Condition("visible", "=", true);
+
+			if (names == null) cond = new Condition("visible", "=", true);
 			else {
 				for (String name : names) {
 					Condition currentCond = new Condition("name", "=", name);
@@ -64,6 +68,14 @@ public class Resources {
 						cond = currentCond;
 					else
 						cond.or(currentCond);
+				}
+			}
+			if (handle != null) {
+				for (Entry<UUID, Project> entry : dao.get(cond).entrySet()) {
+					DAO<Credentials> credDao = SqlobDAOFactory.getDAOUnderProject(Credentials.class, entry.getValue());
+
+					if (!credDao.get(new Condition("handle", "=", handle)).isEmpty())
+						cond.or("uuid", "=", entry.getKey());
 				}
 			}
 			return cond;
