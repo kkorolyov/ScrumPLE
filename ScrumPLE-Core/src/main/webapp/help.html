@@ -27,16 +27,18 @@
 ```
 ### GET
 `/rest/projects` retrieves all **public** projects  
+`?name` filters projects with names containing a substring  
+`?handle` filters projects containing a user with a certain handle  
+
 `/rest/projects/{projectID}` retrieves the project referenced by `projectID`
 
 ### POST
 `/rest/projects` with a project object creates a new project **if a project of the same name does not yet exist** and returns its UUID  
-Form params with names matching a project object's properties are also accepted
 
 ### PUT
 `/rest/projects/{projectID}` with a project object updates the project referenced by `projectID`
 
-### DELETE - Requires **project owner** authorization
+### DELETE - Project Owner
 `/rest/projects/{projectID}` deletes the project referenced by `projectID`
 
 ---
@@ -52,7 +54,8 @@ Form params with names matching a project object's properties are also accepted
 }
 ```
 ### GET
-`/rest/projects/{projectID}/users` retrieves all users local to the project referenced by `projectID`
+`/rest/projects/{projectID}/users` retrieves all users local to the project referenced by `projectID`  
+`?role` filters users with a certain role  
 
 ### POST
 `/rest/projects/{projectID}/users` with a user object creates a new user under the project referenced by `projectID`
@@ -60,7 +63,7 @@ Form params with names matching a project object's properties are also accepted
 ### PUT
 `/rest/projects/{projectID}/users/{userID}` with a user object updates the user referenced by `userID`
 
-### DELETE - Requires **same user or project owner** authorization
+### DELETE - Same User / Project Owner
 `/rest/projects/{projectID}/users/{userID}` deletes the user referenced by `userID`
 
 ---
@@ -72,8 +75,17 @@ Form params with names matching a project object's properties are also accepted
 	"end": (long)
 }
 ```
-### GET
+### GET - Project User
 `/rest/projects/{projectID}/meetings` retrieves all meetings local to the project referenced by `projectID`
+
+### POST - Project User
+`/rest/projects/{projectID}/meetings` with a meeting object creates a new meeting under the project referenced by `projectID`
+
+### PUT - Project User
+`/rest/projects/{projectID}/meetings/{meetingID}` with a meeting object updates the meeting referenced by `meetingID`
+
+### DELETE - Project User
+`/rest/projects/{projectID}/meetings/{meetingID}` deletes the meeting referenced by `meetingID`
 	
 </xmp>
 <script src="lib/strapdown.js"></script>
