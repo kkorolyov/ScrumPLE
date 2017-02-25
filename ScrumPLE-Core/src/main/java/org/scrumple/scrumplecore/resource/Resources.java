@@ -55,30 +55,23 @@ public class Resources {
 
 		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {	// TODO Betterify
-			Iterable<String> names = queryParams.get("name");
+			String name = queryParams.getFirst("name");
 			String handle = queryParams.getFirst("handle");
-			Condition cond = null;
 
-			if (names == null) cond = new Condition("visible", "=", true);
-			else {
-				for (String name : names) {
-					Condition currentCond = new Condition("name", "=", name);
-					
-					if (cond == null)
-						cond = currentCond;
-					else
-						cond.or(currentCond);
-				}
-			}
-			if (handle != null) {
-				for (Entry<UUID, Project> entry : dao.get(cond).entrySet()) {
+			if (name != null) {
+				return new Condition("name", "=", name);
+			} else if (handle != null) {
+				Condition hasHandle = new Condition("uuid", "=", "nope");	// TODO Workaround for no-op condition
+
+				for (Entry<UUID, Project> entry : dao.get((Condition) null).entrySet()) {
 					DAO<Credentials> credDao = SqlobDAOFactory.getDAOUnderProject(Credentials.class, entry.getValue());
 
-					if (!credDao.get(new Condition("handle", "=", handle)).isEmpty())
-						cond.or("uuid", "=", entry.getKey());
+					if (!credDao.get(new Condition("handle", "=", handle)).isEmpty()) hasHandle.or("uuid", "=", entry.getKey());
 				}
+				return hasHandle;
+			} else {
+				return null;
 			}
-			return cond;
 		}
 
 		/**
