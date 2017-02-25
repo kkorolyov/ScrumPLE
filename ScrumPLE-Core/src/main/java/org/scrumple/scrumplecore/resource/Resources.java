@@ -66,7 +66,7 @@ public class Resources {
 				for (Entry<UUID, Project> entry : dao.get((Condition) null).entrySet()) {
 					DAO<Credentials> credDao = SqlobDAOFactory.getDAOUnderProject(Credentials.class, entry.getValue());
 
-					if (!credDao.get(new Condition("handle", "=", handle)).isEmpty()) hasHandle.or("uuid", "=", entry.getKey());
+					if (!credDao.get(new Condition("handle", "=", handle)).isEmpty()) hasHandle.or("uuid", "=", entry.getKey().toString());
 				}
 				return hasHandle;
 			} else {
