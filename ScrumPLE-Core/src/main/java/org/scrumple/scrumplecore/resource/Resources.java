@@ -61,7 +61,7 @@ public class Resources {
 			if (name != null) {
 				return new Condition("name", "LIKE", "%" + name + "%");
 			} else if (handle != null) {
-				Condition hasHandle = new Condition("uuid", "=", "nope");	// TODO Workaround for no-op condition
+				Condition hasHandle = new Condition();
 
 				for (Entry<UUID, Project> entry : dao.get((Condition) null).entrySet()) {
 					DAO<Credentials> credDao = SqlobDAOFactory.getDAOUnderProject(Credentials.class, entry.getValue());
