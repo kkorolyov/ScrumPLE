@@ -49,8 +49,21 @@ function createEntryBox(url) {
 	createForm.addEventListener('submit', event => {
 		event.preventDefault();
 		//alert(JSON.stringify(objectify(createFormFieldset)));
+		//console.log(JSON.stringify(objectify(createFormFieldset)));
+		var projectName = createForm.name.value;
+		var projectDescription= createForm.description.value;
+		var projectVisible = createForm.visible.checked;
+		var projectHandle = createForm.handle.value;
+		var projectPassword = createForm.password.value;
+		var projectDisplayName = createForm.displayName.value;
+		var projectRole = createForm.role.value;
+		var _str = '{"name":"'+projectName+'","description":"'+projectDescription+'","visible":'+projectVisible+',"owner":{"credentials":{"handle":"'+projectHandle+'","password":"'+projectPassword+'"},"displayName":"'+projectDisplayName+'","role":"'+projectRole+'"}}';
 
-		rest.ajax('POST', url, JSON.stringify(objectify(createFormFieldset)), response => displayRaw(response));
+		//alert(_str);
+
+		// {"name":"11","description":"22","visible":true,"owner":{"credentials":{"handle":"33","password":"44"},"displayName":"55","role":"66"}}
+
+		rest.ajax('POST', url, _str, response => displayRaw(response));
 	});
 	//return box;
 }
