@@ -7,52 +7,40 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Sprint {
-	private String description;
-	private Set<Task> tasks;
-	private Backlog backlog;
+	private int sprintNumber;
 	private Period timeLeft;
 	private LocalDate start, end, current;
 	//private Date convertedStartDate, convertedEndDate;
 	
-	public Sprint (String des, Backlog sprintBacklog, int year, int month, int dayOfMonth) {
-		this.description = des;
-		this.backlog = sprintBacklog;
-		tasks = new HashSet<Task>();
-		start = LocalDate.now();
+	public Sprint (int sprintNumber, int syear, int smonth, int sdayOfMonth, int year, int month, int dayOfMonth) {
+		this.sprintNumber = sprintNumber;
+		start = LocalDate.of(syear, smonth, sdayOfMonth);
 		end = LocalDate.of(year, month, dayOfMonth);
-		//Not sure if I need these anymore.
-		//convertedStartDate = Date.valueOf(start);
-		//convertedEndDate = Date.valueOf(end);
 	}
 	
-	public String getDes() {
-		return description;
-	}
-	
-	public void setTasks() {
-		tasks = backlog.getTasks();
+	public int getNumber() {
+		return sprintNumber;
 	}
 	
 	public void setStartDate(Date d) {
 		start = d.toLocalDate();
-		//convertedStartDate = d;
+	}
+	
+	public LocalDate getStart() {
+		return start;
 	}
 	
 	public void setEndDate(Date d) {
 		end = d.toLocalDate();
-		//convertedEndDate = d;
 	}
 	
-	/*public Date getConvertedStartDate() {
-		return this.convertedStartDate;
+	public LocalDate getEnd() {
+		return end;
 	}
-	
-	public Date getConvertedEndDate() {
-		return this.convertedEndDate;
-	}*/
-	
-	public void timeLeft() {
+
+	public Period timeLeft() {
 		current = LocalDate.now();
 		timeLeft = Period.between(current, end);
+		return timeLeft;
 	}
 }
