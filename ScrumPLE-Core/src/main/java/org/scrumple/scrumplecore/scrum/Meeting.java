@@ -32,8 +32,7 @@ public class Meeting implements Comparable<Meeting> {
 	 * @param source meeting to clone
 	 * @param start cloned meeting's start time
 	 */
-	@JsonCreator
-	public Meeting(@JsonProperty("source") Meeting source, @JsonProperty("start") Instant start) {
+	public Meeting(Meeting source, Instant start) {
 		this(source.type, start, start.plusMillis(source.getLength()));
 	}
 
