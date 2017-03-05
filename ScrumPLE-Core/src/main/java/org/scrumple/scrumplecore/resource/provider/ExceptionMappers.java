@@ -1,9 +1,16 @@
 package org.scrumple.scrumplecore.resource.provider;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+
+import org.glassfish.jersey.server.ContainerException;
+import org.scrumple.scrumplecore.auth.AuthenticationException;
+import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.database.DataAccessException;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -21,53 +28,53 @@ final class ExceptionMappers {
 		}
 	}
 
-//	@Provider
-//	static class IllegalArgumentExceptionMapper extends ExceptionMapperLogger<IllegalArgumentException> {
-//		IllegalArgumentExceptionMapper() {
-//			super(400);
-//		}
-//	}
-//
-//	@Provider
-//	static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
-//		AuthenticationExceptionMapper() {
-//			super(401);
-//		}
-//	}
-//	@Provider
-//	static class AuthorizationExceptionMapper extends ExceptionMapperLogger<AuthorizationException> {
-//		AuthorizationExceptionMapper() {
-//			super(401);
-//		}
-//
-//	}
-//
-//	@Provider
-//	static class EntityNotFoundExceptionMapper extends ExceptionMapperLogger<EntityNotFoundException> {
-//		EntityNotFoundExceptionMapper() {
-//			super(404);
-//		}
-//	}
-//	@Provider
-//	static class EntityExistsExceptionMapper extends ExceptionMapperLogger<EntityExistsException> {
-//		EntityExistsExceptionMapper() {
-//			super(409);
-//		}
-//
-//	}
-//	@Provider
-//	static class DataAccessExceptionMapper extends ExceptionMapperLogger<DataAccessException> {
-//		DataAccessExceptionMapper() {
-//			super(500);
-//		}
-//	}
-//
-//	@Provider
-//	static class ContainerExceptionMapper extends ExceptionMapperLogger<ContainerException> {
-//		ContainerExceptionMapper() {
-//			super(500);
-//		}
-//	}
+	@Provider
+	static class IllegalArgumentExceptionMapper extends ExceptionMapperLogger<IllegalArgumentException> {
+		IllegalArgumentExceptionMapper() {
+			super(400);
+		}
+	}
+
+	@Provider
+	static class AuthenticationExceptionMapper extends ExceptionMapperLogger<AuthenticationException> {
+		AuthenticationExceptionMapper() {
+			super(401);
+		}
+	}
+	@Provider
+	static class AuthorizationExceptionMapper extends ExceptionMapperLogger<AuthorizationException> {
+		AuthorizationExceptionMapper() {
+			super(401);
+		}
+
+	}
+
+	@Provider
+	static class EntityNotFoundExceptionMapper extends ExceptionMapperLogger<EntityNotFoundException> {
+		EntityNotFoundExceptionMapper() {
+			super(404);
+		}
+	}
+	@Provider
+	static class EntityExistsExceptionMapper extends ExceptionMapperLogger<EntityExistsException> {
+		EntityExistsExceptionMapper() {
+			super(409);
+		}
+
+	}
+	@Provider
+	static class DataAccessExceptionMapper extends ExceptionMapperLogger<DataAccessException> {
+		DataAccessExceptionMapper() {
+			super(500);
+		}
+	}
+
+	@Provider
+	static class ContainerExceptionMapper extends ExceptionMapperLogger<ContainerException> {
+		ContainerExceptionMapper() {
+			super(500);
+		}
+	}
 
 	static class ExceptionMapperLogger<T extends Throwable> implements ExceptionMapper<T> {
 		private static final Logger log = Logger.getLogger(ExceptionMappers.class.getName(), Level.DEBUG);
