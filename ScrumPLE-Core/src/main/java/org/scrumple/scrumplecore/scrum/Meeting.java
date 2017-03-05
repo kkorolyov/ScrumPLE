@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a single meeting occurring between 2 points in time.
@@ -21,7 +22,7 @@ public class Meeting implements Comparable<Meeting> {
 	 * @param end meeting end time, must be {@code >= start}
 	 */
 	@JsonCreator
-	public Meeting(String type, Instant start, Instant end) {
+	public Meeting(@JsonProperty("type") String type, @JsonProperty("start") Instant start, @JsonProperty("end") Instant end) {
 		setType(type);
 		setTime(start, end);
 	}
@@ -32,7 +33,7 @@ public class Meeting implements Comparable<Meeting> {
 	 * @param start cloned meeting's start time
 	 */
 	@JsonCreator
-	public Meeting(Meeting source, Instant start) {
+	public Meeting(@JsonProperty("source") Meeting source, @JsonProperty("start") Instant start) {
 		this(source.type, start, start.plusMillis(source.getLength()));
 	}
 
