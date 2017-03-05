@@ -10,16 +10,20 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.ws.rs.core.Context;
 
-import dev.kkorolyov.simpleprops.Properties;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.scrumple.scrumplecore.assets.Assets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+
+import dev.kkorolyov.simpleprops.Properties;
 
 @SuppressWarnings("javadoc")
 public class Application extends ResourceConfig {
 	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
 		Assets.applyConfig(parseInitProps(context));
+
+		new ObjectMapper().findAndRegisterModules();
 	}
 	private static Properties parseInitProps(ServletContext context) {
 		Properties props = new Properties();
