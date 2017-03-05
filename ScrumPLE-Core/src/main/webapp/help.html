@@ -77,6 +77,8 @@
 ```
 ### GET - Project User
 `/rest/projects/{projectID}/meetings` retrieves all meetings local to the project referenced by `projectID`
+`?start` denotes the earliest start time of meetings
+`?end` denotes the latest start time of meetings
 
 ### POST - Project User
 `/rest/projects/{projectID}/meetings` with a meeting object creates a new meeting under the project referenced by `projectID`

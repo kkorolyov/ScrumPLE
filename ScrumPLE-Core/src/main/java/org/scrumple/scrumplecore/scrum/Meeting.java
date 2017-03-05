@@ -2,8 +2,7 @@ package org.scrumple.scrumplecore.scrum;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Set;
-import java.util.TreeSet;
+import java.time.temporal.ChronoUnit;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -11,14 +10,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * Represents a single meeting occurring between 2 points in time.
  */
 public class Meeting implements Comparable<Meeting> {
-	/** Constant for daily repeat */
-	public static final long DAILY = 24 * 60 * 60 * 1000;
-	/** Constant for weekly repeat */
-	public static final long WEEKLY = DAILY * 7;
-
 	private String type;
 	private Timestamp start, end;
-	private long repeatInterval;
 
 	public Meeting(){};
 	/**
@@ -34,30 +27,13 @@ public class Meeting implements Comparable<Meeting> {
 	}
 
 	/**
-	 * Returns all occurrences of this meeting between a time range.
-	 * @param start range start
-	 * @param end range end
-	 * @return all occurrences of this meeting between {@code start} and {@code end}, ordered by start time
-	 * @throws IllegalArgumentException if {@code start > end}
+	 * Clones a meeting.
+	 * @param source meeting to clone
+	 * @param start cloned meeting's start time
 	 */
-	public Set<Meeting> getAllOccurrences(Instant start, Instant end) {
-		validateRange(start, end);
-
-		Set<Meeting> all = new TreeSet<>();
-		Instant currentStart = getStart(), currentEnd = getEnd();
-
-		while (between(currentStart, start, end)) {
-			all.add(new Meeting(type, currentStart, currentEnd));
-
-			if (repeatInterval <= 0) break;	// Maximum 1 meeting (original) to return
-
-			currentStart = currentStart.plusMillis(repeatInterval);
-			currentEnd = currentEnd.plusMillis(repeatInterval);
-		}
-		return all;
-	}
-	private static boolean between(Instant instant, Instant rangeStart, Instant rangeEnd) {
-		return rangeStart.compareTo(instant) <= 0 && instant.compareTo(rangeEnd) <= 0;
+	@JsonCreator
+	public Meeting(Meeting source, Instant start) {
+		this(source.type, start, start.plusMillis(source.getLength()));
 	}
 
 	/** @return meeting type */
@@ -81,6 +57,11 @@ public class Meeting implements Comparable<Meeting> {
 		return end.toInstant();
 	}
 
+	/** @return meeting length in millis */
+	public long getLength() {
+		return getStart().until(getEnd(), ChronoUnit.MILLIS);
+	}
+
 	/**
 	 * Sets meeting start and end times.
 	 * @param start meeting start time
@@ -93,24 +74,6 @@ public class Meeting implements Comparable<Meeting> {
 		this.start = Timestamp.from(start);
 		this.end = Timestamp.from(end);
 	}
-
-	/** @return {@code true} if this meeting repeats */
-	public boolean repeats() {
-		return repeatInterval > 0;
-	}
-
-	/** @return meeting repeat interval in milliseconds */
-	public long getRepeat() {
-		return repeatInterval;
-	}
-	/**
-	 * Sets the repeat interval of this meeting.
-	 * @param interval milliseconds after which to repeat this meeting
-	 */
-	public void setRepeat(long interval) {
-		repeatInterval = Math.max(0, interval);
-	}
-
 	private void validateRange(Instant start, Instant end) {
 		if (start.isAfter(end)) throw new IllegalArgumentException("Start time is after end time: " + start + " > " + end);
 	}

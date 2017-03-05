@@ -2,17 +2,12 @@ package org.scrumple.scrumplecore.resource;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
@@ -144,25 +139,21 @@ public class Resources {
 		}
 
 		@Override
-		public Map<UUID, Meeting> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-			Map<UUID, Meeting> results = super.retrieve(uriInfo, headers);
-
-			for (Meeting meeting : results.values().stream().filter(Meeting::repeats).collect(Collectors.toList())) {
-				// TODO Somehow ignore original repeatables if out of range, but keep repeats
-			}
-			return results;
-		}
-		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 			String startString = queryParams.getFirst("start");
 			String endString = queryParams.getFirst("end");
 
-			Instant start = (startString == null) ? Instant.now() : Instant.ofEpochMilli(Long.parseLong(startString));
-			Instant end = (endString == null) ? Instant.now() : Instant.ofEpochMilli(Long.parseLong(endString));
+			Instant start = (startString == null) ? null : Instant.ofEpochMilli(Long.parseLong(startString));
+			Instant end = (endString == null) ? null : Instant.ofEpochMilli(Long.parseLong(endString));
 
-			return new Condition("repeatInterval", ">", 0)
-					.or(new Condition("start", ">=", Timestamp.from(start))
-									.and("start", "<=", Timestamp.from(end)));
+			Condition condition = (start == null) ? null : new Condition("start", ">=", Timestamp.from(start));
+			if (end != null) {
+				Condition endCondition = new Condition("start", "<=", Timestamp.from(end));
+
+				if (condition == null) condition = endCondition;
+				else condition.and(endCondition);
+			}
+			return condition;
 		}
 	}
 }
