@@ -115,13 +115,13 @@ public class Resources {
 		/**
 		 * Clones a meeting.
 		 * @param id ID of meeting to clone
-		 * @param start clone's start time
+		 * @param start clone's start time in millis since epoch start
 		 * @param headers request's HTTP headers
 		 * @return clone's ID
 		 */
 		@POST
 		@Path("{uuid}")
-		public UUID clone(@PathParam("uuid") UUID id, Instant start, @Context HttpHeaders headers) {
+		public UUID clone(@PathParam("uuid") UUID id, long start, @Context HttpHeaders headers) {
 			Meeting source = retrieve(id, headers);
 			Meeting clone = new Meeting(source, start);
 

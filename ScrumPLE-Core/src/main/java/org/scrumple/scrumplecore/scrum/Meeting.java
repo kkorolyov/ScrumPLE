@@ -1,8 +1,6 @@
 package org.scrumple.scrumplecore.scrum;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,11 +16,12 @@ public class Meeting implements Comparable<Meeting> {
 	/**
 	 * Constructs a new meeting.
 	 * @param type description of meeting type
-	 * @param start meeting start time
-	 * @param end meeting end time, must be {@code >= start}
+	 * @param start meeting start time in millis since epoch start
+	 * @param end meeting end time in millis isnce epoch start
+	 * @throws IllegalArgumentException if {@code start > end}
 	 */
 	@JsonCreator
-	public Meeting(@JsonProperty("type") String type, @JsonProperty("start") Instant start, @JsonProperty("end") Instant end) {
+	public Meeting(@JsonProperty("type") String type, @JsonProperty("start") long start, @JsonProperty("end") long end) {
 		setType(type);
 		setTime(start, end);
 	}
@@ -30,10 +29,10 @@ public class Meeting implements Comparable<Meeting> {
 	/**
 	 * Clones a meeting.
 	 * @param source meeting to clone
-	 * @param start clone's start time
+	 * @param start clone's start time in millis since epoch start
 	 */
-	public Meeting(Meeting source, Instant start) {
-		this(source.type, start, start.plusMillis(source.getLength()));
+	public Meeting(Meeting source, long start) {
+		this(source.type, start, start + source.getLength());
 	}
 
 	/** @return meeting type */
@@ -48,34 +47,34 @@ public class Meeting implements Comparable<Meeting> {
 		this.type = type;
 	}
 
-	/** @return meeting start time */
-	public Instant getStart() {
-		return start.toInstant();
+	/** @return meeting start time in millis since epoch start */
+	public long getStart() {
+		return start.getTime();
 	}
-	/** @return meeting end time */
-	public Instant getEnd() {
-		return end.toInstant();
+	/** @return meeting end time in millis since epoch start */
+	public long getEnd() {
+		return end.getTime();
 	}
 
 	/** @return meeting length in millis */
 	public long getLength() {
-		return getStart().until(getEnd(), ChronoUnit.MILLIS);
+		return getEnd() - getStart();
 	}
 
 	/**
 	 * Sets meeting start and end times.
-	 * @param start meeting start time
-	 * @param end meeting end time, must be {@code >= start}
+	 * @param start start time in millis since epoch start
+	 * @param end end time in millis since epoch start
 	 * @throws IllegalArgumentException if {@code start > end}
 	 */
-	public void setTime(Instant start, Instant end) {
+	public void setTime(long start, long end) {
 		validateRange(start, end);
 
-		this.start = Timestamp.from(start);
-		this.end = Timestamp.from(end);
+		this.start = new Timestamp(start);
+		this.end = new Timestamp(end);
 	}
-	private void validateRange(Instant start, Instant end) {
-		if (start.isAfter(end)) throw new IllegalArgumentException("Start time is after end time: " + start + " > " + end);
+	private void validateRange(long start, long end) {
+		if (start > end) throw new IllegalArgumentException("Start time is after end time: " + start + " > " + end);
 	}
 
 	/**

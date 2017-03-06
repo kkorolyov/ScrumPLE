@@ -2,7 +2,6 @@ package org.scrumple.scrumplecore.resource;
 
 import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -76,10 +75,10 @@ public class DebugResource {
 	}
 	private static void generateMeetings(Project project, int num) {
 		DAO<Meeting> meetingDAO = SqlobDAOFactory.getDAOUnderProject(Meeting.class, project);
-		Instant now = Instant.now();
+		long now = System.currentTimeMillis();
 		for (int i = 0; i < num; i++) {
-			long startSecondsOffset = i * 600, endSecondsOffset = startSecondsOffset + 300;
-			meetingDAO.add(new Meeting("Debuggering", now.plusSeconds(startSecondsOffset), now.plusSeconds(endSecondsOffset)));
+			long startOffset = i * 600 * 1000, endOffset = startOffset + 300 * 1000;
+			meetingDAO.add(new Meeting("Debuggering", now + startOffset, now + endOffset));
 		}
 	}
 }
