@@ -5,8 +5,11 @@ import java.time.Instant;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.scrumple.scrumplecore.auth.Authorizer;
@@ -107,6 +110,22 @@ public class Resources {
 			super(SqlobDAOFactory.getDAOUnderProject(Meeting.class, project));
 
 			setAuthorizers(Authorizers.onlyUsers(project));
+		}
+
+		/**
+		 * Clones a meeting.
+		 * @param id ID of meeting to clone
+		 * @param start clone's start time
+		 * @param headers request's HTTP headers
+		 * @return clone's ID
+		 */
+		@POST
+		@Path("{uuid}")
+		public UUID clone(@PathParam("uuid") UUID id, Instant start, @Context HttpHeaders headers) {
+			Meeting source = retrieve(id, headers);
+			Meeting clone = new Meeting(source, start);
+
+			return create(clone, headers);
 		}
 
 		@Override

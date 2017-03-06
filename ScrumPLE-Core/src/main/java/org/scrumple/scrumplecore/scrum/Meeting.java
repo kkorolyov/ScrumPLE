@@ -30,7 +30,7 @@ public class Meeting implements Comparable<Meeting> {
 	/**
 	 * Clones a meeting.
 	 * @param source meeting to clone
-	 * @param start cloned meeting's start time
+	 * @param start clone's start time
 	 */
 	public Meeting(Meeting source, Instant start) {
 		this(source.type, start, start.plusMillis(source.getLength()));
