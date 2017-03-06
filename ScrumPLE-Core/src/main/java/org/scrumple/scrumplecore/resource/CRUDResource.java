@@ -43,24 +43,7 @@ public abstract class CRUDResource<T> {
 
 		return dao.add(obj);
 	}
-	/**
-	 * Creates a new resource from form parameters.
-	 * @param params supplied form parameters
-	 * @param headers request's HTTP headers
-	 * @return id of created resource
-	 */
-	@POST
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public UUID create(MultivaluedMap<String, String> params, @Context HttpHeaders headers) {
-		return create(parseForm(params), headers);
-	}
-	/**
-	 * Constructs an instance of {@code T} from form parameters.
-	 * @param params supplied form parameters
-	 * @return instance representing data supplied in {@code params}
-	 */
-	protected abstract T parseForm(MultivaluedMap<String, String> params);
-	
+
 	/**
 	 * Retrieves a resource.
 	 * @param id id of resource to retrieve

@@ -40,22 +40,6 @@ public class Resources {
 		}
 
 		@Override
-		protected Project parseForm(MultivaluedMap<String, String> params) {
-			String name = params.getFirst("name"),
-					description = params.getFirst("description"),
-					visible = params.getFirst("visible"),
-					ownerHandle = params.getFirst("handle"),
-					ownerPassword = params.getFirst("password"),
-					ownerDisplayName = params.getFirst("displayName");
-
-			if (name == null || description == null || ownerHandle == null || ownerPassword == null)
-				throw new IllegalArgumentException("Missing some form parameters");
-
-			User owner = new User(new Credentials(ownerHandle, ownerPassword), ownerDisplayName, null);
-			return new Project(name, description, visible != null, owner);
-		}
-
-		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {	// TODO Betterify
 			String name = queryParams.getFirst("name");
 			String handle = queryParams.getFirst("handle");
@@ -109,14 +93,6 @@ public class Resources {
 		}
 
 		@Override
-		protected User parseForm(MultivaluedMap<String, String> params) {
-			String handle = params.getFirst("handle"),
-					password = params.getFirst("password");
-
-			return new User(new Credentials(handle, password));
-		}
-
-		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 			return null;
 		}
@@ -131,11 +107,6 @@ public class Resources {
 			super(SqlobDAOFactory.getDAOUnderProject(Meeting.class, project));
 
 			setAuthorizers(Authorizers.onlyUsers(project));
-		}
-
-		@Override
-		protected Meeting parseForm(MultivaluedMap<String, String> params) {
-			return null;
 		}
 
 		@Override
