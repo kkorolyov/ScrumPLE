@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ScrumPLE-Core Help</title>
 </head>
 
@@ -81,7 +82,8 @@
 `?end` denotes the latest start time of meetings
 
 ### POST - Project User
-`/rest/projects/{projectID}/meetings` with a meeting object creates a new meeting under the project referenced by `projectID`
+`/rest/projects/{projectID}/meetings` with a meeting object creates a new meeting under the project referenced by `projectID`  
+`/rest/projects/{projectID}/meetings/{meetingID}` with a number `start = (millis since epoch start)` clones the meeting referenced by `meetingID` and starts the cloned meeting at `start`  
 
 ### PUT - Project User
 `/rest/projects/{projectID}/meetings/{meetingID}` with a meeting object updates the meeting referenced by `meetingID`
