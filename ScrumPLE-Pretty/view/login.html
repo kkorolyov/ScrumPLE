@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Project Page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="login">
+        <center>
+            <form id="loginform">
+                <table>
+                <tr>
+                    <td colspan="2"><input type="text", id="h", name="handle" placeholder="project name"/> </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="password", id="pass", name="password"  placeholder="password"/></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" id="log" name="Login" value="Log In">  </td>
+                    <td><input type="reset" value="Forget">  </td>
+                </tr>                   
+                </table>
+            </form>
+        </center>
+        </div>
+        <div id="project", style="display: none;">
+            <form id="projectform">
+                <fieldset>
+                    <legend>Project</legend>
+                    <textarea readonly id='projectinfo' rows="100" cols="100"></textarea>
+                </fieldset>
+            </form>
+        </div>
+        <script src="/lib/rest.js"></script>
+        <script src="../js/login.js"></script>
+    </body>
+</html>

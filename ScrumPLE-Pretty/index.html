@@ -4,7 +4,8 @@
 <meta charset="utf-8" />
 <title>HOME</title>
 <link rel="stylesheet" href="css/index.css" />
-<script src="/lib/rest.js"></script>
+<script type="text/javascript" src="lib/rest.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 </head>
 
 <body>
@@ -12,7 +13,9 @@
 		<div id="myhome">
 			<div class="myheader">
 				<a href="index.html"><div class="logo">ScrumPLE</div></a>
-				<input type="text" class="search_bar" placeholder="search your project">
+				<input id="search_bar" type="text" class="search_bar" placeholder="search your project">
+				<div id="projectList">
+				</div>
 			</div>
 
 			<div class="form">
