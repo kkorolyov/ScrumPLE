@@ -153,7 +153,7 @@ public abstract class CRUDResource<T> {
 	public String toString() {
 		return getClass().getName() + "{"
 					 + "dao: " + dao
-					 + "authorizers: " + authorizers
+					 + ", authorizers: " + authorizers
 					 + "}";
 	}
 }
