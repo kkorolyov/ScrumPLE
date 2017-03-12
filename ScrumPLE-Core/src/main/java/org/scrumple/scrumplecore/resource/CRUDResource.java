@@ -12,6 +12,8 @@ import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
 
+import dev.kkorolyov.simplelogs.Logger;
+import dev.kkorolyov.simplelogs.Logger.Level;
 import dev.kkorolyov.sqlob.persistence.Condition;
 
 /**
@@ -20,15 +22,19 @@ import dev.kkorolyov.sqlob.persistence.Condition;
  */
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public abstract class CRUDResource<T> {
+	private static final Logger log = Logger.getLogger(CRUDResource.class.getName(), Level.DEBUG);
+
 	final DAO<T> dao;
 	final Map<String, Authorizer> authorizers = new HashMap<>();
-	
+
 	/**
 	 * Constructs a new CRUD resource.
 	 * @param dao object providing access to resource data
 	 */
 	public CRUDResource(DAO<T> dao) {
 		this.dao = dao;
+
+		log.debug(() -> "Constructed new " + this);
 	}
 
 	/**
@@ -41,6 +47,7 @@ public abstract class CRUDResource<T> {
 	public UUID create(T obj, @Context HttpHeaders headers) {
 		getAuthorizer("POST").process(Credentials.fromHeaders(headers));
 
+		log.debug(() -> "Received POST with content=" + obj);
 		return dao.add(obj);
 	}
 
@@ -55,6 +62,7 @@ public abstract class CRUDResource<T> {
 	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
 		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
 
+		log.debug(() -> "Received GET for id=" + id);
 		return dao.get(id);
 	}
 	/**
@@ -67,7 +75,10 @@ public abstract class CRUDResource<T> {
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
 
-		return dao.get(parseQuery(uriInfo.getQueryParameters()));
+		Condition query = parseQuery(uriInfo.getQueryParameters());
+
+		log.debug(() -> "Received GET with query=" + query);
+		return dao.get(query);
 	}
 	/**
 	 * Constructs an optional retrieval filter/condition from query parameters.
@@ -75,7 +86,7 @@ public abstract class CRUDResource<T> {
 	 * @return appropriate filter
 	 */
 	protected abstract Condition parseQuery(MultivaluedMap<String, String> queryParams);
-	
+
 	/**
 	 * Updates a resource.
 	 * @param id id of resource to update
@@ -87,9 +98,10 @@ public abstract class CRUDResource<T> {
 	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) {
 		getAuthorizer("PUT").process(Credentials.fromHeaders(headers));
 
+		log.debug(() -> "Received PUT with id=" + id + " content=" + replacement);
 		dao.update(id, replacement);
 	}
-	
+
 	/**
 	 * Deletes a resource.
 	 * @param id id of resource to delete
@@ -101,6 +113,7 @@ public abstract class CRUDResource<T> {
 	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
 		getAuthorizer("DELETE").process(Credentials.fromHeaders(headers));
 
+		log.debug(() -> "Received DELETE with id=" + id);
 		return dao.remove(id);
 	}
 
@@ -134,5 +147,13 @@ public abstract class CRUDResource<T> {
 		if (authorizer == null)
 			authorizer = Authorizers.ALL;
 		return authorizer;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getName() + "{"
+					 + "dao: " + dao
+					 + "authorizers: " + authorizers
+					 + "}";
 	}
 }
