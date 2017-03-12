@@ -102,7 +102,7 @@ public class Resources {
 		public SprintResource getSprints(@PathParam("uuid") UUID id) {
 			return new SprintResource(retreive(id, null));
 		}
-		@Path("{uuid}/tasks")
+		@Path("{uuid}/stories/{uuid}/tasks")
 		public TaskResource getTasks(@PathParam("uuid") UUID id) {
 			return new TaskResource(retreive(id, null));
 		}
@@ -180,7 +180,9 @@ public class Resources {
 		}
 		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-			return null;
+			int sprintNumber = queryParams.getFirst(sprintId);
+			return new Condition("sprintNumber", "=", sprintNumber);
+			
 		}
 	}
 	public static class UsersResource extends CRUDResource<User> {
