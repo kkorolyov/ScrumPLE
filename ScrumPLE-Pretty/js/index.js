@@ -8,6 +8,7 @@ function init() {
 		if (!input) {
 			return;
 		}
+		document.getElementById('search_bar').innerHTML = ""
 		//var _str = '{"name":"'+input+'"}';
 		//JSON.parse(_str);
 		rest.ajax('GET','projects?name='+input, null, response => {
@@ -15,9 +16,11 @@ function init() {
 				for (let key in response ) {
 					let url = "/project/project.html?projectId=" + key
 					let name = response[key].name
-					let link = document.getElementById("project-list").appendChild(document.createElement('a'))
+					let project-list = document.getElementById("project-list")
+					let link = project-list.appendChild(document.createElement('a'))
 					link.href = url
 					link.textContent = name
+					project-list.appendChild(document.createElement ('br'))
 				}
 			}
 		})
