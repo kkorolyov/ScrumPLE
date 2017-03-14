@@ -8,7 +8,7 @@ function init() {
 		if (!input) {
 			return;
 		}
-		document.getElementById('search_bar').innerHTML = ""
+		document.getElementById('project-list').innerHTML = ""
 		//var _str = '{"name":"'+input+'"}';
 		//JSON.parse(_str);
 		rest.ajax('GET','projects?name='+input, null, response => {
