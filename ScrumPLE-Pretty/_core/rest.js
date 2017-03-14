@@ -1,4 +1,6 @@
-var rest = {
+"use strict"
+
+const rest = {
 	credentials: null,
 	login: function(handle, password) {
 		this.credentials = btoa(handle + ":" + password);
@@ -15,12 +17,12 @@ var rest = {
 	 * @param {function(string)} [responseHandler] invoked after server responds
 	 */
 	ajax: function(method, url, content, responseHandler) {
-		var xhttp = new XMLHttpRequest();
+		const xhttp = new XMLHttpRequest();
 
 		if (responseHandler) {
 			xhttp.onreadystatechange = function () {
 				if (this.readyState === 4) {
-					var response = this.responseText;
+					let response = this.responseText;
 					try {
 						response = JSON.parse(response);
 					} catch (e) {
