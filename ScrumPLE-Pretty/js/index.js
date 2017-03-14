@@ -15,7 +15,7 @@ function init() {
 				for (let key in response ) {
 					let url = "/project/project.html?projectId=" + key
 					let name = response[key].name
-					let link = document.getElementById("project-list").appendChild("a")
+					let link = document.getElementById("project-list").appendChild(document.createElement('a'))
 					link.href = url
 					link.textContent = name
 				}
