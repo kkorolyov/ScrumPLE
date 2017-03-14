@@ -19,8 +19,7 @@ function init() {
 					link.href = url
 					link.textContent = name
 				}
-
 			}
-		};
-	});
+		})
+	})
 }
