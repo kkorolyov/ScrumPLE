@@ -16,11 +16,11 @@ function init() {
 				for (let key in response ) {
 					let url = "/project/project.html?projectId=" + key
 					let name = response[key].name
-					let project-list = document.getElementById("project-list")
-					let link = project-list.appendChild(document.createElement('a'))
+					let projectList = document.getElementById("project-list")
+					let link = projectList.appendChild(document.createElement('a'))
 					link.href = url
 					link.textContent = name
-					project-list.appendChild(document.createElement ('br'))
+					projectList.appendChild(document.createElement ('br'))
 				}
 			}
 		})
