@@ -1,32 +1,36 @@
 package org.scrumple.scrumplecore.session;
 
-import org.scrumple.scrumplecore.scrum.User;
-
 import java.sql.Timestamp;
 import java.util.Random;
 import java.util.UUID;
+
+import org.scrumple.scrumplecore.scrum.User;
 
 /**
  * An application session consisting of a single user, start time, lifetime, and access token.
  */
 public class UserSession {
+	private static final long DEFAULT_DURATION = 15 * 60 * 1000;
+
 	private User user;
-	private Timestamp start;
-	private long lifetime;
 	private String token;
+	private Timestamp start, end;
 
 	public UserSession(){}
+	public UserSession(User user) {
+		this(user, DEFAULT_DURATION);
+	}
 	/**
 	 * Constructs a new session starting at the current system time and with a random access token.
 	 * @param user user initiating session
-	 * @param lifetime time until session expires in milliseconds
+	 * @param duration time until session expires in milliseconds
 	 */
-	public UserSession(User user, long lifetime) {
+	public UserSession(User user, long duration) {
 		this.user = user;
-		this.lifetime = lifetime;
 
-		start = new Timestamp(System.currentTimeMillis());
 		token = generateToken();
+		start = new Timestamp(System.currentTimeMillis());
+		end = new Timestamp(start.getTime() + duration);
 	}
 
 	private static String generateToken() {
@@ -44,18 +48,13 @@ public class UserSession {
 		return user;
 	}
 
-	/** @return session start time */
-	public Timestamp getStart() {
-		return start;
-	}
-
-	/** @return time from session start until expiration in milliseconds */
-	public long getLifetime() {
-		return lifetime;
-	}
-
-	/** @return session access token */
+	/** @return session access token, or {@code null} if session is expired */
 	public String getToken() {
+		tick();
+
 		return token;
+	}
+	private void tick() {	// Invalidates token if current time past end
+		if (System.currentTimeMillis() > end.getTime()) token = null;
 	}
 }
