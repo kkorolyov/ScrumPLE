@@ -9,8 +9,11 @@ target/
 .settings/
 
 # IntelliJ Files
-*.idea
+*.ideas
 *.iml
+
+# Bootstrap Files
+bower_components/
 
 # VSCode Files
 *.vscode/
