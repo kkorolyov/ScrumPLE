@@ -9,7 +9,7 @@ target/
 .settings/
 
 # IntelliJ Files
-*.ideas
+*.idea
 *.iml
 
 # Bootstrap Files
