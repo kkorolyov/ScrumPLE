@@ -145,7 +145,7 @@ public class Resources {
 		
 		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-			String sprintNumber = queryParams.getFirst(sprintId);
+			String sprintNumber = queryParams.getFirst("sprintNumber");
 			if(sprintNumber != null){
 				return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
 			}
