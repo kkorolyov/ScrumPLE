@@ -77,16 +77,16 @@ public class Resources {
 		
 		@Path("{uuid}/stories")
 		public UserStoryResource getStories(@PathParam("uuid") UUID id) {
-			return new UserStoryResource(retreive(id, null));
+			return new UserStoryResource(retrieve(id, null));
 		}
 		
 		@Path("{uuid}/sprints")
 		public SprintResource getSprints(@PathParam("uuid") UUID id) {
-			return new SprintResource(retreive(id, null));
+			return new SprintResource(retrieve(id, null));
 		}
 		@Path("{uuid}/stories/{uuid}/tasks")
 		public TaskResource getTasks(@PathParam("uuid") UUID id) {
-			return new TaskResource(retreive(id, null));
+			return new TaskResource(retrieve(id, null));
 		}
 
 		/**
@@ -109,15 +109,11 @@ public class Resources {
 		}
 		
 		@Override
-		protected Task parseForm(Multivalluedmap<String, String> params) {
-			String taskDescription = params.getFirst("taskDescription");
-			int storyId = params.getFirst("storyId");
-			return new Task(storyId, taskDescription);
-			
-		}
-		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-			return null;
+			String storyId = queryParams.getFirst("storyId");
+			if(storyId != null) {
+				return new Condition("storyId", "=", + Integer.valueOf(storyId));
+			}	
 		}
 	}
 	public static class SprintResource extends CRUDResource<Sprint> {
@@ -130,19 +126,12 @@ public class Resources {
 		}
 		
 		@Override
-		protected Sprint parseForm(MultivaluedMap<String, String> params) {
-			int sprintNumber = params.getFirst("sprintNumber"),
-				syear = params.getFirst("syear"),
-				smonth = params.getFirst("smonth"),
-				sdayOfMonth = params.getFirst("sdayOfMonth"),
-				year = params.getFirst("year"),
-				month = params.getFirst("month"),
-				dayOfMonth = params.getFirst("dayOfMonth");
-			return new Sprint(sprintNumber, syear, smonth, sdayOfMonth, year, month, dayOfMonth);
-		}
-		@Override
-		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-			return null;
+		protected Sprint parseQuery(MultivaluedMap<String, String> params) {
+			String sprintNumber = params.getFirst("sprintNumber");
+			if(sprintNumber!=null){
+				return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
+			}
+			
 		}
 	}
 	public static class UserStoryResource extends CRUDResource<UserStory> {
@@ -155,16 +144,11 @@ public class Resources {
 		}
 		
 		@Override
-		protected UserStory parseForm(MultivaluedMap<String, String> params) {
-			String story = params.getFirst("story");
-			int storyPoint = params.getFirst("storyPoint");
-			return new UserStory(story, storyPoint);
-		}
-		@Override
 		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-			int sprintNumber = queryParams.getFirst(sprintId);
-			return new Condition("sprintNumber", "=", sprintNumber);
-			
+			String sprintNumber = queryParams.getFirst(sprintId);
+			if(sprintNumber != null){
+				return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
+			}
 		}
 	}
 	public static class UsersResource extends CRUDResource<User> {

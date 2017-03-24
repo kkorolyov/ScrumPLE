@@ -6,6 +6,7 @@ public class UserStory {
 	private String story;
 	private int storyPoint;
 	private Sprint sprint;
+	private int sprintNumber;
 	
 	public UserStory() {}
 	
@@ -36,6 +37,7 @@ public class UserStory {
 	
 	public void setSprint(Sprint sprint) {
 		this.sprint = sprint;
+		this.sprintNumber = sprint.getNumber();
 	}
 	
 }
