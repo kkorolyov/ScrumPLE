@@ -20,6 +20,9 @@ import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Meeting;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
+import org.scrumple.scrumplecore.scrum.Sprint;
+import org.scrumple.scrumplecore.scrum.Task;
+import org.scrumple.scrumplecore.scrum.UserStory;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -71,6 +74,20 @@ public class Resources {
 		public UsersResource getUsers(@PathParam("uuid") UUID id) {
 			return new UsersResource(retrieve(id, null));
 		}
+		
+		@Path("{uuid}/stories")
+		public UserStoryResource getStories(@PathParam("uuid") UUID id) {
+			return new UserStoryResource(retreive(id, null));
+		}
+		
+		@Path("{uuid}/sprints")
+		public SprintResource getSprints(@PathParam("uuid") UUID id) {
+			return new SprintResource(retreive(id, null));
+		}
+		@Path("{uuid}/stories/{uuid}/tasks")
+		public TaskResource getTasks(@PathParam("uuid") UUID id) {
+			return new TaskResource(retreive(id, null));
+		}
 
 		/**
 		 * @param id project id
@@ -82,6 +99,74 @@ public class Resources {
 		}
 	}
 	
+	public static class TaskResource extends CRUDResource<Task> {
+		/**
+		 * Constructs a new task resource.
+		 * @param project project that task belongs to
+		 */
+		public TaskResource(Project project) {
+			super(SqlobDAOFactory.getDAOUnderProject(Task.class, project));
+		}
+		
+		@Override
+		protected Task parseForm(Multivalluedmap<String, String> params) {
+			String taskDescription = params.getFirst("taskDescription");
+			int storyId = params.getFirst("storyId");
+			return new Task(storyId, taskDescription);
+			
+		}
+		@Override
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
+			return null;
+		}
+	}
+	public static class SprintResource extends CRUDResource<Sprint> {
+		/**
+		 * Constructs a new sprint resource.
+		 * @param project project of the sprint
+		 */
+		public SprintResource(Project project) {
+			super(SqlobDAOFactory.getDAOUnderProject(Sprint.class, project));
+		}
+		
+		@Override
+		protected Sprint parseForm(MultivaluedMap<String, String> params) {
+			int sprintNumber = params.getFirst("sprintNumber"),
+				syear = params.getFirst("syear"),
+				smonth = params.getFirst("smonth"),
+				sdayOfMonth = params.getFirst("sdayOfMonth"),
+				year = params.getFirst("year"),
+				month = params.getFirst("month"),
+				dayOfMonth = params.getFirst("dayOfMonth");
+			return new Sprint(sprintNumber, syear, smonth, sdayOfMonth, year, month, dayOfMonth);
+		}
+		@Override
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
+			return null;
+		}
+	}
+	public static class UserStoryResource extends CRUDResource<UserStory> {
+		/**
+		 * Constructs a new user story resource.
+		 * @param project project that the user story belongs to
+		 */
+		public UserStoryResource(Project project) {
+			super(SqlobDAOFactory.getDAOUnderProject(UserStory.class, project));
+		}
+		
+		@Override
+		protected UserStory parseForm(MultivaluedMap<String, String> params) {
+			String story = params.getFirst("story");
+			int storyPoint = params.getFirst("storyPoint");
+			return new UserStory(story, storyPoint);
+		}
+		@Override
+		protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
+			int sprintNumber = queryParams.getFirst(sprintId);
+			return new Condition("sprintNumber", "=", sprintNumber);
+			
+		}
+	}
 	public static class UsersResource extends CRUDResource<User> {
 		/**
 		 * Constructs a new users resource.
