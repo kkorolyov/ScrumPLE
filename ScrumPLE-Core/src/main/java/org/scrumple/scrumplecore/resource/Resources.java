@@ -113,7 +113,8 @@ public class Resources {
 			String storyId = queryParams.getFirst("storyId");
 			if(storyId != null) {
 				return new Condition("storyId", "=", + Integer.valueOf(storyId));
-			}	
+			}
+			else return null;
 		}
 	}
 	public static class SprintResource extends CRUDResource<Sprint> {
@@ -131,7 +132,7 @@ public class Resources {
 			if(sprintNumber!=null){
 				return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
 			}
-			
+			else return null;
 		}
 	}
 	public static class UserStoryResource extends CRUDResource<UserStory> {
@@ -149,6 +150,7 @@ public class Resources {
 			if(sprintNumber != null){
 				return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
 			}
+			else return null;
 		}
 	}
 	public static class UsersResource extends CRUDResource<User> {
