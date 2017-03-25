@@ -1,6 +1,21 @@
-// Build plugins
-apply plugin: 'java'
-apply plugin: 'war'
+plugins {
+	id 'java'
+	id 'war'
+	id 'de.undercouch.download' version '3.2.0'
+}
+
+def lib = 'lib/'
+
+task downloadExtra(type: de.undercouch.gradle.tasks.download.Download) {
+	src([
+		'https://github.com/kkorolyov/SQLOb/releases/download/v2.1.1/sqlob-2.1.1.jar',
+		'https://github.com/kkorolyov/SimpleProps/releases/download/v4.0/simple-props-4.0.jar',
+		'https://github.com/kkorolyov/SimpleLogs/releases/download/v2.3/simple-logs-2.3.jar'
+	])
+	dest lib
+	onlyIfNewer true
+}
+tasks.compileJava.dependsOn(downloadExtra)
 
 // Product info
 group = 'org.scrumple'
@@ -12,8 +27,7 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-		
-		flatDir { dirs 'C:/Dev/lib' }	// Change to local lib
+		flatDir { dirs lib }
 }
 dependencies {
 		// REST stuff
