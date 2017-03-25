@@ -1,37 +1,23 @@
-# Bin Files
-bin/
-target/
-*.class
-
-# Eclipse Files
+# Dev
 *.project
 *.classpath
 .settings/
-
-# IntelliJ Files
 *.idea
 *.iml
-
-# Bootstrap Files
-bower_components/
-
-# VSCode Files
 *.vscode/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Lib
+bower_components/
+node_modules/
 
-# Package Files #
+# Build
+bin/
+build/
+target/
+.gradle/
 *.jar
 *.war
-*.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-# Project Files
+# Runtime
 *.ini
 *.log
-
-#Node_Modules
-node_modules/
