@@ -26,7 +26,10 @@ ScrumPLE is composed of 3 fundamental modules:
 
 ## Development
 ScrumPLE development is dependent on several popular development tools:
-* [Apache Maven] for dependency management and project lifecycle
+* [Gradle] for dependency management and project lifecycle
+
+### Building ScrumPLE-Core
+Simply run `ScrumPLE-Core/gradlew(.bat)` to generate a WAR file in `ScrumPLE-Core/build/libs/`
 
 ## Deployment
 The official ScrumPLE deployment is found [here][ScrumPLE] and composed of the following stack:
@@ -52,8 +55,7 @@ Full help can be found [here][ScrumPLE-Core].
 
 [Apache Tomcat]: http://tomcat.apache.org/
 [Tomcat]: http://tomcat.apache.org/
-[Apache Maven]: https://maven.apache.org/
-[Maven]: https://maven.apache.org/
+[Gradle]: https://gradle.org/
 [Jersey]: https://jersey.java.net/
 [Node.js]: https://nodejs.org/
 [MySQL]: https://www.mysql.com/
