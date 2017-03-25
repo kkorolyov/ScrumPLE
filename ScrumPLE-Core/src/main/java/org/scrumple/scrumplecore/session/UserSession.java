@@ -57,4 +57,14 @@ public class UserSession {
 	private void tick() {	// Invalidates token if current time past end
 		if (System.currentTimeMillis() > end.getTime()) token = null;
 	}
+
+	@Override
+	public String toString() {
+		return "UserSession{" +
+					 "user=" + user +
+					 ", token='" + token + '\'' +
+					 ", start=" + start +
+					 ", end=" + end +
+					 '}';
+	}
 }

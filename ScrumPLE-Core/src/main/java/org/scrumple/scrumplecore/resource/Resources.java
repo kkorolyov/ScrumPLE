@@ -12,17 +12,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.scrumple.scrumplecore.auth.Authorizer;
-import org.scrumple.scrumplecore.auth.Authorizers;
-import org.scrumple.scrumplecore.auth.Credentials;
+import org.scrumple.scrumplecore.auth.*;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
-import org.scrumple.scrumplecore.scrum.Meeting;
-import org.scrumple.scrumplecore.scrum.Project;
-import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.scrum.Sprint;
-import org.scrumple.scrumplecore.scrum.Task;
-import org.scrumple.scrumplecore.scrum.UserStory;
+import org.scrumple.scrumplecore.scrum.*;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -43,6 +36,19 @@ public class Resources {
 		 */
 		public ProjectsResource() {
 			super(SqlobDAOFactory.getProjectDAO());
+		}
+
+		/**
+		 * Attempts to authenticate with a project.
+		 * @param id project ID
+		 * @param credentials credentials to authenticate
+		 * @return session key if authentication successful
+		 * @throws AuthenticationException if {@code credentials} failed to authenticate
+		 */
+		@POST
+		@Path("{uuid}/auth")
+		public String authenticate(@PathParam("uuid") UUID id, Credentials credentials) throws AuthenticationException {
+			return new Authenticator(retrieve(id, null)).authenticate(credentials);
 		}
 
 		@Override
