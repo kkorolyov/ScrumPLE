@@ -5,8 +5,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.scrumple.scrumplecore.database.DAO;
-import org.scrumple.scrumplecore.database.SqlobDAOFactory;
-import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.session.UserSession;
 
@@ -20,32 +18,33 @@ import dev.kkorolyov.sqlob.persistence.Condition;
 public class Authenticator {
 	private static final Logger log = Logger.getLogger(Authenticator.class.getName(), Level.DEBUG);
 	
-	private final Project project;
+	private final DAO<User> userDAO;
+	private final DAO<UserSession> sessionDAO;
 	
 	/**
 	 * Constructs a new authenticator.
-	 * @param project project for which authentication is handled
+	 * @param userDAO DAO providing user data access
+	 * @param sessionDAO DAO providing session data access
 	 */
-	public Authenticator(Project project) {
-		this.project = project;
+	public Authenticator(DAO<User> userDAO, DAO<UserSession> sessionDAO) {
+		this.userDAO = userDAO;
+		this.sessionDAO = sessionDAO;
 	}
 
 	public String authenticate(Credentials credentials) throws AuthenticationException {
-		Map<UUID, User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project)
-																					 .get(new Condition("credentials", "=", credentials));
+		Map<UUID, User> users = userDAO.get(new Condition("credentials", "=", credentials));
 
-		if (users.isEmpty()) throw new AuthenticationException(project, credentials);
-		else if (users.size() > 1) log.severe(() -> project + " has multiple users identified by " + credentials);	// Should not happen
+		if (users.isEmpty()) throw new AuthenticationException(credentials);
+		else if (users.size() > 1) log.severe(() -> "Multiple users identified by " + credentials);	// Should not happen
 
 		User user = users.values().iterator().next();
-		DAO<UserSession> sessionDAO = SqlobDAOFactory.getDAOUnderProject(UserSession.class, project);
 		Map<UUID, UserSession> existingSessions = sessionDAO.get(new Condition("user", "=", user));
 
 		for (Entry<UUID, UserSession> entry : existingSessions.entrySet()) {
 			sessionDAO.remove(entry.getKey());
 			log.info(() -> "Removed existing session for " + user + ": " + entry.getValue());
 		}
-		UserSession session = new UserSession(user, 10 * 1000);
+		UserSession session = new UserSession(user);
 
 		log.info(() -> "Generated new session for " + user + ": " + session);
 		return session.getToken();

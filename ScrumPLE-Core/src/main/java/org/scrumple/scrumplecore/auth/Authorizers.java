@@ -1,10 +1,9 @@
 package org.scrumple.scrumplecore.auth;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.database.DAO;
 
 /**
  * A collection of basic {@link Authorizer} implementations.
@@ -13,7 +12,7 @@ public class Authorizers {
 	/** An authorizer which allows all credentials. */
 	public static Authorizer ALL = credentials -> {};
 	/** An authorizer which always no credentials. */
-	public static Authorizer NONE = credentials -> {throw new AuthorizationException(credentials);};
+	public static Authorizer NONE = user -> {throw new AuthorizationException(user);};
 
 	/**
 	 * Returns an authorizer which allows only users found in a project.
@@ -21,9 +20,10 @@ public class Authorizers {
 	 * @return authorizer allowing only users in {@code project}
 	 */
 	public static Authorizer onlyUsers(Project project) {
-		return credentials -> {
-			DAO<User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project);
-			if (users.get(new Condition("credentials", "=", credentials)).isEmpty()) throw new AuthorizationException(credentials);
+		DAO<User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project);
+
+		return user -> 	{
+			if (!users.contains(user)) throw new AuthorizationException(user);
 		};
 	}
 
@@ -35,9 +35,8 @@ public class Authorizers {
 	public static Authorizer onlyOwner(Project project) {
 		DAO<User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project);
 
-		return credentials -> {
-			if (users.get(new Condition("credentials", "=", credentials).and("role", "=", "owner")).isEmpty())
-				throw new AuthorizationException(credentials);
+		return user -> {
+			if (!(user != null && "owner".equals(user.getRole()) && users.contains(user))) throw new AuthorizationException(user);
 		};
 	}
 }

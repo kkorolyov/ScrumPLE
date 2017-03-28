@@ -16,6 +16,7 @@ import org.scrumple.scrumplecore.auth.*;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.*;
+import org.scrumple.scrumplecore.session.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -48,7 +49,11 @@ public class Resources {
 		@POST
 		@Path("{uuid}/auth")
 		public String authenticate(@PathParam("uuid") UUID id, Credentials credentials) throws AuthenticationException {
-			return new Authenticator(retrieve(id, null)).authenticate(credentials);
+			Project project = retrieve(id, null);
+			DAO<User> userDAO = SqlobDAOFactory.getDAOUnderProject(User.class, project);
+			DAO<UserSession> sessionDAO = SqlobDAOFactory.getDAOUnderProject(UserSession.class, project);
+
+			return new Authenticator(userDAO, sessionDAO).authenticate(credentials);
 		}
 
 		@Override

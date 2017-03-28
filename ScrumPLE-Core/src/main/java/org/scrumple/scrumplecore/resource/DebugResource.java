@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.resource;
 
 import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.sql.DataSource;
@@ -12,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.auth.AuthorizationException;
-import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.DataSourcePool;
@@ -27,8 +27,8 @@ import org.scrumple.scrumplecore.scrum.User;
 @Path("debug")
 @Produces({MediaType.APPLICATION_XML})
 public class DebugResource {
-	private static final Credentials debugger = new Credentials("d@bugg3r", "d3bug1t!");
-	private static final Authorizer debuggerOnly = credentials -> {if (!credentials.equals(debugger)) throw new AuthorizationException(credentials);};
+	private static final String DEBUG_TOKEN = "AFi09g34iyv930mvy09i3vyq309iybbMNW$ykehlmkrstohrt";
+	private static final User debugger = new User(new Credentials("d@bugg3r", "d3bug1t!"), "debugger");
 
 	private String systemDB = Assets.get(SYSTEM_DB);
 	private DataSource systemDS = DataSourcePool.get(systemDB);
@@ -40,7 +40,7 @@ public class DebugResource {
 	@Path("reset")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String reset(@QueryParam("projects") @DefaultValue("10") String projects, @QueryParam("users") @DefaultValue("10") String users, @QueryParam("meetings") @DefaultValue("10") String meetings, @Context HttpHeaders headers) {	// Test stub for populating projects
-		debuggerOnly.process(Credentials.fromHeaders(headers));
+		authorize(headers);
 
 		long start = System.nanoTime();
 		
@@ -80,5 +80,13 @@ public class DebugResource {
 			long startOffset = i * 600 * 1000, endOffset = startOffset + 300 * 1000;
 			meetingDAO.add(new Meeting("Debuggering", now + startOffset, now + endOffset));
 		}
+	}
+
+	private void authorize(HttpHeaders headers) {
+		List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+		if (authHeaders.size() <= 0) throw new AuthorizationException(debugger, "Debugging");
+
+		String token = authHeaders.iterator().next();
+		if (!DEBUG_TOKEN.equals(token)) throw new AuthorizationException(debugger, "Debugging");
 	}
 }

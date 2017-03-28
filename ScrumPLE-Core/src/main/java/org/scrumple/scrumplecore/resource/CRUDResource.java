@@ -9,8 +9,9 @@ import javax.ws.rs.core.*;
 
 import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
-import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
+import org.scrumple.scrumplecore.scrum.User;
+import org.scrumple.scrumplecore.session.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -25,14 +26,24 @@ public abstract class CRUDResource<T> {
 	private static final Logger log = Logger.getLogger(CRUDResource.class.getName(), Level.DEBUG);
 
 	final DAO<T> dao;
-	final Map<String, Authorizer> authorizers = new HashMap<>();
+	private final DAO<UserSession> sessionDAO;
+	private final Map<String, Authorizer> authorizers = new HashMap<>();
 
+	/**
+	 * Constructs a new CRUD resource with no session DAO.
+	 * @param dao DAO providing access to resource data
+	 */
+	public CRUDResource(DAO<T> dao) {
+		this(dao, null);
+	}
 	/**
 	 * Constructs a new CRUD resource.
 	 * @param dao object providing access to resource data
+	 * @param sessionDAO object providing access to session data
 	 */
-	public CRUDResource(DAO<T> dao) {
+	public CRUDResource(DAO<T> dao, DAO<UserSession> sessionDAO) {
 		this.dao = dao;
+		this.sessionDAO = sessionDAO;
 
 		log.debug(() -> "Constructed new " + this);
 	}
@@ -45,7 +56,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@POST
 	public UUID create(T obj, @Context HttpHeaders headers) {
-		getAuthorizer("POST").process(Credentials.fromHeaders(headers));
+		getAuthorizer("POST").process(extractUser(headers));
 
 		log.debug(() -> "Received POST with content=" + obj);
 		return dao.add(obj);
@@ -60,7 +71,7 @@ public abstract class CRUDResource<T> {
 	@GET
 	@Path("{uuid}")
 	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
+		getAuthorizer("GET").process(extractUser(headers));
 
 		log.debug(() -> "Received GET for id=" + id);
 		return dao.get(id);
@@ -73,7 +84,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@GET
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
+		getAuthorizer("GET").process(extractUser(headers));
 
 		Condition query = parseQuery(uriInfo.getQueryParameters());
 
@@ -96,7 +107,7 @@ public abstract class CRUDResource<T> {
 	@PUT
 	@Path("{uuid}")
 	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) {
-		getAuthorizer("PUT").process(Credentials.fromHeaders(headers));
+		getAuthorizer("PUT").process(extractUser(headers));
 
 		log.debug(() -> "Received PUT with id=" + id + " content=" + replacement);
 		dao.update(id, replacement);
@@ -111,7 +122,7 @@ public abstract class CRUDResource<T> {
 	@DELETE
 	@Path("{uuid}")
 	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("DELETE").process(Credentials.fromHeaders(headers));
+		getAuthorizer("DELETE").process(extractUser(headers));
 
 		log.debug(() -> "Received DELETE with id=" + id);
 		return dao.remove(id);
@@ -149,10 +160,19 @@ public abstract class CRUDResource<T> {
 		return authorizer;
 	}
 
+	private User extractUser(HttpHeaders headers) {
+		if (sessionDAO == null) return null;
+
+		UserSession session = UserSession.fromHeaders(headers, sessionDAO);
+
+		return (session == null) ? null : session.getUser();
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + "{"
 					 + "dao=" + dao
+					 + ", sessionDAO=" + sessionDAO
 					 + ", authorizers=" + authorizers
 					 + "}";
 	}

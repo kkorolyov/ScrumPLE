@@ -1,14 +1,16 @@
 package org.scrumple.scrumplecore.auth;
 
+import org.scrumple.scrumplecore.scrum.User;
+
 /**
  * Processes credentials and throws an {@link AuthorizationException} if credentials are unauthorized.
  */
 @FunctionalInterface
 public interface Authorizer {
 	/**
-	 * Processes credentials, determining whether they are valid in some context.
-	 * @param credentials credentials to process
-	 * @throws AuthorizationException if {@code credentials} unauthorized
+	 * Processes a user and determines whether it is authorized in some context.
+	 * @param user user to process
+	 * @throws AuthorizationException if {@code user} unauthorized
 	 */
-	void process(Credentials credentials);
+	void process(User user);
 }
