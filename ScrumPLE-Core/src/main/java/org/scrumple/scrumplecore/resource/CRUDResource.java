@@ -26,24 +26,15 @@ public abstract class CRUDResource<T> {
 	private static final Logger log = Logger.getLogger(CRUDResource.class.getName(), Level.DEBUG);
 
 	final DAO<T> dao;
-	private final DAO<UserSession> sessionDAO;
 	private final Map<String, Authorizer> authorizers = new HashMap<>();
+	private DAO<UserSession> sessionDAO;
 
-	/**
-	 * Constructs a new CRUD resource with no session DAO.
-	 * @param dao DAO providing access to resource data
-	 */
-	public CRUDResource(DAO<T> dao) {
-		this(dao, null);
-	}
 	/**
 	 * Constructs a new CRUD resource.
 	 * @param dao object providing access to resource data
-	 * @param sessionDAO object providing access to session data
 	 */
-	public CRUDResource(DAO<T> dao, DAO<UserSession> sessionDAO) {
+	public CRUDResource(DAO<T> dao) {
 		this.dao = dao;
-		this.sessionDAO = sessionDAO;
 
 		log.debug(() -> "Constructed new " + this);
 	}
@@ -128,12 +119,20 @@ public abstract class CRUDResource<T> {
 		return dao.remove(id);
 	}
 
+	private Authorizer getAuthorizer(String identifier) {
+		Authorizer authorizer = authorizers.get(identifier);
+		if (authorizer == null)	authorizer = Authorizers.ALL;
+
+		return authorizer;
+	}
+
 	/**
 	 * Sets a common authorizer for all methods.
 	 * @param authorizer authorizer for all methods, does nothing if {@code null}
+	 * @param authDAO DAO providing access to auth data
 	 */
-	public void setAuthorizers(Authorizer authorizer) {
-		setAuthorizers(authorizer, authorizer, authorizer, authorizer);
+	public void setAuthorizers(Authorizer authorizer, DAO<UserSession> authDAO) {
+		setAuthorizers(authorizer, authorizer, authorizer, authorizer, authDAO);
 	}
 	/**
 	 * Sets the authorizers used by this resource. {@code null} values do nothing.
@@ -141,24 +140,21 @@ public abstract class CRUDResource<T> {
 	 * @param GET authorizer for {@code GET} requests
 	 * @param PUT authorizer for {@code PUT} requests
 	 * @param DELETE authorizer for {@code DELETE} requests
+	 * @param authDAO DAO providing access to auth data
 	 */
-	public void setAuthorizers(Authorizer POST, Authorizer GET, Authorizer PUT, Authorizer DELETE) {
+	public void setAuthorizers(Authorizer POST, Authorizer GET, Authorizer PUT, Authorizer DELETE, DAO<UserSession> authDAO) {
 		setAuthorizer("POST", POST);
 		setAuthorizer("GET", GET);
 		setAuthorizer("PUT", PUT);
 		setAuthorizer("DELETE", DELETE);
+
+		this.sessionDAO = authDAO;
 	}
 	private void setAuthorizer(String identifier, Authorizer authorizer) {
 		if (authorizer != null)
 			authorizers.put(identifier, authorizer);
 	}
 
-	private Authorizer getAuthorizer(String identifier) {
-		Authorizer authorizer = authorizers.get(identifier);
-		if (authorizer == null)
-			authorizer = Authorizers.ALL;
-		return authorizer;
-	}
 
 	private User extractUser(HttpHeaders headers) {
 		if (sessionDAO == null) return null;
@@ -172,8 +168,8 @@ public abstract class CRUDResource<T> {
 	public String toString() {
 		return getClass().getName() + "{"
 					 + "dao=" + dao
-					 + ", sessionDAO=" + sessionDAO
 					 + ", authorizers=" + authorizers
+					 + ", sessionDAO=" + sessionDAO
 					 + "}";
 	}
 }
