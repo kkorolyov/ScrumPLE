@@ -1,4 +1,4 @@
-[![Build Status](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/buildStatus/icon?job=ScrumPLE)](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/job/ScrumPLE/)
+[![Build Status](https://travis-ci.org/kkorolyov/ScrumPLE.svg?branch=master)](https://travis-ci.org/kkorolyov/ScrumPLE)
 # ScrumPLE
 A collaborative development environment tailored to the Scrum framework
 
