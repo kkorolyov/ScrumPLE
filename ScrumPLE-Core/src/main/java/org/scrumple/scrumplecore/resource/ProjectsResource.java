@@ -22,6 +22,7 @@ import dev.kkorolyov.sqlob.persistence.Condition;
 /**
  * Provides endpoints for accessing projects.
  */
+@Path("projects")
 public class ProjectsResource extends CRUDResource<Project> {
 	/**
 	 * Constructs a new projects resource.
