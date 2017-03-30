@@ -10,7 +10,7 @@ import org.scrumple.scrumplecore.scrum.User;
  */
 public class Authorizers {
 	/** An authorizer which allows all credentials. */
-	public static Authorizer ALL = credentials -> {};
+	public static Authorizer ALL = user -> {};
 	/** An authorizer which always no credentials. */
 	public static Authorizer NONE = user -> {throw new AuthorizationException(user);};
 
@@ -23,7 +23,7 @@ public class Authorizers {
 		DAO<User> users = SqlobDAOFactory.getDAOUnderProject(User.class, project);
 
 		return user -> 	{
-			if (!users.contains(user)) throw new AuthorizationException(user);
+			if (user == null || !users.contains(user)) throw new AuthorizationException(user);
 		};
 	}
 

@@ -36,7 +36,7 @@ public class UserSession {
 	public static UserSession fromHeaders(HttpHeaders headers, DAO<UserSession> dao) {
 		List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
 
-		if (authHeaders.size() > 0) {
+		if (authHeaders != null && authHeaders.size() > 0) {
 			String token = authHeaders.iterator().next();
 			Map<UUID, UserSession> matchingSessions = dao.get(new Condition("token", "=", token));
 
