@@ -45,6 +45,7 @@ public class Authenticator {
 			log.info(() -> "Removed existing session for " + user + ": " + entry.getValue());
 		}
 		UserSession session = new UserSession(user);
+		sessionDAO.add(session);
 
 		log.info(() -> "Generated new session for " + user + ": " + session);
 		return session.getToken();
