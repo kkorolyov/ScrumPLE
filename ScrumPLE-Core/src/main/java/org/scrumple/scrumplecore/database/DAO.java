@@ -11,6 +11,9 @@ import dev.kkorolyov.sqlob.persistence.Condition;
  * Provides access to object stored as persistent data.
  */
 public interface DAO<T> {
+	/** @return {@code true} if this DAO persists {@code obj} */
+	boolean contains(T obj);
+
 	/**
 	 * Retrieves a uniquely-identified persisted object.
 	 * @param id object identifier
@@ -18,19 +21,19 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public T get(UUID id);
+	T get(UUID id);
 	/** 
 	 * @param cond filter restricting returned objects, {@code null} implies no filter
 	 * @return all persisted objects matching {@code cond} as <code>{id, object}</code> pairs
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public Map<UUID, T> get(Condition cond);
+	Map<UUID, T> get(Condition cond);
 	/**
 	 * @return all persisted objects of type {@code T} as <code>{id, object}</code> pairs
 	 * @throws DataAccessException if an issue occurs during data access
 	 * @see #get(Condition)
 	 */
-	public Map<UUID, T> getAll();
+	Map<UUID, T> getAll();
 	
 	/**
 	 * Updates a persisted object with a new instance.
@@ -39,7 +42,7 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public void update(UUID id, T newObj);
+	void update(UUID id, T newObj);
 	
 	/**
 	 * Persists an object.
@@ -47,7 +50,7 @@ public interface DAO<T> {
 	 * @return persisted object identifier
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public UUID add(T obj);
+	UUID add(T obj);
 	/**
 	 * Removes a persisted object.
 	 * @param id object identifier
@@ -55,5 +58,5 @@ public interface DAO<T> {
 	 * @throws EntityNotFoundException if {@code id} does not match a persisted object
 	 * @throws DataAccessException if an issue occurs during data access
 	 */
-	public T remove(UUID id);
+	T remove(UUID id);
 }

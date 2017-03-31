@@ -82,7 +82,10 @@ function applyEventListeners() {
 	});
 	document.getElementById('loginForm').addEventListener('submit', function(event) {
 		event.preventDefault();
-		rest.login(this.elements['handle'].value, this.elements['password'].value);
+
+		let project = document.getElementsByClassName('selected')[0].textContent
+
+		rest.login(this.elements['handle'].value, this.elements['password'].value, project);
 		this.reset();
 	});
 }

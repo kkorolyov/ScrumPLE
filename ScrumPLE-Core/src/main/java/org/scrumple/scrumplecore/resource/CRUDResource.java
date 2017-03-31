@@ -9,8 +9,9 @@ import javax.ws.rs.core.*;
 
 import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
-import org.scrumple.scrumplecore.auth.Credentials;
 import org.scrumple.scrumplecore.database.DAO;
+import org.scrumple.scrumplecore.scrum.User;
+import org.scrumple.scrumplecore.session.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
@@ -25,7 +26,8 @@ public abstract class CRUDResource<T> {
 	private static final Logger log = Logger.getLogger(CRUDResource.class.getName(), Level.DEBUG);
 
 	final DAO<T> dao;
-	final Map<String, Authorizer> authorizers = new HashMap<>();
+	private final Map<String, Authorizer> authorizers = new HashMap<>();
+	private DAO<UserSession> sessionDAO;
 
 	/**
 	 * Constructs a new CRUD resource.
@@ -45,7 +47,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@POST
 	public UUID create(T obj, @Context HttpHeaders headers) {
-		getAuthorizer("POST").process(Credentials.fromHeaders(headers));
+		getAuthorizer("POST").process(extractUser(headers));
 
 		log.debug(() -> "Received POST with content=" + obj);
 		return dao.add(obj);
@@ -60,7 +62,7 @@ public abstract class CRUDResource<T> {
 	@GET
 	@Path("{uuid}")
 	public T retrieve(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
+		getAuthorizer("GET").process(extractUser(headers));
 
 		log.debug(() -> "Received GET for id=" + id);
 		return dao.get(id);
@@ -73,7 +75,7 @@ public abstract class CRUDResource<T> {
 	 */
 	@GET
 	public Map<UUID, T> retrieve(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-		getAuthorizer("GET").process(Credentials.fromHeaders(headers));
+		getAuthorizer("GET").process(extractUser(headers));
 
 		Condition query = parseQuery(uriInfo.getQueryParameters());
 
@@ -96,7 +98,7 @@ public abstract class CRUDResource<T> {
 	@PUT
 	@Path("{uuid}")
 	public void update(@PathParam("uuid") UUID id, T replacement, @Context HttpHeaders headers) {
-		getAuthorizer("PUT").process(Credentials.fromHeaders(headers));
+		getAuthorizer("PUT").process(extractUser(headers));
 
 		log.debug(() -> "Received PUT with id=" + id + " content=" + replacement);
 		dao.update(id, replacement);
@@ -111,18 +113,26 @@ public abstract class CRUDResource<T> {
 	@DELETE
 	@Path("{uuid}")
 	public T delete(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
-		getAuthorizer("DELETE").process(Credentials.fromHeaders(headers));
+		getAuthorizer("DELETE").process(extractUser(headers));
 
 		log.debug(() -> "Received DELETE with id=" + id);
 		return dao.remove(id);
 	}
 
+	private Authorizer getAuthorizer(String identifier) {
+		Authorizer authorizer = authorizers.get(identifier);
+		if (authorizer == null)	authorizer = Authorizers.ALL;
+
+		return authorizer;
+	}
+
 	/**
 	 * Sets a common authorizer for all methods.
 	 * @param authorizer authorizer for all methods, does nothing if {@code null}
+	 * @param authDAO DAO providing access to auth data
 	 */
-	public void setAuthorizers(Authorizer authorizer) {
-		setAuthorizers(authorizer, authorizer, authorizer, authorizer);
+	public void setAuthorizers(Authorizer authorizer, DAO<UserSession> authDAO) {
+		setAuthorizers(authorizer, authorizer, authorizer, authorizer, authDAO);
 	}
 	/**
 	 * Sets the authorizers used by this resource. {@code null} values do nothing.
@@ -130,23 +140,28 @@ public abstract class CRUDResource<T> {
 	 * @param GET authorizer for {@code GET} requests
 	 * @param PUT authorizer for {@code PUT} requests
 	 * @param DELETE authorizer for {@code DELETE} requests
+	 * @param authDAO DAO providing access to auth data
 	 */
-	public void setAuthorizers(Authorizer POST, Authorizer GET, Authorizer PUT, Authorizer DELETE) {
+	public void setAuthorizers(Authorizer POST, Authorizer GET, Authorizer PUT, Authorizer DELETE, DAO<UserSession> authDAO) {
 		setAuthorizer("POST", POST);
 		setAuthorizer("GET", GET);
 		setAuthorizer("PUT", PUT);
 		setAuthorizer("DELETE", DELETE);
+
+		this.sessionDAO = authDAO;
 	}
 	private void setAuthorizer(String identifier, Authorizer authorizer) {
 		if (authorizer != null)
 			authorizers.put(identifier, authorizer);
 	}
 
-	private Authorizer getAuthorizer(String identifier) {
-		Authorizer authorizer = authorizers.get(identifier);
-		if (authorizer == null)
-			authorizer = Authorizers.ALL;
-		return authorizer;
+
+	private User extractUser(HttpHeaders headers) {
+		if (sessionDAO == null) return null;
+
+		UserSession session = UserSession.fromHeaders(headers, sessionDAO);
+
+		return (session == null) ? null : session.getUser();
 	}
 
 	@Override
@@ -154,6 +169,7 @@ public abstract class CRUDResource<T> {
 		return getClass().getName() + "{"
 					 + "dao=" + dao
 					 + ", authorizers=" + authorizers
+					 + ", sessionDAO=" + sessionDAO
 					 + "}";
 	}
 }

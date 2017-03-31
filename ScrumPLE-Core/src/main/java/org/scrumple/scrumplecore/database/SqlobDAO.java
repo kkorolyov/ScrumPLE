@@ -80,7 +80,17 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 			throw new DataAccessException(e);
 		}
 	}
-	
+
+	@Override
+	public boolean contains(T obj) {
+		try {
+			return s.getId(obj) != null;
+		} catch (SQLException e) {
+			log.exception(e);
+			throw new DataAccessException(e);
+		}
+	}
+
 	@Override
 	public T get(UUID id){
 		try {

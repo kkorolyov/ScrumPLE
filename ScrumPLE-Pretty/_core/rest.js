@@ -1,12 +1,20 @@
 "use strict"
 
 const rest = {
-	credentials: null,
-	login: function(handle, password) {
-		this.credentials = btoa(handle + ":" + password);
+	token: null,
+	login: function(handle, password, projectId) {
+		let credentials = {
+			"handle": handle,
+			"password": password
+		}
+		this.ajax('POST', "projects/" + projectId + "/auth", JSON.stringify(credentials), response => {
+			console.log(response)
+			this.token = response
+		})
+		console.log(projectId + "/auth")
 	},
 	getUrl: function(url) {
-		return "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/" + url;
+		return "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/" + url
 	},
 	/**
 	 * Sends a REST request.
@@ -17,26 +25,26 @@ const rest = {
 	 * @param {function(string)} [responseHandler] invoked after server responds
 	 */
 	ajax: function(method, url, content, responseHandler) {
-		const xhttp = new XMLHttpRequest();
+		const xhttp = new XMLHttpRequest()
 
 		if (responseHandler) {
 			xhttp.onreadystatechange = function () {
 				if (this.readyState === 4) {
-					let response = this.responseText;
+					let response = this.responseText
 					try {
-						response = JSON.parse(response);
+						response = JSON.parse(response)
 					} catch (e) {
-						console.log(e.message);
+						console.log(e.message)
 					}
-					responseHandler(response);
+					responseHandler(response)
 				}
 			}
 		}
-		xhttp.open(method, this.getUrl(url), true);
+		xhttp.open(method, this.getUrl(url), true)
 
-		if (this.credentials) xhttp.setRequestHeader("Authorization", "Basic " + this.credentials);
-		if (content) xhttp.setRequestHeader("Content-type", "application/json");
+		if (this.token) xhttp.setRequestHeader("Authorization", this.token)
+		if (content) xhttp.setRequestHeader("Content-type", "application/json")
 
-		xhttp.send(content);
+		xhttp.send(content)
 	}
 }
