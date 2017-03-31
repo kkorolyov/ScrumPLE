@@ -11,15 +11,15 @@
                 <input type="text" name="sprintNumber" placeholder="Sprint Number">
                 <div>Start Date</div>
                 <div>
-                    <input type="text" name="smonth" placeholder="mm">
-                    <input type="text" name="sday" placeholder="dd">
-                    <input type="text" name="syear" placeholder="yyyy">
+                    <input type="number" name="smonth" placeholder="mm" min="1" max="12">
+                    <input type="number" name="sday" placeholder="dd" min="1" max="31">
+                    <input type="number" name="syear" placeholder="yyyy" min="1900" max="3000">
                 </div>
                 <div>End Date</div>
                 <div>
-                    <input type="text" name="emonth" placeholder="mm">
-                    <input type="text" name="eday" placeholder="dd">
-                    <input type="text" name="eyear" placeholder="yyyy">
+                    <input type="number" name="emonth" placeholder="mm" min="1" max="12">
+                    <input type="number" name="eday" placeholder="dd" min="1" max="31">
+                    <input type="number" name="eyear" placeholder="yyyy" min="1900" max="3000">
                 </div>
                 <div>
                     <input type="submit" name="create" value="Create">
