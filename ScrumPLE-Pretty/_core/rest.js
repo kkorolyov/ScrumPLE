@@ -14,7 +14,7 @@ const rest = {
 		console.log(projectId + "/auth")
 	},
 	getUrl: function(url) {
-		return "https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/rest/" + url
+		return "http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/scrumple/rest/" + url
 	},
 	/**
 	 * Sends a REST request.
