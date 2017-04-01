@@ -31,7 +31,7 @@ public class Authenticator {
 		this.sessionDAO = sessionDAO;
 	}
 
-	public String authenticate(Credentials credentials) throws AuthenticationException {
+	public UserSession authenticate(Credentials credentials) throws AuthenticationException {
 		Map<UUID, User> users = userDAO.get(new Condition("credentials", "=", credentials));
 
 		if (users.isEmpty()) throw new AuthenticationException(credentials);
@@ -48,6 +48,6 @@ public class Authenticator {
 		sessionDAO.add(session);
 
 		log.info(() -> "Generated new session for " + user + ": " + session);
-		return session.getToken();
+		return session;
 	}
 }

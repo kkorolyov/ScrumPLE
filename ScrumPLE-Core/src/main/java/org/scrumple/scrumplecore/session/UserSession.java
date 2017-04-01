@@ -47,7 +47,7 @@ public class UserSession {
 				UserSession session = sessionEntry.getValue();
 
 				if (session.isExpired()) {
-					log.warning(() -> session + " expired " + (System.currentTimeMillis() - session.getEnd().getTime()) + "ms ago, removing...");
+					log.warning(() -> session + " expired " + (System.currentTimeMillis() - session.getEnd()) + "ms ago, removing...");
 					dao.remove(sessionEntry.getKey());
 				} else {
 					log.debug(() -> "Found a valid session for token=" + token + ": " + session);
@@ -106,12 +106,12 @@ public class UserSession {
 	}
 
 	/** @return session start time in ms */
-	public Timestamp getStart() {
-		return start;
+	public long getStart() {
+		return start.getTime();
 	}
 	/** @return session end time in ms */
-	public Timestamp getEnd() {
-		return end;
+	public long getEnd() {
+		return end.getTime();
 	}
 
 	@Override

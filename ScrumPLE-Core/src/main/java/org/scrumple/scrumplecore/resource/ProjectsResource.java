@@ -35,12 +35,12 @@ public class ProjectsResource extends CRUDResource<Project> {
 	 * Attempts to authenticate with a project.
 	 * @param id project ID
 	 * @param credentials credentials to authenticate
-	 * @return session key if authentication successful
+	 * @return session if authentication successful
 	 * @throws AuthenticationException if {@code credentials} failed to authenticate
 	 */
 	@POST
 	@Path("{uuid}/auth")
-	public String authenticate(@PathParam("uuid") UUID id, Credentials credentials) throws AuthenticationException {
+	public UserSession authenticate(@PathParam("uuid") UUID id, Credentials credentials) throws AuthenticationException {
 		Project project = retrieve(id, null);
 		DAO<User> userDAO = SqlobDAOFactory.getDAOUnderProject(User.class, project);
 		DAO<UserSession> sessionDAO = SqlobDAOFactory.getDAOUnderProject(UserSession.class, project);
