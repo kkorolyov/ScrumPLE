@@ -7,13 +7,13 @@ angular
 			getUrl: function (url) {
 				return "http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/scrumple/rest/" + url
 			},
-			token: null,
+			session: null,	// TODO make private
 			/**
 			 * Logs in with a handle-password pair to a project.
 			 * @param {string} handle login handle
 			 * @param {string} password login password
 			 * @param {string} projectId ID of project to log in to
-			 * @param {function} [success] invoked upon authentication success
+			 * @param {function(Object)} [success] invoked upon authentication success, with authenticated user as parameter
 			 * @param {function} [failure] invoked upon authentication failure
 			 */
 			login: function(handle, password, projectId, success, failure) {
@@ -22,9 +22,9 @@ angular
 					"password": password
 				}
 				this.ajax('POST', "projects/" + projectId + "/auth", credentials, response => {
-					this.token = response.token
+					this.session = response
 
-					if (success) success()
+					if (success) success(this.session.user)
 				}, response => {
 					if (failure) failure()
 				})
@@ -47,13 +47,13 @@ angular
 			 * @param {successCB} [success] invoked upon request success
 			 * @param {errorCB} [error] invoked upon request error
 			 */
-			ajax: function(method, url, content, success, error) {
+			ajax: function(method, url, content, success, error) {	// TODO Handle re-auth
 				const httpConf = {
 					method: method,
 					url: this.getUrl(url),
 					headers: {'Content-Type': 'application/json'}
 				}
-				if (this.token) httpConf.headers['Authorization'] = this.token
+				if (this.session) httpConf.headers['Authorization'] = this.session.token
 				
 				if (content) httpConf.data = content
 

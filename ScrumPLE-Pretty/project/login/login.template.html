@@ -3,10 +3,12 @@
 		display: block;
 	}
 
-	#logout {
-		position: absolute;
-		top: 1em;
-		right: 1em
+	#profile {
+		float: right;
+	}
+	#profile > * {
+		padding: 0;
+		margin: 0;
 	}
 
 	.error {
@@ -14,17 +16,22 @@
 	}
 </style>
 
-<form name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.auth.loggedIn">
+<div id="profile">
+	<h4>{{$ctrl.resources.user().displayName}}</h4>
+	<h4>{{$ctrl.resources.user().role}}</h4>
+
+	<input type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()">
+</div>
+
+<form name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.resources.auth()">
 	<fieldset>
 		<legend>Login</legend>
 
-		<input type="text" name="handle" placeholder="Email" autofocus ng-model="$ctrl.handle" required>
-		<input type="password" name="password" placeholder="Password" ng-model="$ctrl.password" required>
+		<input type="text" name="handle" placeholder="Email" autofocus required ng-model="$ctrl.handle">
+		<input type="password" name="password" placeholder="Password" required ng-model="$ctrl.password">
 
 		<input type="submit" value="Log In">
 
-		<p class="error" ng-if="$ctrl.auth.failed">Incorrect email or password</p>
+		<p class="error" ng-if="$ctrl.failed">Incorrect email or password</p>
 	</fieldset>
 </form>
-
-<input id="logout" type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.auth.loggedIn">

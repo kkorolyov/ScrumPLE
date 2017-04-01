@@ -22,12 +22,12 @@
 </head>
 
 <body>
-	<div ng-if="auth.project">
-		<h1>{{auth.project.name}}</h1>
-		<h2>{{auth.project.description}}</h2>
-	</div>
+	<login></login>
 
-	<login project-id="projectId" auth="auth"></login>
+	<div ng-if="resources.auth()">
+		<h1>{{resources.project().name}}</h1>
+		<h2>{{resources.project().description}}</h2>
+	</div>
 </body>
 
 </html>
