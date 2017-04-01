@@ -1,11 +1,11 @@
 "use strict"
 
 angular
-	.module('project', [])
+	.module('project', ['login', 'users', 'tasks', 'stories', 'sprints'])
 	.controller('project', ['$scope', '$location', function ($scope, $location) {
 		$scope.projectId = $location.search().projectId
-		
-		$scope.loggedIn = false
-		$scope.logInSuccess = () => $scope.loggedIn = true; $scope.$apply
-		$scope.logOutSuccess = () => $scope.loggedIn = false
+		$scope.auth = {}
+		$scope.title = function () {
+			return ($scope.auth.project) ? "ScrumPLE - " + $scope.auth.project.name : "Log In To Project"
+		}
 	}])

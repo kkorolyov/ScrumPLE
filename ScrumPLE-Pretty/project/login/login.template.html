@@ -2,12 +2,19 @@
 	form input {
 		display: block;
 	}
+
+	#logout {
+		position: absolute;
+		top: 1em;
+		right: 1em
+	}
+
 	.error {
 		color: red;
 	}
 </style>
 
-<form name="login" ng-submit="$ctrl.login()">
+<form name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.auth.loggedIn">
 	<fieldset>
 		<legend>Login</legend>
 
@@ -16,6 +23,8 @@
 
 		<input type="submit" value="Log In">
 
-		<p class="error" ng-if="$ctrl.logInFailed">Incorrect email or password</p>
+		<p class="error" ng-if="$ctrl.auth.failed">Incorrect email or password</p>
 	</fieldset>
 </form>
+
+<input id="logout" type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.auth.loggedIn">

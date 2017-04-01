@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="project" ng-controller="project">
 
 <head>
-	<title>ScrumPLE Project</title>
+	<title>{{title()}}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,15 +11,23 @@
 	<!--App-->
 	<script src="project.app.js"></script>
 	<!--Services-->
-	<script src="rest.service.js"></script>
+	<script src="_core/rest.service.js"></script>
+	<script src="_core/resources.service.js"></script>
 	<!--Components-->
 	<script src="login/login.component.js"></script>
+	<script src="users/users.component.js"></script>
+	<script src="tasks/tasks.component.js"></script>
+	<script src="stories/stories.component.js"></script>
+	<script src="sprints/sprints.component.js"></script>
 </head>
 
-<body ng-app="project" ng-controller="project">
-	<login ng-if="!loggedIn" project-id="projectId" log-in-success="logInSuccess()"></login>
+<body>
+	<div ng-if="auth.project">
+		<h1>{{auth.project.name}}</h1>
+		<h2>{{auth.project.description}}</h2>
+	</div>
 
-	<h2 ng-if="loggedIn">Logged in to project: {{projectId}}</h2>	<!--Placeholder-->
+	<login project-id="projectId" auth="auth"></login>
 </body>
 
 </html>

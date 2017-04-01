@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('project')
+	.module('rest', [])
 	.factory('rest', ['$http', function ($http) {
 		return {
 			getUrl: function (url) {
