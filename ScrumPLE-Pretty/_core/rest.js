@@ -1,5 +1,8 @@
 "use strict"
 
+/**
+ * Deprecated, moved to 'rest.service.js'
+ */
 const rest = {
 	token: null,
 	login: function(handle, password, projectId) {

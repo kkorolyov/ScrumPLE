@@ -1,32 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Project Page</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="/_core/style.css" rel="stylesheet">
-    </head>
-    <body>
-        <header>Project Page</header>
-        <div id="login">
-            <form id="loginform">
-                <fieldset>
-                    <legend>Login</legend>
-                    handle: <input type="text", id="h", name="handle"/><br>
-                    password: <input type="password", id="pass", name="password"/> <br>
-                    <input type="submit", id="log", name="Login", value="Log In">
-                </fieldset>
-            </form>
-        </div>
-        <div id="project", style="display: none;">
-            <form id="projectform">
-                <fieldset>
-                    <legend>Project</legend>
-                    <textarea readonly id='projectinfo' rows="100" cols="100"></textarea>
-                </fieldset>
-            </form>
-        </div>
-        <script src="/_core/rest.js"></script>
-        <script src="project.js"></script>
-    </body>
-</html>>
+<html>
+
+<head>
+	<title>ScrumPLE Project</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!--CDN libs-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.js"></script>
+	<!--App-->
+	<script src="project.app.js"></script>
+	<!--Services-->
+	<script src="rest.service.js"></script>
+	<!--Components-->
+	<script src="login/login.component.js"></script>
+</head>
+
+<body ng-app="project" ng-controller="project">
+	<login ng-if="!loggedIn" project-id="projectId" log-in-success="logInSuccess()"></login>
+
+	<h2 ng-if="loggedIn">Logged in to project: {{projectId}}</h2>	<!--Placeholder-->
+</body>
+
+</html>

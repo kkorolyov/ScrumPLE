@@ -1,0 +1,21 @@
+<style>
+	form input {
+		display: block;
+	}
+	.error {
+		color: red;
+	}
+</style>
+
+<form name="login" ng-submit="$ctrl.login()">
+	<fieldset>
+		<legend>Login</legend>
+
+		<input type="text" name="handle" placeholder="Email" autofocus ng-model="$ctrl.handle" required>
+		<input type="password" name="password" placeholder="Password" ng-model="$ctrl.password" required>
+
+		<input type="submit" value="Log In">
+
+		<p class="error" ng-if="$ctrl.logInFailed">Incorrect email or password</p>
+	</fieldset>
+</form>
