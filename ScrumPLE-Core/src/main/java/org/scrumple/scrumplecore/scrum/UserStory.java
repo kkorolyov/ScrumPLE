@@ -2,6 +2,11 @@ package org.scrumple.scrumplecore.scrum;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserStory {
 	private String story;
 	private int storyPoint;
@@ -10,9 +15,10 @@ public class UserStory {
 	
 	public UserStory() {}
 	
-	public UserStory(String story, int storyPoint) {
-		this.story = story;
-		this.storyPoint = storyPoint;
+	@JsonCreator
+	public UserStory(@JsonProperty("story") String story, @JsonProperty("storyPoint") int storyPoint) {
+		setStory(story);
+		setPoint(storyPoint) ;
 	}
 	
 	public String getStory() {
@@ -27,8 +33,8 @@ public class UserStory {
 		return storyPoint;
 	}
 	
-	public void setPoint(int newPoint) {
-		this.storyPoint = newPoint;
+	public void setPoint(int storyPoint) {
+		this.storyPoint = storyPoint;
 	}
 	
 	public int getSprint() {
