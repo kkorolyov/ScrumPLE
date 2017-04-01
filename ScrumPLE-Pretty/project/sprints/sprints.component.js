@@ -1,14 +1,15 @@
 "use strict"
 
 angular
-	.module('sprints', [])
+	.module('sprints', ['rest'])
 	.component('sprints', {
 		templateUrl: "sprints/sprints.template.html",
 
 		bindings: {
 
 		},
-		controller: [function () {
+		controller: ['rest', function (rest) {
+			this.create 
 
 		}]
 	})
