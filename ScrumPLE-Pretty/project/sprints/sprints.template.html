@@ -17,6 +17,6 @@
     </div>
 </form>
 
-<form name = "sprintList">
-    
-</form>
+<div name = "sprintList" ng-repeat = "sprint in $ctrl.sprints">
+    {{sprint.sprintNumber}}
+</div>

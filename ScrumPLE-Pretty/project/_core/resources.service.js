@@ -66,6 +66,15 @@ angular
 						}, reason => {
 							return $q.reject(reason)
 						})
+				},
+
+				sprints: function () {
+					return rest.ajax('GET', _projectURL() + "/sprints")
+						.then(sprints => {
+							return sprints
+						}, reason => {
+							return $q.reject(reason)
+						})
 				}
 			}
 		}()

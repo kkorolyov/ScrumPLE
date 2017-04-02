@@ -1,15 +1,21 @@
 "use strict"
 
 angular
-	.module('sprints', ['rest'])
+	.module('sprints', ['resources'])
 	.component('sprints', {
 		templateUrl: "sprints/sprints.template.html",
 
 		bindings: {
 
 		},
-		controller: ['rest', function (rest) {
-			this.create 
+		controller: ['resources', function (resources) {
+			this.sprints = []
+			resources.sprints().then(sprintMap => {
+				for(let key in sprintMap){
+					this.sprints.push(sprintMap[key])
+				}
+			})
 
+			this.create //TODO
 		}]
 	})
