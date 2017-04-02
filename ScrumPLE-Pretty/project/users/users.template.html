@@ -1,7 +1,30 @@
 <style>
+	#display-name {
+		font-style: normal;
+	}
+	#role {
+		font-style: italic;
+	}
 
+	.current-user {
+		color: rebeccapurple;
+		border-color: rebeccapurple !important;
+	}
+
+	.member-box {
+		float: left;
+		clear: both;
+		
+		display: flex;
+		align-items: flex-start;
+
+		border: 2pt solid black;
+	}
 </style>
 
-<div class="member-box" ng-repeat-start="user in $ctrl.users()">
-	
+<h1>Members</h1>
+<div class="member-box" ng-repeat="user in $ctrl.users" ng-class="{'current-user': user.current}">
+	<h3>
+		<span id="display-name">{{user.displayName}}</span> - <span id="role">{{user.role}}</span>
+	</h3>
 </div>

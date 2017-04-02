@@ -28,8 +28,9 @@ angular
 					return rest.login(handle, password, this.project().id)
 						.then(user => {	// Success
 							_user = user
+							_user.current = true
 
-							rest.ajax('GET', _projectUrl(), null)
+							rest.ajax('GET', _projectUrl())
 								.then(project => {
 									for (let property in project) _project[property] = project[property]
 								})
@@ -47,13 +48,21 @@ angular
 					rest.logout()
 				},
 
-				users: function (success, error) {
-					return rest.ajax('GET', _projectUrl() + "/users", null)
+				/** @returns {Object} promise resolving to UUID -> User map of all users in current project */
+				users: function () {
+					return rest.ajax('GET', _projectUrl() + "/users")
 						.then(users => {
-							_users = [_user]
-							for (let key in users) {
-								if (users[key] !== _user) _users.push(users[key])
-							}
+							return users
+						}, reason => {
+							return $q.reject(reason)
+						})
+				},
+
+				/** @returns {Object} promise resolving to UUID -> Meeting map of all users in current project */
+				meetings: function () {
+					return rest.ajax('GET', _projectUrl() + "/meetings")
+						.then(meetings => {
+							return meetings
 						}, reason => {
 							return $q.reject(reason)
 						})
