@@ -7,8 +7,8 @@ angular
 
 		controller: ['resources', function (resources) {
 			this.login = function () {
-				resources.login(this.handle, this.password,
-					() => {
+				resources.login(this.handle, this.password)
+					.then(() => {
 						delete this.failed
 						delete this.handle
 						delete this.password
