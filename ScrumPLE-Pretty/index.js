@@ -14,7 +14,7 @@ function init() {
 		rest.ajax('GET','projects?name='+input, null, response => {
 			if (typeof response === 'object') {
 				for (let key in response ) {
-					let url = "/project/project.html?projectId=" + key
+					let url = "/project/project.html#!?projectId=" + key
 					let name = response[key].name
 					let projectList = document.getElementById("project-list")
 					let link = projectList.appendChild(document.createElement('a'))
