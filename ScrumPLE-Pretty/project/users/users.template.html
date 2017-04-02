@@ -1,14 +1,16 @@
 <style>
-	#display-name {
-		font-style: normal;
-	}
-	#role {
-		font-style: italic;
-	}
+	.user {
+		border: 1px solid gray;
 
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
 	.current-user {
 		color: rebeccapurple;
-		border-color: rebeccapurple !important;
+		border-color: rebeccapurple;
+
+		cursor: pointer;
 	}
 
 	.member-box {
@@ -16,15 +18,19 @@
 		clear: both;
 		
 		display: flex;
-		align-items: flex-start;
-
-		border: 2pt solid black;
+		flex-direction: column;
 	}
 </style>
 
 <h1>Members</h1>
-<div class="member-box" ng-repeat="user in $ctrl.users" ng-class="{'current-user': user.current}">
-	<h3>
-		<span id="display-name">{{user.displayName}}</span> - <span id="role">{{user.role}}</span>
-	</h3>
-</div>
+<section class="member-box">
+	<section class="user" ng-class="{'current-user': user.current}" ng-repeat="user in $ctrl.users" ng-click="user.current ? user.editting = true : null">
+		<span ng-if="!user.editting">{{user.displayName}}</span>
+		<input name="displayName" ng-model="user.displayName" ng-if="user.editting">
+
+		<span ng-if="!user.editting">{{user.role}}</span>
+		<input name="role" ng-model="user.role" ng-if="user.editting">
+
+		<input type="button" value="Apply" ng-if="user.editting" ng-click="user.editting = false; $event.stopPropagation()">
+	</section>
+</section>

@@ -13,6 +13,5 @@ angular
 						if (userMap[key].displayName !== resources.user().displayName) this.users.push(userMap[key])
 					}
 				})
-			
 		}]
 	})
