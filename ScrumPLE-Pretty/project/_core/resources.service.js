@@ -75,6 +75,15 @@ angular
 						}, reason => {
 							return $q.reject(reason)
 						})
+				},
+
+				stories: function() {
+					return rest.ajax('GET', _projectURL() + "/stories")
+						.then(stories => {
+							return stories
+						}, reason => {
+							return $q.reject(reason)
+						})
 				}
 			}
 		}()
