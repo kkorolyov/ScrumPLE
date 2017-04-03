@@ -41,6 +41,9 @@ public class UserStory {
 	}
 	
 	public int getSprint() {
+		if(sprint == null){
+			return -1;
+		}
 		return sprint.getNumber();
 	}
 	
