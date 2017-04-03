@@ -84,6 +84,11 @@ angular
 						}, reason => {
 							return $q.reject(reason)
 						})
+				},
+
+				createStory: function(story, storyPoint) {
+					const newStory = {story: story, storyPoint: storyPoint}
+					return rest.ajax('POST', _projectURL() + "/stories", newStory)
 				}
 			}
 		}()

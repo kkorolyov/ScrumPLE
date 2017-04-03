@@ -16,7 +16,9 @@ angular
 						this.stories.push(storiesMap[key])
 					}
 				})
-			this.create //TODO
+			this.create = function() {
+				resources.createStory(this.story, this.storyPoint)
+			} //TODO
 
 		}]
 	})
