@@ -17,6 +17,7 @@ angular
 					}
 				})
 			this.create = function() {
+				console.log("Create Button")
 				resources.createStory(this.story, this.storyPoint)
 			} //TODO
 
