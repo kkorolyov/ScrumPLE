@@ -69,7 +69,7 @@ angular
 				},
 
 				sprints: function () {
-					return rest.ajax('GET', _projectURL() + "/sprints")
+					return rest.ajax('GET', _projectUrl() + "/sprints")
 						.then(sprints => {
 							return sprints
 						}, reason => {
@@ -78,7 +78,7 @@ angular
 				},
 
 				stories: function() {
-					return rest.ajax('GET', _projectURL() + "/stories")
+					return rest.ajax('GET', _projectUrl() + "/stories")
 						.then(stories => {
 							return stories
 						}, reason => {
@@ -88,7 +88,7 @@ angular
 
 				createStory: function(story, storyPoint) {
 					const newStory = {story: story, storyPoint: storyPoint}
-					return rest.ajax('POST', _projectURL() + "/stories", newStory)
+					return rest.ajax('POST', _projectUrl() + "/stories", newStory)
 				}
 			}
 		}()

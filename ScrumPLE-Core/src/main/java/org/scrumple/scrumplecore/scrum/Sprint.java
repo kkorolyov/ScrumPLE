@@ -22,6 +22,10 @@ public class Sprint {
 		start = LocalDate.of(syear, smonth, sdayOfMonth);
 		end = LocalDate.of(year, month, dayOfMonth);
 	}*/
+
+	public Sprint(){
+		
+	}
 	
 	@JsonCreator
 	public Sprint(@JsonProperty("sprintNumber") int sprintNumber, @JsonProperty("start") long start, @JsonProperty("end") long end) {
