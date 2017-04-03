@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041) -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Board</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="google" value="notranslate">
+	<link rel="shortcut icon" href="https://www.codeply.com/images/cp_ico.png">
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link href="font-awesome.min.css" rel="stylesheet">
+
+	<style type="text/css">
+	html,body {
+	  overflow-x: hidden; 
+	}
+	body {
+	  padding-top: 70px;
+	}
+
+	/*
+	 * Off Canvas
+	 * --------------------------------------------------
+	 */
+	@media screen and (max-width: 767px) {
+	  .row-offcanvas {
+		position: relative;
+		-webkit-transition: all .25s ease-out;
+			 -o-transition: all .25s ease-out;
+				transition: all .25s ease-out;
+	  }
+	  
+	  
+	  
+
+	  .row-offcanvas-right {
+		right: 0;
+	  }
+
+	  .row-offcanvas-left {
+		left: 0;
+	  }
+
+	  .row-offcanvas-right
+	  .sidebar-offcanvas {
+		right: -60%; /* 6 columns */
+	  }
+
+	  .row-offcanvas-left
+	  .sidebar-offcanvas {
+		left: -60%; /* 6 columns */
+	  }
+
+	  .row-offcanvas-right.active {
+		right: 60%; /* 6 columns */
+	  }
+
+	  .row-offcanvas-left.active {
+		left: 60%; /* 6 columns */
+	  }
+
+	  .sidebar-offcanvas {
+		position: absolute;
+		top: 0;
+		width: 60%; /* 6 columns */
+	  }
+	}
+	#sidebar {
+		padding-left:10%;
+		right:70%;
+		padding-top:50px;
+	}
+	#sidebar a.list-group-item {
+		height:28px;
+		line-height:28px;
+		padding-top:0;
+	}
+	.list-group .active {
+		background-color:#92CCFF;
+	}
+	.list-group a:hover {
+		background-color:#92CCFF;
+	}
+	</style>
+
+</head>
+<body>
+  <nav class="navbar navbar-fixed-top navbar-inverse" style="background-color:white;border-color:#ede5e5;">
+      <div class="container-fluid">
+        <div class="navbar-header" style="float: left;">
+           
+          <a class="navbar-brand" href="#" style="color:black;">ScrumPLE</a>
+        </div>
+		
+		<div class="log-out">
+			<button type="button" class="btn btn-default" style="float: right;margin-top: 9px;">Log out</button>
+		</div>
+        
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9 col-sm-push-3" style="left:30%;padding-top:60px;">
+          
+          
+        </div>
+
+        <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
+          <div class="list-group">
+            <a href="#" data-index="1" class="list-group-item"><strong>Userstory</strong></a>
+            <a href="#" data-index="2" class="list-group-item"><strong>Sprint</strong></a>
+            <a href="#" data-index="3" class="list-group-item"><strong>Backlog</strong></a>
+            <a href="#" data-index="4" class="list-group-item"><strong>Member</strong></a>
+            <a href="#" data-index="5" class="list-group-item"><strong>Add member</strong></a>
+             
+        </div>
+      </div>
+
+    </div>
+  <script src="jquery.min.js"></script>
+  <script src="bootstrap.min.js"></script>
+  
+  
+  
+  <script>
+  $(document).ready(function () {
+	
+	$('.list-group-item').click(function() {
+		$('.list-group-item').css('background-color','');
+		$('.list-group-item').removeClass('active');
+		$(this).addClass('active');
+		$(this).css('background-color','#92CCFF');
+		var index = $(this).attr('data-index');
+		var content = "link"+ index;
+		$('.col-xs-12').html(content);
+	});
+  });
+  </script>
+
+
+
+</body></html>
