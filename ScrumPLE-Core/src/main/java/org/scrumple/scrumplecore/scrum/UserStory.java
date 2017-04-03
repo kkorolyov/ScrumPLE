@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NOT_NULL)
+@JsonInclude(Include.NON_NULL)
 public class UserStory {
 	private String story;
 	private int storyPoint;
