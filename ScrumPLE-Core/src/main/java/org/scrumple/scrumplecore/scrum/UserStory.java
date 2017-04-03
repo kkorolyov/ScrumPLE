@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserStory {
 	private String story;
 	private int storyPoint;
 	private Sprint sprint;
+	@JsonIgnore
 	private int sprintNumber;
 	
 	public UserStory() {}
@@ -37,11 +39,8 @@ public class UserStory {
 		this.storyPoint = storyPoint;
 	}
 	
-	public int getSprint() {
-		if(sprint == null){
-			return -1;
-		}
-		return sprint.getNumber();
+	public Sprint getSprint() {
+		return sprint;
 	}
 	
 	public void setSprint(Sprint sprint) {
