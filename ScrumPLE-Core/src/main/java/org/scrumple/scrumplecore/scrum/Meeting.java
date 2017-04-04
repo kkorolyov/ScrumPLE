@@ -18,7 +18,7 @@ public class Meeting implements Comparable<Meeting> {
 	 * Constructs a new meeting.
 	 * @param type description of meeting type
 	 * @param start meeting start time in millis since epoch start
-	 * @param end meeting end time in millis isnce epoch start
+	 * @param end meeting end time in millis since epoch start
 	 * @throws IllegalArgumentException if {@code start > end}
 	 */
 	@JsonCreator
