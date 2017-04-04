@@ -12,6 +12,8 @@ import javax.ws.rs.core.HttpHeaders;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.scrum.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
 import dev.kkorolyov.sqlob.persistence.Condition;
@@ -91,6 +93,7 @@ public class UserSession {
 	}
 
 	/** @return {@code true} if the current system time is past this session's end time */
+	@JsonIgnore
 	public boolean isExpired() {
 		return System.currentTimeMillis() > end.getTime();
 	}
