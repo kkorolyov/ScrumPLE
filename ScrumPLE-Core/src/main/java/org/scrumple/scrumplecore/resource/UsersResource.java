@@ -29,6 +29,8 @@ public class UsersResource extends CRUDResource<User> {
 
 	@Override
 	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-		return null;
+		String displayName = queryParams.getFirst("displayName");
+
+		return (displayName == null) ? null : new Condition("displayName" , "LIKE", "%" + displayName + "%");
 	}
 }
