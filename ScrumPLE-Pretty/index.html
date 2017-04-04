@@ -1,58 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="scrumple" ng-controller="scrumple">
 
 <head>
-	
-	<meta charset="utf-8" />
-	<title>HOME</title>
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<title>{{title}}</title>
 
-	<link rel="stylesheet" href="index.css" />
+	<!--CDN libs-->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.js"></script>
+	<script src="https://unpkg.com/angular-ui-router@1.0.0-beta.3/release/angular-ui-router.js"></script>
+	<!--Services-->
+	<script src="_core/title.service.js"></script>
+	<script src="_core/rest.service.js"></script>
+	<script src="_core/resources.service.js"></script>
+	<!--Components-->
+	<script src="project/project.component.js"></script>
+	<script src="login/login.component.js"></script>
+	<script src="users/users.component.js"></script>
+	<script src="tasks/tasks.component.js"></script>
+	<script src="stories/stories.component.js"></script>
+	<script src="sprints/sprints.component.js"></script>
+	<!--App-->
+	<script src="app.js"></script>
 </head>
 
 <body>
-	<div id="mywrapper">
-		<div id="myhome">
-			<div class="myheader">
-				<a href="index.html">
-					<div class="logo">ScrumPLE</div>
-				</a>
-				<!--<input id="search_bar" type="text" class="search_bar" placeholder="search your project">-->
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="input-group">
-							<input id="search_bar" type="text" class="form-control SearchBar" placeholder="Search for...">
-							<span class="input-group-btn">
-							<button class="btn btn-defaul SearchButton" type="button">
-								<span class=" glyphicon glyphicon-search SearchIcon" ></span>
-							</button>
-							</span>
-						</div>
-					</div>
-				</div>
-				<div id="project-list">
-				</div>
-			</div>
+	<a ui-sref="project">Project</a>
 
-			<div class="form">
-				<form action="">
-					<button type="button" onclick='location.href="create/create.html"'>Create
-						your project</button>
-				</form>
-			</div>
-
-
-		</div>
-	</div>
-
-	<script src="/_core/rest.js"></script>
-	<script src="index.js"></script>
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<project piss="shit"></project>
+	<ui-view></ui-view>
 </body>
 
 </html>

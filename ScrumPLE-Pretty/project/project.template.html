@@ -1,0 +1,8 @@
+<login></login>
+
+<div ng-if="$ctrl.resources.auth()">
+	<h1>{{$ctrl.resources.project().name}}</h1>
+	<h2>{{$ctrl.resources.project().description}}</h2>
+
+	<ui-view></ui-view>
+</div>
