@@ -30,6 +30,13 @@ angular
 							_user = user
 							_user.current = true
 
+							// Get logged-in user ID
+							rest.ajax('GET', _projectUrl() + "/users?displayName=" + _user.displayName)
+								.then(userMap => {
+									_user.id = Object.keys(userMap)[0]
+								})
+
+							// Load logged-in project properties
 							rest.ajax('GET', _projectUrl())
 								.then(project => {
 									for (let property in project) _project[property] = project[property]

@@ -10,7 +10,7 @@ angular
 			resources.users()
 				.then(userMap => {
 					for (let key in userMap) {
-						if (userMap[key].displayName !== resources.user().displayName) this.users.push(userMap[key])
+						if (key !== resources.user().id) this.users.push(userMap[key])
 					}
 				})
 		}]
