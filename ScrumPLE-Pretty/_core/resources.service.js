@@ -19,6 +19,14 @@ angular
 				auth: function () { return this.user() != null },	// For semantics
 
 				/**
+				 * Sets the current project.
+				 * @param {Object} project project to enter
+				 */
+				enter: function (project) {
+					_project = project
+				},
+
+				/**
 				 * Attempts to authenticate to the current project.
 				 * @param {string} handle login handle
 				 * @param {string} password login password
@@ -27,19 +35,11 @@ angular
 				login: function (handle, password) {
 					return rest.login(handle, password, this.project().id)
 						.then(user => {	// Success
-							_user = user
-							_user.current = true
-
-							// Get logged-in user ID
-							rest.ajax('GET', _projectUrl() + "/users?displayName=" + _user.displayName)
-								.then(userMap => {
-									_user.id = Object.keys(userMap)[0]
-								})
-
-							// Load logged-in project properties
-							rest.ajax('GET', _projectUrl())
-								.then(project => {
-									for (let property in project) _project[property] = project[property]
+							// Save logged-in user
+							this.values(this.users(user.displayName))
+								.then(users => {
+									_user = users[0]
+									_user.current = true
 								})
 							return null
 						}, reason => {	// Failure
@@ -55,9 +55,31 @@ angular
 					rest.logout()
 				},
 
-				/** @returns {Object} promise resolving to UUID -> User map of all users in current project */
-				users: function () {
-					return rest.ajax('GET', _projectUrl() + "/users")
+				/** 
+				 * @param {string} [name] filters returned projects by LIKE name
+				 * @returns {Object} promise resolving to UUID -> Project map of projects
+				 */
+				projects: function (name) {
+					let url = "projects"
+					if (name) url += ("?name=" + name)
+
+					return rest.ajax('GET', url)
+						.then(projects => {
+							return projects
+						}, reason => {
+							return $q.reject(reason)
+						})
+				},
+
+				/**
+				 * @param {string} [name] filters returned users by displayName
+				 * @returns {Object} promise resolving to UUID -> User map of all users in current project
+				 */
+				users: function (name) {
+					let url = _projectUrl() + "/users"
+					if (name) url += ("?displayName=" + name)
+
+					return rest.ajax('GET', url)
 						.then(users => {
 							return users
 						}, reason => {
@@ -96,6 +118,28 @@ angular
 				createStory: function(story, storyPoint) {
 					const newStory = {story: story, storyPoint: storyPoint}
 					return rest.ajax('POST', _projectUrl() + "/stories", newStory)
+				},
+
+				/**
+				 * Returns an array of resources with each ID injected into the resource itself.
+				 * @param {Object} resources promise resolving to UUID -> Resource map
+				 * @returns promise resolving to array of transformed resources
+				 */
+				values: function (resources) {
+					return resources
+						.then(results => {
+							const list = []
+							
+							for (let key in results) {
+								const resource = results[key]
+								resource.id = key
+
+								list.push(resource)
+							}
+							return list
+						}, reason => {
+							return $q.reject(reason)
+						})
 				}
 			}
 		}()
