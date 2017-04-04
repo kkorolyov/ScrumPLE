@@ -3,6 +3,7 @@ package org.scrumple.scrumplecore.scrum;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -57,6 +58,7 @@ public class Meeting implements Comparable<Meeting> {
 	}
 
 	/** @return meeting length in millis */
+	@JsonIgnore
 	public long getLength() {
 		return getEnd() - getStart();
 	}
