@@ -1,13 +1,9 @@
 package org.scrumple.scrumplecore.scrum;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserStory {
 	private String story;
 	private int storyPoint;

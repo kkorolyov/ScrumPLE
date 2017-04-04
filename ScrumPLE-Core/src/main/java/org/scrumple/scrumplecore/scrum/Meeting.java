@@ -3,13 +3,11 @@ package org.scrumple.scrumplecore.scrum;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a single meeting occurring between 2 points in time.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Meeting implements Comparable<Meeting> {
 	private String type;
 	private Timestamp start, end;

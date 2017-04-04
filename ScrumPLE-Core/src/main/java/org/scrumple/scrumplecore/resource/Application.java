@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.scrumple.scrumplecore.assets.Assets;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
@@ -23,7 +24,7 @@ public class Application extends ResourceConfig {
 	public Application(@Context ServletContext context) throws MalformedURLException, URISyntaxException {
 		Assets.applyConfig(parseInitProps(context));
 
-		new ObjectMapper().findAndRegisterModules();
+		new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);	// Globally ignore unknown properties
 	}
 	private static Properties parseInitProps(ServletContext context) {
 		Properties props = new Properties();

@@ -33,7 +33,6 @@ dependencies {
 		// REST stuff
     compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.25.1',
 			'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1',
-			'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.7',
 			'javax.persistence:persistence-api:1.0.2',
 			'javax.servlet:javax.servlet-api:4.0.0-b01'
 			

@@ -1,16 +1,10 @@
 package org.scrumple.scrumplecore.scrum;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.HashSet;
-import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Sprint {
 	private int sprintNumber;
 	//private Period timeLeft;
