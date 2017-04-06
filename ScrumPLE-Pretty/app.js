@@ -9,7 +9,7 @@ app.config(['$stateProvider', function ($stateProvider, resources) {
 			url: '/project/{projectName}',
 			component: 'project',
 			onEnter: ['$stateParams', 'resources', function ($stateParams, resources) {	// Enter project in resources service
-				resources.values(resources.projects($stateParams.projectName))
+				resources.get('projects', { name: $stateParams.projectName })
 					.then(projects => {
 						resources.enter(projects[0])
 					})
@@ -22,7 +22,20 @@ app.config(['$stateProvider', function ($stateProvider, resources) {
 		.state({
 			name: 'project.users',
 			url: '/users',
-			component: 'users'
+			component: 'users',
+			resolve: {
+				users: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/users')
+						.then(users => {
+							const sortedUsers = [resources.user()]
+
+							for (let i = 0; i < users.length; i++) {
+								if (users[i].id !== resources.user().id) sortedUsers.push(users[i])
+							}
+							return sortedUsers
+						})
+				}]
+			}
 		})
 		.state({
 			name: 'project.stories',
