@@ -1,0 +1,32 @@
+<style>
+	.project {
+		border: 1px solid cadetblue;
+	}
+
+	#projects-box {
+		float: left;
+
+		display: flex;
+		flex-direction: column;
+	}
+</style>
+
+<form name="project-search" ng-submit="$ctrl.searchProjects()">
+	<input id="search_bar" type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search for..." ng-model="$ctrl.name">
+	<span class="input-group-btn">
+	<input class="btn btn-defaul SearchButton" type="submit">
+		<span class="glyphicon glyphicon-search SearchIcon"></span>
+	</input>
+	</span>
+</form>
+
+<section id="projects-box">
+	<section class="project" ng-repeat="project in $ctrl.projects">
+		<a ui-sref="project({projectName: project.name})">
+			<section>
+				<h3>{{project.name}}</h3>
+				<h4>{{project.description}}</h4>
+			</section>
+		</a>
+	</section>
+</section>

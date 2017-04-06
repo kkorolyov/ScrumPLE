@@ -1,9 +1,17 @@
 "use strict"
 
-const app = angular.module('scrumple', ['project', 'login', 'users', 'tasks', 'stories', 'sprints', 'ui.router', 'title', 'resources'])
+const app = angular.module('scrumple', ['projects', 'project', 'login', 'users', 'tasks', 'stories', 'sprints', 'ui.router', 'title', 'resources'])
 
-app.config(['$stateProvider', function ($stateProvider, resources) {
+app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
+	$urlRouterProvider.otherwise("/")
+
 	$stateProvider
+		.state({
+			name: 'projects',
+			url: '/',
+			component: 'projects'
+		})
+		
 		.state({
 			name: 'project',
 			url: '/project/{projectName}',
