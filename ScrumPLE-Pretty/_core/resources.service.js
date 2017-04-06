@@ -91,7 +91,7 @@ angular
 				 * @return {Object} promise resolving to ID of added resource, or null if replacing resource
 				 */
 				set: function (url, obj) {
-					return rest.ajax(obj.id ? 'PUT' : 'POST', obj.id ? (url + "/" + obj.id) : url)
+					return rest.ajax(obj.id ? 'PUT' : 'POST', obj.id ? (url + "/" + obj.id) : url, obj)
 						.then(newId => {
 							return newId
 						}, reason => {

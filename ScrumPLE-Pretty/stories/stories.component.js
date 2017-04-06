@@ -18,7 +18,9 @@ angular
 				})
 			this.create = function() {
 				console.log("Create Button")
-				resources.createStory(this.story, this.storyPoint)
+				const newStory = {story: this.story, storyPoint: this.storyPoint}
+				const url = resources.projectUrl()
+				resources.set(url, newStory)
 			} //TODO
 
 		}]
