@@ -21,7 +21,11 @@ angular
 				const newStory = {story: this.story, storyPoint: this.storyPoint}
 				const url = resources.projectUrl()
 				resources.set(url, newStory)
-			} //TODO
+			}
+
+			this.update = function() {
+				//TODO
+			}
 
 		}]
 	})
