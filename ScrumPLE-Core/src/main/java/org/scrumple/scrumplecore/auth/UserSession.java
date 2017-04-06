@@ -1,4 +1,4 @@
-package org.scrumple.scrumplecore.session;
+package org.scrumple.scrumplecore.auth;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -34,6 +34,7 @@ public class UserSession {
 	 * @param headers HTTP headers to parse
 	 * @param dao object providing access to sessions to search
 	 * @return appropriate session, or {@code null} if not found
+	 * @throws SessionExpiredException if session from headers is expired
 	 */
 	public static UserSession fromHeaders(HttpHeaders headers, DAO<UserSession> dao) {
 		List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
@@ -50,7 +51,7 @@ public class UserSession {
 
 				if (session.isExpired()) {
 					log.warning(() -> session + " expired " + (System.currentTimeMillis() - session.getEnd()) + "ms ago, removing...");
-					dao.remove(sessionEntry.getKey());
+					throw new SessionExpiredException(session);
 				} else {
 					log.debug(() -> "Found a valid session for token=" + token + ": " + session);
 					return session;

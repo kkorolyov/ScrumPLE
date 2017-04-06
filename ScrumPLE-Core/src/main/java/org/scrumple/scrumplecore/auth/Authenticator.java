@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.session.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;

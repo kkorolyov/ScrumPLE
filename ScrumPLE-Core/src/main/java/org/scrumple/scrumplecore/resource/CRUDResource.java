@@ -11,7 +11,7 @@ import org.scrumple.scrumplecore.auth.Authorizer;
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.session.UserSession;
+import org.scrumple.scrumplecore.auth.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;

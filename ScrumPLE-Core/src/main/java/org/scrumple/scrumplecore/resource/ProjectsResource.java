@@ -15,7 +15,7 @@ import org.scrumple.scrumplecore.database.DAO;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
-import org.scrumple.scrumplecore.session.UserSession;
+import org.scrumple.scrumplecore.auth.UserSession;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 
