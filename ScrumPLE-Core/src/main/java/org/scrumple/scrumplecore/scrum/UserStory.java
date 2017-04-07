@@ -17,8 +17,7 @@ public class UserStory {
 	
 	public UserStory() {}
 	
-	@JsonCreator
-	public UserStory(@JsonProperty("story") String story, @JsonProperty("storyPoint") int storyPoint) {
+	public UserStory(String story, int storyPoint) {
 		setStory(story);
 		setStoryPoint(storyPoint) ;
 	}
