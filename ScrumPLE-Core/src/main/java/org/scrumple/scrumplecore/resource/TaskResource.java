@@ -7,6 +7,7 @@ import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.Task;
 import org.scrumple.scrumplecore.auth.UserSession;
+import org.scrumple.scrumplecore.scrum.UserStory;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
 
@@ -18,10 +19,10 @@ public class TaskResource extends CRUDResource<Task> {
 	 * Constructs a new task resource.
 	 * @param project project that task belongs to
 	 */
-	public TaskResource(Project project) {
-		super(SqlobDAOFactory.getDAOUnderProject(Task.class, project));
+	public TaskResource(UserStory story) {
+		super(SqlobDAOFactory.getDAOUnderProject(Task.class, story));
 
-		setAuthorizers(Authorizers.onlyUsers(project), SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
+		setAuthorizers(Authorizers.onlyUsers(story), SqlobDAOFactory.getDAOUnderProject(UserSession.class, story));
 	}
 
 	@Override
