@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class UserStory {
 	private String story;
 	private int storyPoint;
+	@JsonIgnore
 	private Sprint sprint;
 	@JsonIgnore
 	private int sprintNumber;
