@@ -77,12 +77,13 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			}
 		})
 		.state({
-			name: 'project.stories.tasks',
+			name: 'project.tasks',
 			url: '/{storyId}/tasks',
 			component: 'tasks',
 			resolve: {
-				tasks: ['resources', function(resources) {
-					//TODO
+				tasks: ['$stateParams', 'resources', function($stateParams, resources) {
+					console.log("tasks state here!")
+					return resources.get(resources.projectUrl() + "/" + $stateParams.storyId + "/tasks")
 				}]
 			}
 		})

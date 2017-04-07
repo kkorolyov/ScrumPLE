@@ -1,6 +1,7 @@
 package org.scrumple.scrumplecore.resource;
 
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.Path;
 
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
@@ -30,5 +31,10 @@ public class UserStoryResource extends CRUDResource<UserStory> {
 		if (sprintNumber != null) {
 			return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
 		} else return null;
+	}
+
+	@Path("{uuid}/tasks")
+	public TaskResource getTasks(@PathParam("uuid") UUID id) {
+		return new TaskResource(retrieve(id, null));
 	}
 }

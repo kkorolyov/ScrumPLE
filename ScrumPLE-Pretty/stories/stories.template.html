@@ -1,9 +1,11 @@
 <h1>User Stories</h1>
 
-<section ng-repeat = "story in $ctrl.stories" ng-click="story.editting = true">
-    <span ng-if="!story.editting">{{story.story}}</span>
+<section ng-repeat = "story in $ctrl.stories">
+    <span ng-if="!story.editting">{{story.story}} {{story.storyPoint}}</span>
+    <a ui-sref="project.tasks({storyId: story.story})" ng-if="!story.editting">tasks</a>
+    <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="story.editting = true">
     <input name="story" ng-model="story.story" ng-if="story.editting">
-    <input type="storyPoint" ng-model="story.storyPoint" ng-if="story.editting">
+    <input name="storyPoint" ng-model="story.storyPoint" ng-if="story.editting">
     <input type="button" name="Confirm" value="Apply" ng-if="story.editting" ng-click="$ctrl.update(story); story.editting = false; $event.stopPropagation()">
     <input type="button" name="Delete" value="Delete" ng-if="story.editting" ng-click="$ctrl.delete(story); story.editting = false; $event.stopPropagation()">
 </section>

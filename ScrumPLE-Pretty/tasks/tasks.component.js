@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('tasks', [])
+	.module('tasks', ['resources'])
 	.component('tasks', {
 		templateUrl: "tasks/tasks.template.html",
 
