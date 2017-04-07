@@ -98,6 +98,14 @@ angular
 							return $q.reject(reason)
 						})
 				},
+				/**
+				 * Deletes a resource.
+				 * @param {string} url resource url
+				 * @return {Object} promise resolving to null
+				 */
+				delete: function (url) {
+					return rest.ajax('DELETE')
+				},
 
 				sprints: function () {
 					return rest.ajax('GET', this.projectUrl() + "/sprints")
