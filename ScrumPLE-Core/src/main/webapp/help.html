@@ -91,6 +91,32 @@
 
 ### DELETE - Project User
 `/rest/projects/{projectID}/meetings/{meetingID}` deletes the meeting referenced by `meetingID`
+
+---
+# User Stories
+```
+{
+	"story": (string),
+	"storyPoint": (int),
+	"sprint": {
+		"sprintNumber": (int),
+		"start": (long),
+		"end": (long)
+	}
+}
+```
+### GET
+`/rest/projects/{projectID}/stories` retrieves all stories local to the project referenced by `projectID`  
+
+### POST
+`/rest/projects/{projectID}/stories` with a user story object creates a new user story under the project referenced by `projectID`
+
+### PUT
+`/rest/projects/{projectID}/stories/{storyID}` with a user story object updates the user referenced by `storyID`
+
+### DELETE - Same User / Project Owner
+`/rest/projects/{projectID}/stories/{storyID}` deletes the user story referenced by `storyID`
+
 	
 </xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
