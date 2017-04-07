@@ -4,7 +4,7 @@
     <span ng-if="!story.editting">{{story.story}}</span>
     <input name="story" ng-model="story.story" ng-if="story.editting">
     <input type="storyPoint" ng-model="story.storyPoint" ng-if="story.editting">
-    <input type="button" name="Confirm" value="Apply" ng-if="story.editting" ng-click="$ctrl.update(); story.editting = false; $event.stopPropagation()">
+    <input type="button" name="Confirm" value="Apply" ng-if="story.editting" ng-click="$ctrl.update(story); story.editting = false; $event.stopPropagation()">
 </section>
 
 <form name = "createStory">

@@ -48,7 +48,14 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		.state({
 			name: 'project.stories',
 			url: '/stories',
-			component: 'stories'
+			component: 'stories',
+			resolve: {
+				stories: ['resources', function(resources) {
+					return resources.get(resources.projectUrl() + '/stories')
+						
+						
+				}]
+			}
 		})
 }])
 
