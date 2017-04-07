@@ -20,7 +20,7 @@ public class UserStory {
 	@JsonCreator
 	public UserStory(@JsonProperty("story") String story, @JsonProperty("storyPoint") int storyPoint) {
 		setStory(story);
-		setPoint(storyPoint) ;
+		setStoryPoint(storyPoint) ;
 	}
 	
 	public String getStory() {
