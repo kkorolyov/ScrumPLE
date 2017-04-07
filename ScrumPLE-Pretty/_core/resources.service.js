@@ -103,8 +103,8 @@ angular
 				 * @param {string} url resource url
 				 * @return {Object} promise resolving to null
 				 */
-				delete: function (url) {
-					return rest.ajax('DELETE')
+				delete: function (url, obj) {
+					return rest.ajax('DELETE', url + "/" + obj.id)
 				},
 
 				sprints: function () {
