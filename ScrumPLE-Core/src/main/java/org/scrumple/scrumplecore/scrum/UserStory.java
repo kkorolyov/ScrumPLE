@@ -3,7 +3,9 @@ package org.scrumple.scrumplecore.scrum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+@JsonInclude(Include.NON_NULL)
 public class UserStory {
 	private String story;
 	private int storyPoint;
@@ -31,7 +33,7 @@ public class UserStory {
 		return storyPoint;
 	}
 	
-	public void setPoint(int storyPoint) {
+	public void setStoryPoint(int storyPoint) {
 		this.storyPoint = storyPoint;
 	}
 	
