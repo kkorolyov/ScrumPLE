@@ -2,6 +2,7 @@ package org.scrumple.scrumplecore.resource;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.scrumple.scrumplecore.auth.Authorizers;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
