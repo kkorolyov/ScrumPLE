@@ -76,6 +76,16 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				}]
 			}
 		})
+		.state({
+			name: 'project.stories.tasks',
+			url: '/{storyId}/tasks',
+			component: 'tasks',
+			resolve: {
+				tasks: ['resources', function(resources) {
+					//TODO
+				}]
+			}
+		})
 }])
 
 app.controller('scrumple', ['$scope', 'title', function ($scope, title) {
