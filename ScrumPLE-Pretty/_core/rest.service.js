@@ -57,8 +57,7 @@ angular
 					const httpConf = {
 						method: method,
 						url: this.getUrl(url),
-						headers: { 'Content-Type': 'application/json' },
-						//cache: true
+						headers: { 'Content-Type': 'application/json' }
 					}
 					if (_session) httpConf.headers['Authorization'] = _session.token
 

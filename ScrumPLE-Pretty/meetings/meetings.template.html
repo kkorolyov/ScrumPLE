@@ -1,26 +1,14 @@
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-	}
-
-	#meetings-box {
-		float: left;
-	}
+	
 </style>
 
 <h1>Meetings</h1>
 
-<section id="meetings-box">
-	<section ng-repeat="meeting in $ctrl.meetings">
-		<section ng-if="!meeting.editting" ng-click="meeting.editting = true">
-			<span>{{meeting.type}}</span>
-		</section>
+<section class="list list-box">
+	<section class="list" ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
+		<p>{{meeting.type}}</p>
 
-		<input type="date" name="start" ng-model="meeting.start">
-		<input type="date" name="end" ng-model="meeting.end">
-
-		<input type="button" name="apply" ng-if="meeting.editting" ng-click="meeting.editting = false; $event.stopPropagation()"
+		<input class="form-control" type="text" ng-model="meeting.start">
+		<input class="form-control" type="text" ng-model="meeting.end">
 	</section>
 </section>

@@ -1,6 +1,6 @@
 "use strict"
 
-const app = angular.module('scrumple', ['projects', 'project', 'login', 'users', 'tasks', 'stories', 'sprints', 'ui.router', 'title', 'resources'])
+const app = angular.module('scrumple', ['projects', 'project', 'login', 'users', 'meetings', 'tasks', 'stories', 'sprints', 'ui.router', 'title', 'resources'])
 
 app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
 	$urlRouterProvider.otherwise("/")
@@ -11,7 +11,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			url: '/',
 			component: 'projects'
 		})
-		
+
 		.state({
 			name: 'project',
 			url: '/project/{projectName}',
@@ -46,14 +46,33 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			}
 		})
 		.state({
+			name: 'project.meetings',
+			url: '/meetings',
+			component: 'meetings',
+			resolve: {
+				meetings: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/meetings')
+						.then(meetings => {
+							for (let i = 0; i < meetings.length; i++) {
+								const meeting = meetings[i]
+
+								meeting.start = new Date(meeting.start)
+								meeting.end = new Date(meeting.end)
+							}
+							return meetings
+						})
+				}]
+			}
+		})
+		.state({
 			name: 'project.stories',
 			url: '/stories',
 			component: 'stories',
 			resolve: {
-				stories: ['resources', function(resources) {
+				stories: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/stories')
-						
-						
+
+
 				}]
 			}
 		})
