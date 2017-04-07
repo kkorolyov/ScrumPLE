@@ -6,14 +6,17 @@ angular
 		templateUrl: "meetings/edit.template.html",
 
 		bindings: {
-			resolve: '<'
+			resolve: '<',
+			close: '&',
+			dismiss: '&'
 		},
 		controller: [function () {
 			this.$onInit = function () {
 				this.meeting = this.resolve.meeting
-
-				console.log("HI")
-				console.log(this.meeting)
+			}
+			
+			this.ok = function () {	// Return augmented meeting
+				this.close({$value: this.meeting})
 			}
 		}]
 	})

@@ -52,15 +52,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				meetings: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/meetings')
-						.then(meetings => {
-							for (let i = 0; i < meetings.length; i++) {
-								const meeting = meetings[i]
-
-								meeting.start = new Date(meeting.start)
-								meeting.end = new Date(meeting.end)
-							}
-							return meetings
-						})
 				}]
 			}
 		})
