@@ -58,7 +58,7 @@ angular
 						method: method,
 						url: this.getUrl(url),
 						headers: { 'Content-Type': 'application/json' },
-						cache: true
+						//cache: true
 					}
 					if (_session) httpConf.headers['Authorization'] = _session.token
 

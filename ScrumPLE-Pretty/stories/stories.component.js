@@ -44,6 +44,12 @@ angular
 
 			this.delete = function(story) {
 				resources.delete(url, story)
+					.then(() => {
+						resources.get(url)
+							.then(stories => {
+								this.stories = stories
+							})
+					})
 			}
 
 		}]
