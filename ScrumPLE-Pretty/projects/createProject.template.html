@@ -1,7 +1,7 @@
 <form name ="project-create" ng-submit="$ctrl.addProject(projectName, description, visible, ownerName, password)">
 			<input type="text" name="projectName" placeholder="Project Name" ng-model="$ctrl.projectName">
 			<input type="text" name="description" placeholder="Project Description" ng-model="$ctrl.description">
-			<input type="checkbox" name="visible" placeholder="visible" ng-model="$ctrl.visible">
+			<label> <input type="checkbox" name="visible" placeholder="visible" ng-model="$ctrl.visible">visible</label>
 			<input type="text" name="ownerName" placeholder="username" ng-model="$ctrl.handle">
 			<input type="password" name="password" placeholder="password" ng-model="$ctrl.password">
 			<input type="submit" name="Create" value="Create">
