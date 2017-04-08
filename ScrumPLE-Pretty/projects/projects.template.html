@@ -2,7 +2,26 @@
 	.project {
 		border: 1px solid cadetblue;
 	}
-
+	.jumbo {
+		background: url(/projects/intro-bg.jpg) no-repeat;
+		padding-bottom: 100%;
+		
+	}
+	.SearchBar {
+		position: relative;
+		width: 500px;	
+	}
+	.search{
+		padding-left: 30%;
+		padding-top: 40%;
+	}
+	.search1{
+		padding-top: 1%;
+		padding-left: 30%;
+	}
+	.jumbo-some {
+		padding-top: 2%;
+	}
 	#projects-box {
 		float: left;
 
@@ -11,22 +30,33 @@
 	}
 </style>
 
-<form name="project-search" ng-submit="$ctrl.searchProjects()">
-	<input id="search_bar" type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search for..." ng-model="$ctrl.name">
-	<span class="input-group-btn">
-	<input class="btn btn-defaul SearchButton" type="submit">
-		<span class="glyphicon glyphicon-search SearchIcon"></span>
-	</input>
-	</span>
-</form>
-
-<section id="projects-box">
-	<section class="project" ng-repeat="project in $ctrl.projects">
-		<a ui-sref="project({projectName: project.name})">
-			<section>
-				<h3>{{project.name}}</h3>
-				<h4>{{project.description}}</h4>
+<div class = "jumbo" >
+	<div class="jumbo-some">
+		<form name="project-search" ng-submit="$ctrl.searchProjects()">
+			<section class="search">
+			<input type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search for..." ng-model="$ctrl.name">
 			</section>
-		</a>
-	</section>
-</section>
+			<span class="input-group-btn">
+			<section class="search1">	
+			<input class="btn btn-defaul SearchButton" type="submit">
+				<span class="glyphicon glyphicon-search SearchIcon"></span>
+			</input>
+			</section>
+			</span>
+		</form>
+
+		<section id="projects-box">
+			<section class="project" ng-repeat="project in $ctrl.projects">
+				<a ui-sref="project({projectName: project.name})">
+					<section>
+						<h3>{{project.name}}</h3>
+						<h4>{{project.description}}</h4>
+					</section>
+				</a>
+			</section>
+		</section>
+
+	</div>
+
+		
+</div>
