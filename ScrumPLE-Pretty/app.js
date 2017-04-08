@@ -13,6 +13,17 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		})
 
 		.state({
+			name: 'projects.createProject',
+			url: 'createProject',
+			component: 'createProject',
+			resolve: {
+				createProject: ['resources', function (resources) {
+					console.log("createProjectsPage")
+				}]
+			}
+		})
+
+		.state({
 			name: 'project',
 			url: '/project/{projectName}',
 			component: 'project',
