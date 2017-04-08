@@ -96,4 +96,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 
 app.controller('scrumple', ['$scope', 'title', function ($scope, title) {
 	$scope.title = () => title.title()
+
+	$scope.onSplash = () => $scope.title() === "ScrumPLE"	// Lame hack, don't want to make another service just for BG class, though
 }])
