@@ -1,12 +1,46 @@
 "use strict"
 
 angular
-	.module('rest', [])
-	.factory('rest', ['$http', '$q', function ($http, $q) {
+	.module('rest', ['storage'])
+	.factory('rest', ['$http', '$q', 'storage', function ($http, $q, storage) {
 		return function () {	// Closure for private fields
-			let _session = null
+			/**
+			 * Gets or sets auth.
+			 * @param {Object} [auth] auth to set
+			 * @returns {Object} current auth if invoked without an argument
+			 */
+			function _auth(auth) {
+				return storage.storage("auth", auth)
+			}
+			/**
+			 * Gets or sets session.
+			 * @param {Object} [session] session to set
+			 * @returns {Object} current session if invoked without an argument
+			 */
+			function _session(session) {
+				return storage.storage("sess", session)
+			}
+
+			const _retry = function () {
+				const defaultRetries = 1
+				let retries = defaultRetries
+
+				return () => {
+					if (retries > 0) {
+						retries--
+						return true
+					} else {
+						retries = defaultRetries
+						return false
+					}
+				}
+			}()
 
 			return {
+				auth: function () {
+					return _auth() != null
+				},
+
 				getUrl: function (url) {
 					return "http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/scrumple/rest/" + url
 				},
@@ -19,21 +53,31 @@ angular
 				 * @returns {Object} promise resolving to authenticated user
 				 */
 				login: function (handle, password, projectId) {
-					const credentials = {
-						"handle": handle,
-						"password": password
+					if (handle) {
+						_auth({
+							credentials: {
+								handle: handle,
+								password: password
+							},
+							projectId: projectId
+						})
 					}
-					return this.ajax('POST', "projects/" + projectId + "/auth", credentials)
-						.then(response => {
-							_session = response
+					const auth = _auth()
 
-							return _session.user
+					return this.ajax('POST', "projects/" + auth.projectId + "/auth", auth.credentials)
+						.then(response => {
+							_session(response)
+
+							return response.user
 						}, reason => {
+							this.logout()
+
 							return $q.reject(reason)
 						})
 				},
 				logout: function () {
-					_session = null
+					_auth(null)
+					_session(null)
 				},
 
 				/**
@@ -59,18 +103,33 @@ angular
 						url: this.getUrl(url),
 						headers: { 'Content-Type': 'application/json' }
 					}
-					if (_session) httpConf.headers['Authorization'] = _session.token
+					if (_session()) httpConf.headers['Authorization'] = _session().token
 
 					if (content) httpConf.data = content
 
 					console.log("Sending request: " + JSON.stringify(httpConf))
 					return $http(httpConf)
-						.then(function (response) {
+						.then(response => {
 							const result = response.data
 
 							console.log("Success: " + JSON.stringify(result))
 							return result
-						}, function (response) {
+						}, response => {
+							if (response.status === 401 && _retry()) {
+								console.log("Unauthorized, attempting to re-auth...")
+
+								this.login()	// Login with stored auth
+									.then(() => {
+										console.log("Re-auth successful, retrying ajax...")
+										
+										return this.ajax(method, url, content)
+									}, reason => {
+										console.log("Re-auth attempt failed")
+										this.logout()
+										
+										return $q.reject(reason)
+									})
+							}
 							const reason = response.status + ": " + response.data
 
 							console.log(reason)

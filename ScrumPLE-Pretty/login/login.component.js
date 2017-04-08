@@ -5,7 +5,7 @@ angular
 	.component('login', {
 		templateUrl: "login/login.template.html",
 
-		controller: ['resources', function (resources) {
+		controller: ['$state', 'resources', function ($state, resources) {
 			this.login = function () {
 				resources.login(this.handle, this.password)
 					.then(() => {
@@ -18,6 +18,7 @@ angular
 			}
 			this.logout = function () {
 				resources.logout()
+				$state.go('projects')
 			}
 
 			this.resources = resources
