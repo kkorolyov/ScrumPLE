@@ -15,15 +15,29 @@ angular
 					})
 			}
 
-			this.addProject = function (name, description, handle, password) {
+			this.addProject = function (name, description, visible, handle, password) {
 				resources.set("projects", {
-					name: name,
-					description: description,
+					name: this.projectName,
+					description: this.description,
+					visible: this.visible,
 					owner: {
-						handle: handle,
-						password: password
+						credentials: {
+							handle: this.handle,
+							password: this.password
+						},
+						displayName: this.handle
+						
 					}
 				})
+				// .then(project => {
+				// 	console.log(project)
+				// 	const url = "projects/" + project+ "/users"
+				// 	 resources.set(url, {
+				// 	 	handle: this.handle,
+				// 	 	password: this.password
+				// 	 })
+				// })
+				
 			}
 		}]
 	})
