@@ -43,7 +43,6 @@ angular
 							this.get(this.projectUrl() + "/users", { displayName: user.displayName })
 								.then(users => {
 									_user(users[0])
-									_user().current = true
 								})
 							return null
 						}, reason => {	// Failure
