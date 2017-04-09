@@ -10,13 +10,23 @@ angular
 			close: '&',
 			dismiss: '&'
 		},
-		controller: [function () {
+		controller: ['resources', function (resources) {
 			this.$onInit = function () {
-				this.meeting = this.resolve.meeting
+				this.edit = this.resolve.meeting ? true : false
+				this.action = this.edit ? "Edit" : "Create"
+
+				this.meeting = this.edit ? this.resolve.meeting : {}	// Edit if binding, create otherwise
 			}
-			
-			this.ok = function () {	// Return augmented meeting
-				this.close({$value: this.meeting})
+
+			this.return = function (del) {
+				this.close({
+					$value: {
+						meeting: this.meeting,
+						del: del
+					}
+				})
 			}
+			this.ok = function () { this.return() }
+			this.delete = function () { this.return(true) }
 		}]
 	})

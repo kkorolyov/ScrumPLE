@@ -11,42 +11,54 @@ angular
 		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
 			const url = resources.projectUrl() + "/meetings"
 
-			function presentify(meetings) {
-				for (let i = 0; i < meetings.length; i++) {
-					const meeting = meetings[i]
+			function dateify(meeting) {	// long to Date
+				meeting.start = new Date(meeting.start)
+				meeting.end = new Date(meeting.end)
 
-					// Change to dates
-					meeting.start = new Date(meeting.start)
-					meeting.end = new Date(meeting.end)
-				}
+				return meeting
+			}
+			function longify(meeting) {	// Date to long
+				meeting.start = meeting.start.getTime()
+				meeting.end = meeting.end.getTime()
+
+				return meeting
+			}
+
+			function presentify(meetings) {
+				for (let i = 0; i < meetings.length; i++) dateify(meetings[i])
 				return meetings
 			}
+
+			function refresh(scope) {
+				resources.get(url)
+					.then(meetings => { scope.meetings = presentify(meetings) })
+			}
+
 			this.$onInit = function () { presentify(this.meetings) }
 
+			this.add = function () {
+				$uibModal.open({
+					component: 'edit'
+				}).result.then(result => {
+					resources.set(url, longify(resultmeeting))
+						.then(() => refresh(this))
+				})
+			}
 			this.edit = function (meeting) {
 				$uibModal.open({
 					component: 'edit',
 					resolve: {
 						meeting: meeting
 					}
-				}).result.then(meeting => {	// Save edits
-					// Change back to longs
-					meeting.start = meeting.start.getTime()
-					meeting.end = meeting.end.getTime()
-
-					resources.set(url, meeting)
-						.then(() => {
-							resources.get(url)
-								.then(meetings => { this.meetings = presentify(meetings) })
-						})
+				}).result.then(result => {	// Save edits
+					if (result.del) {
+						resources.delete(url, result.meeting)
+							.then(() => refresh(this))
+					}	else {
+						resources.set(url, longify(meeting))
+							.then(() => refresh(this))
+					}
 				})
-			}
-
-			this.add = function (meeting) {
-
-			}
-			this.delete = function (meeting) {
-
 			}
 		}]
 	})

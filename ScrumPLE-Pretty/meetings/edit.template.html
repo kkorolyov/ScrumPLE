@@ -1,10 +1,11 @@
-<h1>Edit Meeting</h1>
+<h1>{{$ctrl.action}} Meeting</h1>
 
 <form ng-submit="$ctrl.ok()">
-	<input class="form-control" type="text" ng-model="$ctrl.meeting.type" ng-required>
-	<input class="form-control" type="text" ng-model="$ctrl.meeting.start" uib-datepicker-popup is-open="$ctrl.meeting.startEdit" ng-click="$ctrl.meeting.startEdit = true" ng-required>
-	<input class="form-control" type="text" ng-model="$ctrl.meeting.end" uib-datepicker-popup is-open="$ctrl.meeting.endEdit" ng-click="$ctrl.meeting.endEdit = true" ng-required>
+	<input class="form-control" type="text" placeholder="Type" ng-model="$ctrl.meeting.type" required>
+	<input class="form-control" type="text" placeholder="Start" ng-model="$ctrl.meeting.start" uib-datepicker-popup is-open="$ctrl.meeting.startEdit" ng-click="$ctrl.meeting.startEdit = true" required>
+	<input class="form-control" type="text" placeholder="End" ng-model="$ctrl.meeting.end" uib-datepicker-popup is-open="$ctrl.meeting.endEdit" ng-click="$ctrl.meeting.endEdit = true" required>
 
 	<input type="submit" value="Apply">
 	<input type="button" value="Cancel" ng-click="$ctrl.dismiss()">
+	<label class="btn btn-primary" ng-click="$ctrl.delete()" ng-if="$ctrl.edit">Delete</label>
 </form>
