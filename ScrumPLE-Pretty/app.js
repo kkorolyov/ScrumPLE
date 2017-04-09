@@ -79,6 +79,21 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				}]
 			}
 		})
+
+		.state({
+			name: 'project.sprints',
+			url: '/sprints',
+			component: 'sprints',
+			resolve: {
+				sprints: ['title', 'resources', function(title, resources) {
+					return resources.get(resources.projectUrl() + '/sprints')
+						.then(sprints => {
+							title.title(resources.project().name + " - Sprints")
+							return sprints
+						})
+				}]
+			}
+		})
 		.state({
 			name: 'project.tasks',
 			url: '/{storyId}/tasks',
