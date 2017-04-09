@@ -41,7 +41,7 @@ public class UserStory {
 	
 	public void setSprint(Sprint sprint) {
 		this.sprint = sprint;
-		this.sprintNumber = sprint.getNumber();
+		this.sprintNumber = sprint.getSprintNumber();
 	}
 	
 }
