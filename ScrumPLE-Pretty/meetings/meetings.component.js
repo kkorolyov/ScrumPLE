@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('meetings', ['ui.bootstrap'])
+	.module('meetings', ['edit'])
 	.component('meetings', {
 		templateUrl: "meetings/meetings.template.html",
 
@@ -10,6 +10,11 @@ angular
 		},
 		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
 			const url = resources.projectUrl() + "/meetings"
+			const fields = {
+				type: ["text", "Type"],
+				start: ["date", "Start Date"],
+				end: ["date", "End Date"]
+			}
 
 			function dateify(meeting) {	// long to Date
 				meeting.start = new Date(meeting.start)
@@ -38,9 +43,15 @@ angular
 
 			this.add = function () {
 				$uibModal.open({
-					component: 'edit'
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: "Create Meeting"
+						},
+						fields: fields
+					}
 				}).result.then(result => {
-					resources.set(url, longify(resultmeeting))
+					resources.set(url, longify(result.data))
 						.then(() => refresh(this))
 				})
 			}
@@ -48,16 +59,15 @@ angular
 				$uibModal.open({
 					component: 'edit',
 					resolve: {
-						meeting: meeting
+						meta: {
+							title: "Edit Meeting"
+						},
+						fields: fields,
+						data: meeting
 					}
 				}).result.then(result => {	// Save edits
-					if (result.del) {
-						resources.delete(url, result.meeting)
-							.then(() => refresh(this))
-					}	else {
-						resources.set(url, longify(meeting))
-							.then(() => refresh(this))
-					}
+					(result.del ? resources.delete(url, result.data) : resources.set(url, longify(result.data)))	// Return a delete or edit promise
+						.then(() => refresh(this))
 				})
 			}
 		}]

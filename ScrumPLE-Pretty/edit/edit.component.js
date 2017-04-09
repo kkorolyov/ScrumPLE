@@ -1,9 +1,9 @@
 "use strict"
 
 angular
-	.module('meetings')
+	.module('edit', ['ui.bootstrap', 'ui.bootstrap.datetimepicker'])
 	.component('edit', {
-		templateUrl: "meetings/edit.template.html",
+		templateUrl: "edit/edit.template.html",
 
 		bindings: {
 			resolve: '<',
@@ -12,16 +12,19 @@ angular
 		},
 		controller: ['resources', function (resources) {
 			this.$onInit = function () {
-				this.edit = this.resolve.meeting ? true : false
-				this.action = this.edit ? "Edit" : "Create"
+				this.title = this.resolve.meta.title
 
-				this.meeting = this.edit ? this.resolve.meeting : {}	// Edit if binding, create otherwise
+				this.fields = this.resolve.fields
+				this.placeholders = {}
+
+				this.edit = this.resolve.data ? true : false
+				this.data = this.edit ? angular.copy(this.resolve.data) : {}	// Edit if binding, create otherwise
 			}
 
 			this.return = function (del) {
 				this.close({
 					$value: {
-						meeting: this.meeting,
+						data: this.data,
 						del: del
 					}
 				})
