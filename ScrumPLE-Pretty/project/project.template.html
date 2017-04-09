@@ -1,8 +1,225 @@
 <login></login>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Board</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" value="notranslate">
+    <link rel="shortcut icon" href="https://www.codeply.com/images/cp_ico.png">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-<div ng-if="$ctrl.auth()">
-  <h1>{{$ctrl.project().name}}</h1>
-  <h2>{{$ctrl.project().description}}</h2>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
-  <ui-view></ui-view>
-</div>
+     <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-rc.1/angular-ui-router.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-animate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.4/angular-touch.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-ui-datetime-picker/2.5.4/datetime-picker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-ui-datetime-picker/2.5.4/datetime-picker.tpls.js"></script>
+</head>
+
+<section ng-if="$ctrl.auth()">
+	
+     <h1>{{$ctrl.project().name}}</h1>
+     <h2>{{$ctrl.project().description}}</h2>
+
+    <style type="text/css">
+    html,body {
+      overflow-x: hidden; 
+    }
+    body {
+      padding-top: 70px;
+    }
+
+    /*
+     * Off Canvas
+     * --------------------------------------------------
+     */
+    @media screen and (max-width: 767px) {
+      .row-offcanvas {
+        position: relative;
+        -webkit-transition: all .25s ease-out;
+             -o-transition: all .25s ease-out;
+                transition: all .25s ease-out;
+      }
+      
+      
+      
+
+      .row-offcanvas-right {
+        right: 0;
+      }
+
+      .row-offcanvas-left {
+        left: 0;
+      }
+
+      .row-offcanvas-right
+      .sidebar-offcanvas {
+        right: -60%; /* 6 columns */
+      }
+
+      .row-offcanvas-left
+      .sidebar-offcanvas {
+        left: -60%; /* 6 columns */
+      }
+
+      .row-offcanvas-right.active {
+        right: 60%; /* 6 columns */
+      }
+
+      .row-offcanvas-left.active {
+        left: 60%; /* 6 columns */
+      }
+
+      .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 60%; /* 6 columns */
+      }
+    }
+    #sidebar {
+        padding-left:10%;
+        right:70%;
+        padding-top:50px;
+    }
+    #sidebar a.list-group-item {
+        height:48px;
+        line-height:48px;
+        padding-top:0;
+        font-size:13px;
+        padding-left: 40px;
+    }
+    .list-group {
+        width:200px;
+    }
+    .list-group .active {
+        background-color:#92CCFF;
+    }
+    .list-group a:hover {
+        background-color:#92CCFF;
+    }
+    </style>
+
+</head>
+<body ng-app="project">
+  <nav class="navbar navbar-fixed-top navbar-default" style="background-color:white;border-color:#ede5e5;">
+      <div class="container-fluid">
+        <div class="navbar-header" style="float: left;">
+           
+          <a class="navbar-brand" href="#" style="color:black;">ScrumPLE</a>
+        </div>
+        
+        <div class="log-out">
+            <button type="button" class="btn btn-default" style="float: right;margin-top: 9px;">Log out</button>
+        </div>
+        
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-xs-12 col-sm-9 col-sm-push-3" style="left:30%;padding-top:50px;" 
+            <login></login>
+            <div ng-if="$ctrl.auth()">
+              
+                <ui-view></ui-view>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-3 col-sm-pull-9 sidebar-offcanvas" id="sidebar">
+          <div class="list-group" ng-app>
+            <a href="javascript:void(0);" data-index="1" class="list-group-item active" ui-sref="project">Projectname</a>
+            <a href="javascript:void(0);" data-index="2" class="list-group-item" ui-sref="project.users">Team</a>
+            <a href="javascript:void(0);" data-index="3" class="list-group-item" ui-sref="project.meetings">Meetings</a>
+            <a href="javascript:void(0);" data-index="4" class="list-group-item" ui-sref="project.stories">Stories</a>
+            <a href="javascript:void(0);" data-index="5" class="list-group-item" ui-sref="project.project.tasks">Tasks</a>
+            
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=crossorigin="anonymous"></script>
+    
+  <script>
+  $(document).ready(function () {
+    $('.list-group-item').click(function() {
+        $('.list-group-item').css('background-color','');
+        $('.list-group-item').removeClass('active');
+        $(this).addClass('active');
+        $(this).css('background-color','#92CCFF');
+        var index = $(this).attr('data-index');
+
+    });
+  });
+  </script>
+
+
+
+</body></html>
+	<ui-view></ui-view>
+</section>
+
+<!--<div class="nav-side-menu">
+    <div class="brand">Brand Logo</div>
+    <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+    <div class="menu-list">
+        <ul id="menu-content" class="menu-content collapse out">
+            <li>
+                <a href="#">
+                    <i class="fa fa-dashboard fa-lg"></i> Dashboard
+                </a>
+            </li>
+            <li data-toggle="collapse" data-target="#products" class="collapsed active">
+                <a href="#"><i class="fa fa-gift fa-lg"></i> UI Elements <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="products">
+                <li class="active"><a href="#">CSS3 Animation</a></li>
+                <li><a href="#">General</a></li>
+                <li><a href="#">Buttons</a></li>
+                <li><a href="#">Tabs &amp; Accordions</a></li>
+                <li><a href="#">Typography</a></li>
+                <li><a href="#">FontAwesome</a></li>
+                <li><a href="#">Slider</a></li>
+                <li><a href="#">Panels</a></li>
+                <li><a href="#">Widgets</a></li>
+                <li><a href="#">Bootstrap Model</a></li>
+            </ul>
+            <li data-toggle="collapse" data-target="#service" class="collapsed">
+                <a href="#"><i class="fa fa-globe fa-lg"></i> Services <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="service">
+                <li>New Service 1</li>
+                <li>New Service 2</li>
+                <li>New Service 3</li>
+            </ul>
+
+
+            <li data-toggle="collapse" data-target="#new" class="collapsed">
+                <a href="#"><i class="fa fa-car fa-lg"></i> New <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="new">
+                <li>New New 1</li>
+                <li>New New 2</li>
+                <li>New New 3</li>
+            </ul>
+            <li>
+                <a href="#">
+                    <i class="fa fa-user fa-lg"></i> Profile
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-users fa-lg"></i> Users
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>-->
