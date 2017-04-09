@@ -1,7 +1,7 @@
 <h1>Sprints</h1>
 
-<section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints">
-    <p>Sprint: {{sprint.number}}</p>
+<section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
+    <p>Sprint: {{sprint.sprintNumber}}</p>
     <input class="form-control" type="text" ng-model="sprint.start">
 	<input class="form-control" type="text" ng-model="sprint.end">
 </section>

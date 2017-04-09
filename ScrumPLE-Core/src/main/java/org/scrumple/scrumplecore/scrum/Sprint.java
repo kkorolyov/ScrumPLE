@@ -2,8 +2,6 @@ package org.scrumple.scrumplecore.scrum;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Sprint {
 	private int sprintNumber;
@@ -21,17 +19,16 @@ public class Sprint {
 		
 	}
 	
-	@JsonCreator
-	public Sprint(@JsonProperty("sprintNumber") int sprintNumber, @JsonProperty("start") long start, @JsonProperty("end") long end) {
-		setNumber(sprintNumber);
+	public Sprint(int sprintNumber, long start, long end) {
+		setSprintNumber(sprintNumber);
 		setTime(start, end);
 	}
 	
-	public int getNumber() {
+	public int getSprintNumber() {
 		return sprintNumber;
 	}
 	
-	public void setNumber(int sprintNumber) {
+	public void setSprintNumber(int sprintNumber) {
 		this.sprintNumber = sprintNumber;
 	}
 	

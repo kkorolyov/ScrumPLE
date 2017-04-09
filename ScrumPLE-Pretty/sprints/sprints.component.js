@@ -60,6 +60,22 @@ angular
 				})
 			}
 
+			this.edit = function(sprint) {
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: "Edit Sprint"
+						},
+						fields: fields,
+						data: sprint
+					}
+				}).result.then(result => {
+					(result.del ? resources.delete(url, result.data) : resources.set(url, toLong(result.data)))
+						.then(() => refresh(this))
+				})
+			}
+
 			this.create //TODO
 		}]
 	})
