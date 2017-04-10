@@ -2,23 +2,38 @@
 	.project {
 		border: 1px solid cadetblue;
 	}
-	.jumbo {
-		background: url(/projects/intro-bg.jpg) no-repeat;
-		padding-bottom: 100%;
+	/*.background {
+		position: fixed;
+		z-index: -1;
+		display: inline-block;
 		
-	}
+	}*/
+	div {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+img {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
 	.SearchBar {
-		position: relative;
+		/*position: relative;*/
 		width: 500px;	
 	}
-	.search{
+	/*.search{
 		padding-left: 30%;
 		padding-top: 40%;
 	}
 	.search1{
 		padding-top: 1%;
 		padding-left: 30%;
-	}
+	}*/
 	.jumbo-some {
 		padding-top: 2%;
 	}
@@ -30,8 +45,9 @@
 	}
 </style>
 
-<div class = "jumbo" >
-	<div class="jumbo-some">
+	<div>
+	<img id="background" src="https://github.com/BlackrockDigital/startbootstrap-grayscale/blob/master/img/intro-bg.jpg?raw=true">
+
 		<form name="project-search" ng-submit="$ctrl.searchProjects()">
 			<section class="search">
 			<input type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search for..." ng-model="$ctrl.name">
@@ -54,7 +70,6 @@
 					</section>
 				</a>
 		</section>
-	</div>
 
 		<form name ="project-create" ng-submit="$ctrl.addProject(projectName, description, visible, ownerName, password)">
 			<input type="text" name="projectName" placeholder="Project Name" ng-model="$ctrl.projectName">
@@ -64,5 +79,4 @@
 			<input type="password" name="password" placeholder="password" ng-model="$ctrl.password">
 			<input type="submit" name="Create" value="Create">
 		</form>
-
 </div>
