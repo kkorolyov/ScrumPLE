@@ -36,15 +36,19 @@ angular
 			}
 
 			this.update = function(story) {
-				resources.set(url, story)
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: 'Edit Story'
+						},
+						fields: fields,
+						data: story
+					}
+				}).result.then(result => {
+					(result.del ? resources.delete(url, result.data) : resources.set(url, result.data))
+						.then(() => refresh(this))
+				})
 			}
-
-			this.delete = function(story) {
-				resources.delete(url, story)
-					.then(() => {
-						refresh(this)
-					})
-			}
-
 		}]
 	})
