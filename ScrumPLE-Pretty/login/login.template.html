@@ -27,6 +27,17 @@
 		<form name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.resources.auth()" role="form">
 			<fieldset>
 				<legend>Log In </legend>
+				<small class="text-muted">Connect Scrumple with your favorite social network</small>
+					<br><br>
+					<p>
+						<a class="btn btn-primary social-login-btn social-facebook" ng-disabled="true" href="/auth/facebook"><i class="fa fa-facebook"></i></a>
+						<a class="btn btn-primary social-login-btn social-twitter" ng-disabled="true" href="/auth/twitter"><i class="fa fa-twitter"></i></a>
+						<a class="btn btn-primary social-login-btn social-linkedin" ng-disabled="true" href="/auth/linkedin"><i class="fa fa-linkedin"></i></a>
+						<a class="btn btn-primary social-login-btn social-google" ng-disabled="true" href="/auth/google"><i class="fa fa-google-plus"></i></a>
+					</p>
+
+					<small class="text-muted">Or Login with your Scrumple account</small>
+					<br><br>
 			<div class="form-group" ng-class="{ 'has-error': form.handle.$dirty && form.handle.$error.required }">
             	<label for="handle">Please Enter your Email Address</label>
 				<input type="text" name="handle" placeholder=" Email adderss" class="form-control" autofocus required ng-model="$ctrl.handle">
