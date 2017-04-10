@@ -1,40 +1,42 @@
 "use strict"
 
 angular
-	.module('stories', ['resources'])
+	.module('stories', ['resources', 'edit'])
 	.component('stories', {
 		templateUrl: "stories/stories.template.html",
 
 		bindings: {
-			//stories: '<'
+			stories: '<'
 		},
-		controller: ['resources' , function (resources) {
-			this.stories = []
+		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
+			// this.stories = []
 			const url = resources.projectUrl() + "/stories"
-			resources.get(url)
-				.then(stories => {
-					this.stories = stories
-					console.log(stories)
-				})
+			const fields = {
+				story: ['text', 'Story'],
+				storyPoint: ['number', 'Story Point']
+			}
+			// resources.get(url)
+			// 	.then(stories => {
+			// 		this.stories = stories
+			// 		console.log(stories)
+			// 	})
+			function refresh(scope) {
+				resources.get(url)
+					.then(stories => scope.stories = stories)
+			}
 			this.create = function() {
-				console.log("Create Button")
-				const newStory = {story: this.story, storyPoint: this.storyPoint}
-				// const url = resources.projectUrl() +"/stories"
-				resources.set(url, newStory)
-					.then(() => {
-						resources.get(url)
-							.then(stories => {
-								this.stories = stories
-								console.log("nested then")
-								console.log(this.stories)
-							})
-					})
-				/*resources.get(url)
-					.then(stories => {
-						this.stories = stories
-						console.log("Inside then:" + stories)
-					})*/
-				console.log("outside then: " + this.stories)
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: "Create Story"
+						},
+						fields: fields
+					}
+				}).result.then(result => {
+					resources.set(url, result.data)
+						.then(() => refresh(this))
+				})
 			}
 
 			this.update = function(story) {
@@ -45,10 +47,7 @@ angular
 			this.delete = function(story) {
 				resources.delete(url, story)
 					.then(() => {
-						resources.get(url)
-							.then(stories => {
-								this.stories = stories
-							})
+						refresh(this)
 					})
 			}
 
