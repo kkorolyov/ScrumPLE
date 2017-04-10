@@ -88,11 +88,6 @@ public class ProjectsResource extends CRUDResource<Project> {
 		return new SprintsResource(retrieve(id, null));
 	}
 
-	@Path("{uuid}/stories/{uuid}/tasks")
-	public TaskResource getTasks(@PathParam("uuid") UUID id) {
-		return new TaskResource(retrieve(id, null));
-	}
-
 	/**
 	 * @param id project id
 	 * @return meetings resource under project {@code id}
