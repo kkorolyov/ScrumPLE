@@ -95,12 +95,12 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			}
 		})
 		.state({
-			name: 'project.tasks',
+			name: 'project.stories.tasks',
 			url: '/{storyId}/tasks',
 			component: 'tasks',
 			resolve: {
 				tasks: ['$stateParams', 'title', 'resources', function ($stateParams, title, resources) {
-					return resources.get(resources.projectUrl() + "/" + $stateParams.storyId + "/tasks")
+					return resources.get(resources.projectUrl() + "/stories/" + $stateParams.storyId + "/tasks")
 						.then(tasks => {
 							title.title(resources.project().name + " Stories(" + $stateParams.storyId + ")")
 						})

@@ -65,6 +65,7 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("GET").process(extractUser(headers));
 
 		log.debug(() -> "Received GET for id=" + id);
+		log.severe(() -> headers);
 		return dao.get(id);
 	}
 	/**

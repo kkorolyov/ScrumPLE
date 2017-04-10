@@ -2,7 +2,7 @@
 
 <section ng-repeat = "story in $ctrl.stories">
     <span ng-if="!story.editting">{{story.story}} {{story.storyPoint}}</span>
-    <a ui-sref="project.tasks({storyId: story.story})" ng-if="!story.editting">tasks</a>
+    <a ui-sref="project.stories.tasks({storyId: story.id})" ng-if="!story.editting">tasks</a>
     <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
 </section>
 
