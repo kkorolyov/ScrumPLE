@@ -5,7 +5,7 @@ angular
 	.component('projects', {
 		templateUrl: "projects/projects.template.html",
 
-		controller: ['resources', function (resources) {
+		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
 			this.searchProjects = function () {
 				console.log(this.name)
 				resources.get('projects', { name: this.name })
@@ -15,29 +15,10 @@ angular
 					})
 			}
 
-			this.addProject = function (name, description, visible, handle, password) {
-				resources.set("projects", {
-					name: this.projectName,
-					description: this.description,
-					visible: this.visible,
-					owner: {
-						credentials: {
-							handle: this.handle,
-							password: this.password
-						},
-						displayName: this.handle
-						
-					}
+			this.create = function () {
+				$uibModal.open({
+					component: 'createProject'
 				})
-				// .then(project => {
-				// 	console.log(project)
-				// 	const url = "projects/" + project+ "/users"
-				// 	 resources.set(url, {
-				// 	 	handle: this.handle,
-				// 	 	password: this.password
-				// 	 })
-				// })
-				
 			}
 		}]
 	})

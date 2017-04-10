@@ -8,9 +8,16 @@ angular
 		bindings: {
 			users: '<'
 		},
-		controller: ['resources', function (resources) {
-			this.addUser = function () {
-				
+		controller: ['$state', 'resources', function ($state, resources) {
+			this.user = resources.user()
+
+			this.chat = false
+
+			this.message = undefined
+			this.messageLog = () => "This is a dummy message log"
+			this.send = function () {
+				console.log(this.message)
+				this.message = undefined
 			}
 		}]
 	})

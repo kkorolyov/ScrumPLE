@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('meetings', ['ui.bootstrap'])
+	.module('meetings', ['edit'])
 	.component('meetings', {
 		templateUrl: "meetings/meetings.template.html",
 
@@ -10,43 +10,65 @@ angular
 		},
 		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
 			const url = resources.projectUrl() + "/meetings"
+			const fields = {
+				type: ["text", "Type"],
+				start: ["date", "Start Date"],
+				end: ["date", "End Date"]
+			}
+
+			function dateify(meeting) {	// long to Date
+				meeting.start = new Date(meeting.start)
+				meeting.end = new Date(meeting.end)
+
+				return meeting
+			}
+			function longify(meeting) {	// Date to long
+				meeting.start = meeting.start.getTime()
+				meeting.end = meeting.end.getTime()
+
+				return meeting
+			}
 
 			function presentify(meetings) {
-				for (let i = 0; i < meetings.length; i++) {
-					const meeting = meetings[i]
-
-					// Change to dates
-					meeting.start = new Date(meeting.start)
-					meeting.end = new Date(meeting.end)
-				}
+				for (let i = 0; i < meetings.length; i++) dateify(meetings[i])
 				return meetings
 			}
+
+			function refresh(scope) {
+				resources.get(url)
+					.then(meetings => { scope.meetings = presentify(meetings) })
+			}
+
 			this.$onInit = function () { presentify(this.meetings) }
 
+			this.add = function () {
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: "Create Meeting"
+						},
+						fields: fields
+					}
+				}).result.then(result => {
+					resources.set(url, longify(result.data))
+						.then(() => refresh(this))
+				})
+			}
 			this.edit = function (meeting) {
 				$uibModal.open({
 					component: 'edit',
 					resolve: {
-						meeting: meeting
+						meta: {
+							title: "Edit Meeting"
+						},
+						fields: fields,
+						data: meeting
 					}
-				}).result.then(meeting => {	// Save edits
-					// Change back to longs
-					meeting.start = meeting.start.getTime()
-					meeting.end = meeting.end.getTime()
-
-					resources.set(url, meeting)
-						.then(() => {
-							resources.get(url)
-								.then(meetings => { this.meetings = presentify(meetings) })
-						})
+				}).result.then(result => {	// Save edits
+					(result.del ? resources.delete(url, result.data) : resources.set(url, longify(result.data)))	// Return a delete or edit promise
+						.then(() => refresh(this))
 				})
-			}
-
-			this.add = function (meeting) {
-
-			}
-			this.delete = function (meeting) {
-
 			}
 		}]
 	})

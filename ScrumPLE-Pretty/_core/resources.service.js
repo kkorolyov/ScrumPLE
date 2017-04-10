@@ -1,29 +1,33 @@
 "use strict"
 
 angular
-	.module('resources', ['rest'])
-	.factory('resources', ['$q', 'rest', function ($q, rest) {
+	.module('resources', ['rest', 'storage'])
+	.factory('resources', ['$q', 'rest', 'storage', function ($q, rest, storage) {
 		return function () {	// Closure for private fields
-			let _project = null	// Current project
-			let _user = null // Current user
+			function _project(project) {
+				return storage.storage("project", project)
+			}
+			function _user(user) {
+				return storage.storage("user", user)
+			}
 
 			return {
 				/** @returns {Object} current project */
-				project: () => { return _project },
+				project: () => { return _project() },
 				/** @returns {Object} URL to current project */
-				projectUrl: () => { return "projects/" + _project.id },
+				projectUrl: () => { return "projects/" + _project().id },
 
 				/** @returns {Object} current authenticated user, or null if not authentiated */
-				user: () => { return _user },
+				user: () => { return _user() },
 				/** @returns {boolean} true if authenticated */
-				auth: function () { return this.user() != null },	// For semantics
+				auth: ()  =>{ return rest.auth() },
 
 				/**
 				 * Sets the current project.
 				 * @param {Object} project project to enter
 				 */
 				enter: function (project) {
-					_project = project
+					_project(project)
 				},
 
 				/**
@@ -38,19 +42,18 @@ angular
 							// Save logged-in user
 							this.get(this.projectUrl() + "/users", { displayName: user.displayName })
 								.then(users => {
-									_user = users[0]
-									_user.current = true
+									_user(users[0])
 								})
 							return null
 						}, reason => {	// Failure
-							_user = null
+							_user(null)
 
 							return $q.reject(reason)
 						})
 				},
 				logout: () => {
-					_project = null
-					_user = null
+					_project(null)
+					_user(null)
 
 					rest.logout()
 				},
@@ -105,51 +108,6 @@ angular
 				 */
 				delete: function (url, obj) {
 					return rest.ajax('DELETE', url + "/" + obj.id)
-				},
-
-				sprints: function () {
-					return rest.ajax('GET', this.projectUrl() + "/sprints")
-						.then(sprints => {
-							return sprints
-						}, reason => {
-							return $q.reject(reason)
-						})
-				},
-
-				stories: function () {
-					return rest.ajax('GET', this.projectUrl() + "/stories")
-						.then(stories => {
-							return stories
-						}, reason => {
-							return $q.reject(reason)
-						})
-				},
-
-				createStory: function (story, storyPoint) {
-					const newStory = { story: story, storyPoint: storyPoint }
-					return rest.ajax('POST', this.projectUrl() + "/stories", newStory)
-				},
-
-				/**
-				 * Returns an array of resources with each ID injected into the resource itself.
-				 * @param {Object} resources promise resolving to UUID -> Resource map
-				 * @returns promise resolving to array of transformed resources
-				 */
-				values: function (resources) {
-					return resources
-						.then(results => {
-							const list = []
-
-							for (let key in results) {
-								const resource = results[key]
-								resource.id = key
-
-								list.push(resource)
-							}
-							return list
-						}, reason => {
-							return $q.reject(reason)
-						})
 				}
 			}
 		}()

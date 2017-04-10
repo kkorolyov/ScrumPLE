@@ -21,6 +21,11 @@ img {
 	border: none;
 }
 
+.splash-screen {
+	background: grey url("http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg") fixed no-repeat;
+	background-size: cover;
+}
+
 .list {
 	display: flex;
 	flex-direction: column;

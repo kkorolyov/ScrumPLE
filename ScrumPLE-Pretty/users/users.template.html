@@ -6,31 +6,36 @@
 		flex-direction: column;
 		align-items: flex-end;
 	}
-	.current-user {
-		color: rebeccapurple;
-		border-color: rebeccapurple;
-
-		cursor: pointer;
+	.current-user * {
+		color: cadetblue;
 	}
 
-	.member-box {
-		float: left;
-		clear: both;
-		
+	.teambox {
 		display: flex;
-		flex-direction: column;
+	}
+
+	.chat {
+		float: right;
+		clear: both;
 	}
 </style>
 
-<h1>Members</h1>
-<section class="member-box">
-	<section class="user" ng-class="{'current-user': user.current}" ng-repeat="user in $ctrl.users" ng-click="user.current ? user.editting = true : null">
-		<span ng-if="!user.editting">{{user.displayName}}</span>
-		<input name="displayName" ng-model="user.displayName" ng-if="user.editting">
+<h1>Team</h1>
+<section class="teambox">
+	<section class="user" ng-class="{'current-user': user.id === $ctrl.user.id}" ng-repeat="user in $ctrl.users">
+		<h3>{{user.displayName}}</h3>
+		<h5>{{user.role}}</h5>
+	</section>
+</section>
 
-		<span ng-if="!user.editting">{{user.role}}</span>
-		<input name="role" ng-model="user.role" ng-if="user.editting">
+<section class="form-group">
+	<input class="chat btn" ng-class="{'btn-success': !$ctrl.chat, 'btn-danger': $ctrl.chat}" type="button" value="{{$ctrl.chat ? 'Close Chat' : 'Open Chat'}}" ng-click="$ctrl.chat = !$ctrl.chat">
+	<form class="chat" ng-submit="$ctrl.send()" ng-if="$ctrl.chat">
+		<textarea class="form-control" disabled>{{$ctrl.messageLog()}}</textarea>
 
-		<input type="button" value="Apply" ng-if="user.editting" ng-click="user.editting = false; $event.stopPropagation()">
+		<section class="form-inline">
+			<textarea class="form-control" ng-model="$ctrl.message" required></textarea>
+			<input class="btn btn-success" type="submit" value="Send">
+		</div>
 	</section>
 </section>

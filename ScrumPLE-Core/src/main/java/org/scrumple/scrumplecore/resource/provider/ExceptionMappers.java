@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 import org.glassfish.jersey.server.ContainerException;
 import org.scrumple.scrumplecore.auth.AuthenticationException;
 import org.scrumple.scrumplecore.auth.AuthorizationException;
+import org.scrumple.scrumplecore.auth.SessionExpiredException;
 import org.scrumple.scrumplecore.database.DataAccessException;
 
 import dev.kkorolyov.simplelogs.Logger;
@@ -46,7 +47,12 @@ final class ExceptionMappers {
 		AuthorizationExceptionMapper() {
 			super(401);
 		}
-
+	}
+	@Provider
+	static class SessionExpiredExceptionMapper extends ExceptionMapperLogger<SessionExpiredException> {
+		SessionExpiredExceptionMapper() {
+			super(401);
+		}
 	}
 
 	@Provider

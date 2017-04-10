@@ -1,22 +1,9 @@
-<form name = "createSprint" ng-submit = "$ctrl.create">
-    <input type="text" name="sprintNumber" placeholder="Sprint Number">
-    <div>Start Date</div>
-    <div>
-        <input type="number" name="smonth" placeholder="mm" min="1" max="12">
-        <input type="number" name="sday" placeholder="dd" min="1" max="31">
-        <input type="number" name="syear" placeholder="yyyy" min="1900" max="3000">
-    </div>
-    <div>End Date</div>
-    <div>
-        <input type="number" name="emonth" placeholder="mm" min="1" max="12">
-        <input type="number" name="eday" placeholder="dd" min="1" max="31">
-        <input type="number" name="eyear" placeholder="yyyy" min="1900" max="3000">
-    </div>
-    <div>
-        <input type="submit" name="create" value="Create">
-    </div>
-</form>
+<h1>Sprints</h1>
 
-<div name = "sprintList" ng-repeat = "sprint in $ctrl.sprints">
-    {{sprint.sprintNumber}}
-</div>
+<section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
+    <p>Sprint: {{sprint.sprintNumber}}</p>
+    <input class="form-control" type="text" ng-model="sprint.start">
+	<input class="form-control" type="text" ng-model="sprint.end">
+</section>
+
+<label class="btn btn-success" ng-click="$ctrl.add()">+</label>

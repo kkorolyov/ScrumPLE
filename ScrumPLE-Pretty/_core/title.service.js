@@ -3,15 +3,17 @@
 angular
 	.module('title', [])
 	.factory('title', function () {
-		const obj = {
-			title: function () {
-				return this.title
-			},
-			default: function () {
-				this.title = "ScrumPLE"
+		let _title = ""
+
+		return {
+			/**
+			 * Gets or sets the current page title.
+			 * @param {string} [title] new page title
+			 * @return current page title if invoked without arguments
+			 */
+			title: function (title) {
+				if (title) _title = title
+				else return _title
 			}
 		}
-		obj.default()
-		
-		return obj
 	})
