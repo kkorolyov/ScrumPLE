@@ -9,17 +9,13 @@ angular
 			stories: '<'
 		},
 		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
-			// this.stories = []
+
 			const url = resources.projectUrl() + "/stories"
 			const fields = {
 				story: ['text', 'Story'],
 				storyPoint: ['number', 'Story Point']
 			}
-			// resources.get(url)
-			// 	.then(stories => {
-			// 		this.stories = stories
-			// 		console.log(stories)
-			// 	})
+
 			function refresh(scope) {
 				resources.get(url)
 					.then(stories => scope.stories = stories)
@@ -40,7 +36,6 @@ angular
 			}
 
 			this.update = function(story) {
-				// const url = resources.projectUrl() + "/stories"
 				resources.set(url, story)
 			}
 
