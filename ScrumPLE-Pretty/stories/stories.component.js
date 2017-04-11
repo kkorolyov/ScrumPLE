@@ -22,10 +22,25 @@ angular
 					.then(stories => scope.stories = stories)
 			}
 
+			this.debug = function () {
+				console.log("Debugging")
+			}
+
+			function refreshTasks(url, story) {
+				const taskList = []
+				resources.get(url)
+					.then(tasks => {
+						for(let i = 0; i < tasks.length; i++) {
+							if(tasks[i].story.story === story.story) {
+								taskList.push(tasks[i])
+							}
+						}
+					})
+					return taskList
+			}
 			this.tasks = function(story) {
 				const taskUrl = url + "/" + story.id + "/tasks"
-				resources.get(taskUrl)
-					.then(tasks => this.taskList = tasks)
+				this.taskList = refreshTasks(taskUrl, story)
 			}
 
 			this.createTask = function(story) {
@@ -35,24 +50,7 @@ angular
 					description: this.taskDescription
 				}
 				resources.set(taskUrl, task)
-					.then(() => resources.get(taskUrl)
-									.then(tasks => this.taskList = tasks))
-				// const taskUrl = url + "/" + story.id + "/tasks"
-				// const fields = {
-				// 	description: ['text', 'Description']
-				// }
-				// $uibModal.open({
-				// 	component: 'edit',
-				// 	resolve: {
-				// 		meta: {
-				// 			title: "Create Task"
-				// 		},
-				// 		fields: fields
-				// 	}.result.then(result => {
-				// 		resources.set(taskUrl, result.data)
-				// 			.then(tasks => this.taskList = tasks)
-				// 	})
-				// })
+					.then(() => this.taskList = refreshTasks(taskUrl, story))
 			}
 			this.create = function() {
 				$uibModal.open({

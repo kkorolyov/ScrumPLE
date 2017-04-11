@@ -1,18 +1,18 @@
 <h1>User Stories</h1>
 
-<section ng-repeat = "story in $ctrl.stories">
-    <!--<span ng-if="!story.editting">{{story.story}} {{story.storyPoint}}</span>-->
-    <input type="button" name="story" value="{{story.story}} {{story.storyPoint}}" ng-click="isCollapsed = !isCollapsed; $ctrl.tasks(story)">
-    <section uib-collapse="isCollapsed">
+<uib-accordion close-others=true>
+    <section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
+        <uib-accordion-heading>
+            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''">{{story.story}}</label>
+        </uib-accordion-heading>
+        Story Point: {{story.storyPoint}}
+        <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
         <section ng-repeat="task in $ctrl.taskList">
             {{task.description}}
         </section>
-        Tasks go here
         <input type="text" name="description" placeholder="Task Description" ng-model="$ctrl.taskDescription">
-        <label class="btn btn-success" ng-click="$ctrl.createTask(story)">+</label>
+        <label class="btn btn-success" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>
     </section>
-    <!--<a ui-sref="project.stories.tasks({storyId: story.id})" ng-if="!story.editting">tasks</a>-->
-    <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
-</section>
+</uib-accordion>
 
 <label class="btn btn-success" ng-click = "$ctrl.create()">+</label>
