@@ -1,8 +1,17 @@
 <h1>User Stories</h1>
 
 <section ng-repeat = "story in $ctrl.stories">
-    <span ng-if="!story.editting">{{story.story}} {{story.storyPoint}}</span>
-    <a ui-sref="project.stories.tasks({storyId: story.id})" ng-if="!story.editting">tasks</a>
+    <!--<span ng-if="!story.editting">{{story.story}} {{story.storyPoint}}</span>-->
+    <input type="button" name="story" value="{{story.story}} {{story.storyPoint}}" ng-click="isCollapsed = !isCollapsed; $ctrl.tasks(story)">
+    <section uib-collapse="isCollapsed">
+        <section ng-repeat="task in $ctrl.taskList">
+            {{task.description}}
+        </section>
+        Tasks go here
+        <input type="text" name="description" placeholder="Task Description" ng-model="$ctrl.taskDescription">
+        <label class="btn btn-success" ng-click="$ctrl.createTask(story)">+</label>
+    </section>
+    <!--<a ui-sref="project.stories.tasks({storyId: story.id})" ng-if="!story.editting">tasks</a>-->
     <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
 </section>
 
