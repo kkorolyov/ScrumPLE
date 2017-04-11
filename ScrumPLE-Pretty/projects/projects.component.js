@@ -16,26 +16,37 @@ angular
 			}
 			
 			const proj = resources.get('projects')
-			const fields = {
-				name: ["text", "Project Name"],
-				escription: ["text", "Project Description"],
-				visible: ["checkbox", "visible"],
-				handle: ["text", "Username"],
-				Password: ["text", "Password"]
-			}
 
-			this.create = function () {
+			this.add = function () {
 				$uibModal.open({
 					component: 'edit',
 					resolve: {
-						meta:{
+						meta: {
 							title: "Create New Project"
 						},
-						fields: fields
+						fields: {
+							name: ["text", "Project Name"],
+							description: ["text", "Project Description"],
+							visible: ["checkbox", "Visible"],
+							handle: ["text", "Project Owner Email Address"],
+							password: ["password", "Project Owner Password"]
+						}
 					}
 				}).result.then(result => {
-					resources.set(proj)
-						.then(() => refresh(this))
+					const data = {
+						name: result.data.name,
+						description: result.data.description,
+						visible: result.data.visible,
+						owner: {
+							credentials: {
+								handle: result.data.handle,
+								password: result.data.password
+							},
+							displayName: result.data.handle,
+							role: "owner"
+						}
+					}
+					resources.set('projects', data)
 				})
 			}
 		}]

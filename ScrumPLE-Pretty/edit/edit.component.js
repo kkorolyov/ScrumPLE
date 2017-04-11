@@ -15,7 +15,6 @@ angular
 				this.title = this.resolve.meta.title
 
 				this.fields = this.resolve.fields
-				this.placeholders = {}
 
 				this.edit = this.resolve.data ? true : false
 				this.data = this.edit ? angular.copy(this.resolve.data) : {}	// Edit if binding, create otherwise
