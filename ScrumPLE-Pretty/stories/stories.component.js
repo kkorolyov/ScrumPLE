@@ -8,8 +8,9 @@ angular
 		bindings: {
 			stories: '<'
 		},
-		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
-
+		controller: ['$scope', '$uibModal', 'resources' , function ($scope, $uibModal, resources) {
+			this.taskList = []
+			$scope.isCollapsed = true
 			const url = resources.projectUrl() + "/stories"
 			const fields = {
 				story: ['text', 'Story'],
@@ -19,6 +20,39 @@ angular
 			function refresh(scope) {
 				resources.get(url)
 					.then(stories => scope.stories = stories)
+			}
+
+			this.tasks = function(story) {
+				const taskUrl = url + "/" + story.id + "/tasks"
+				resources.get(taskUrl)
+					.then(tasks => this.taskList = tasks)
+			}
+
+			this.createTask = function(story) {
+				const taskUrl = url + "/" + story.id + "/tasks"
+				const task = {
+					story: story,
+					description: this.taskDescription
+				}
+				resources.set(taskUrl, task)
+					.then(() => resources.get(taskUrl)
+									.then(tasks => this.taskList = tasks))
+				// const taskUrl = url + "/" + story.id + "/tasks"
+				// const fields = {
+				// 	description: ['text', 'Description']
+				// }
+				// $uibModal.open({
+				// 	component: 'edit',
+				// 	resolve: {
+				// 		meta: {
+				// 			title: "Create Task"
+				// 		},
+				// 		fields: fields
+				// 	}.result.then(result => {
+				// 		resources.set(taskUrl, result.data)
+				// 			.then(tasks => this.taskList = tasks)
+				// 	})
+				// })
 			}
 			this.create = function() {
 				$uibModal.open({
