@@ -1,11 +1,13 @@
 <h1>Meetings</h1>
 
-<section class="list list-box">
-	<section class="list" ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
+<section class="list">
+	<section ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
 		<p>{{meeting.type}}</p>
 
-		<input class="form-control" type="text" ng-model="meeting.start">
-		<input class="form-control" type="text" ng-model="meeting.end">
+		<div>
+			<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
+			<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
+		</div>
 	</section>
 </section>
 

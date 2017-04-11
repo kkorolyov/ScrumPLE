@@ -18,6 +18,13 @@ angular
 
 				this.edit = this.resolve.data ? true : false
 				this.data = this.edit ? angular.copy(this.resolve.data) : {}	// Edit if binding, create otherwise
+
+				this.applyDefaults()
+			}
+			this.applyDefaults = function () {
+				for (let property in this.fields) {
+					if (this.fields[property][2]) this.data[property] = this.fields[property][2]
+				}
 			}
 
 			this.return = function (del) {

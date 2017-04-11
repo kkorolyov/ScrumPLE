@@ -14,9 +14,6 @@ angular
 							(a, b) => a.name.localeCompare(b.name))
 					})
 			}
-			
-			const proj = resources.get('projects')
-
 			this.add = function () {
 				$uibModal.open({
 					component: 'edit',

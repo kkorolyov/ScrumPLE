@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('meetings', ['edit'])
+	.module('meetings', [])
 	.component('meetings', {
 		templateUrl: "meetings/meetings.template.html",
 
@@ -30,8 +30,7 @@ angular
 			}
 
 			function presentify(meetings) {
-				for (let i = 0; i < meetings.length; i++) dateify(meetings[i])
-				return meetings
+				return meetings.map(meeting => dateify(meeting))
 			}
 
 			function refresh(scope) {
@@ -39,7 +38,7 @@ angular
 					.then(meetings => { scope.meetings = presentify(meetings) })
 			}
 
-			this.$onInit = function () { presentify(this.meetings) }
+			this.$onInit = function () { this.meetings = presentify(this.meetings) }
 
 			this.add = function () {
 				$uibModal.open({

@@ -28,15 +28,17 @@ img {
 
 .list {
 	display: flex;
-	flex-direction: column;
-
-	border: 1px solid blue;
+	flex-flow: column wrap;
+	justify-content: flex-start;
+	align-items: stretch;
+	align-content: stretch;
 }
-
-.list-box {
-	float: left;
-	
-	border: 1px solid black;
+.wide-list {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: stretch;
 }
 
 #mywrapper {

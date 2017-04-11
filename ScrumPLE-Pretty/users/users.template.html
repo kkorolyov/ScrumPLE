@@ -1,16 +1,15 @@
 <style>
 	.user {
 		border: 1px solid gray;
-
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
 	}
-
+	
 	.teambox {
 		display: flex;
 	}
-
+	
 	.chat {
 		float: right;
 		clear: both;
@@ -18,23 +17,26 @@
 </style>
 
 <h1>Team</h1>
-<section class="teambox">
-	<h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends). You should fix that!</h3>
+<section class="wide-list">
+		<h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends)!
+			<a href="" ng-click="$ctrl.add()">You should fix that!</a>
+		</h3>
 
-	<section class="user" ng-class="{'current-user': user.id === $ctrl.user.id}" ng-repeat="user in $ctrl.users">
+	<section ng-repeat="user in $ctrl.users">
 		<h3>{{user.displayName}}</h3>
 		<h5>{{user.role}}</h5>
 	</section>
 </section>
 
 <section class="form-group">
-	<input class="chat btn" ng-class="{'btn-success': !$ctrl.chat, 'btn-danger': $ctrl.chat}" type="button" value="{{$ctrl.chat ? 'Close Chat' : 'Open Chat'}}" ng-click="$ctrl.chat = !$ctrl.chat">
-	<form class="chat" ng-submit="$ctrl.send()" ng-if="$ctrl.chat">
-		<textarea class="form-control" disabled>{{$ctrl.messageLog()}}</textarea>
+	<input class="chat btn" ng-class="{'btn-success': !$ctrl.chat, 'btn-danger': $ctrl.chat}" type="button" value="{{$ctrl.chat ? 'Close Chat' : 'Open Chat'}}"
+		ng-click="$ctrl.chat = !$ctrl.chat">
+		<form class="chat" ng-submit="$ctrl.send()" ng-if="$ctrl.chat">
+			<textarea class="form-control" disabled>{{$ctrl.messageLog()}}</textarea>
 
-		<section class="form-inline">
-			<textarea class="form-control" ng-model="$ctrl.message" required></textarea>
-			<input class="btn btn-success" type="submit" value="Send">
-		</section>
-	</form>
+			<section class="form-inline">
+				<textarea class="form-control" ng-model="$ctrl.message" required></textarea>
+				<input class="btn btn-success" type="submit" value="Send">
+			</section>
+		</form>
 </section>
