@@ -36,18 +36,13 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			name: 'project.users',
 			url: '/users',
 			component: 'users',
+			onEnter: ['title', function (title) {
+				title.title(resources.project().name + " - Team")
+			}],
 			resolve: {
-				users: ['title', 'resources', function (title, resources) {
+				users: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/users')
-						.then(users => {
-							const sortedUsers = [resources.user()]
-
-							for (let i = 0; i < users.length; i++) {
-								if (users[i].id !== resources.user().id) sortedUsers.push(users[i])
-							}
-							title.title(resources.project().name + " - Users")
-							return sortedUsers
-						})
+						.then(users => users.filter(user => user.id !== resources.user().id))	// Only return other users
 				}]
 			}
 		})
@@ -59,7 +54,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				meetings: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/meetings')
 						.then(meetings => {
-							title.title(resources.project().name + " - Meetings")
 							return meetings
 						})
 				}]
