@@ -1,9 +1,9 @@
 "use strict"
 
 angular
-	.module('title', [])
-	.factory('title', function () {
-		let _title = ""
+	.module('title', ['resources'])
+	.factory('title', ['resources', function (resources) {
+		let _title = () => ""
 
 		return {
 			/**
@@ -12,8 +12,16 @@ angular
 			 * @return current page title if invoked without arguments
 			 */
 			title: function (title) {
-				if (title) _title = title
-				else return _title
+				if (title) _title = () => title
+				else return _title()
+			},
+
+			/**
+			 * Sets a subtitle of the current project.
+			 * @param {string} [subTitle] project subtitle
+			 */
+			projectSub: function (subTitle) {
+				_title = () => resources.project().name + (subTitle ? " - " + subTitle : "")
 			}
 		}
-	})
+	}])

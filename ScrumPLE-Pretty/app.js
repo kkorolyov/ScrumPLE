@@ -1,6 +1,6 @@
 "use strict"
 
-const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'projects', 'project', 'login', 'users', 'meetings', 'tasks', 'stories', 'sprints'])
+const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'edit', 'projects', 'project', 'login', 'users', 'meetings', 'tasks', 'stories', 'sprints'])
 
 app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
 	$urlRouterProvider.otherwise("/")
@@ -24,7 +24,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 					.then(projects => {
 						resources.enter(projects[0])
 
-						title.title(resources.project().name)
+						title.projectSub()
 					})
 			}],
 			onExit: ['resources', function (resources) {
@@ -36,18 +36,13 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			name: 'project.users',
 			url: '/users',
 			component: 'users',
+			onEnter: ['title', function (title) {
+				title.projectSub("Team")
+			}],
 			resolve: {
-				users: ['title', 'resources', function (title, resources) {
+				users: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/users')
-						.then(users => {
-							const sortedUsers = [resources.user()]
-
-							for (let i = 0; i < users.length; i++) {
-								if (users[i].id !== resources.user().id) sortedUsers.push(users[i])
-							}
-							title.title(resources.project().name + " - Users")
-							return sortedUsers
-						})
+						.then(users => users.filter(user => user.id !== resources.user().id))	// Only return other users
 				}]
 			}
 		})
@@ -55,13 +50,12 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			name: 'project.meetings',
 			url: '/meetings',
 			component: 'meetings',
+			onEnter: ['title', function (title) {
+				title.projectSub("Meetings")
+			}],
 			resolve: {
 				meetings: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/meetings')
-						.then(meetings => {
-							title.title(resources.project().name + " - Meetings")
-							return meetings
-						})
 				}]
 			}
 		})
@@ -69,41 +63,25 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			name: 'project.stories',
 			url: '/stories',
 			component: 'stories',
+			onEnter: ['title', function (title) {
+				title.projectSub("Stories")
+			}],
 			resolve: {
 				stories: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/stories')
-						.then(stories => {
-							title.title(resources.project().name + " - Stories")
-							return stories
-						})
 				}]
 			}
 		})
-
 		.state({
 			name: 'project.sprints',
 			url: '/sprints',
 			component: 'sprints',
+			onEnter: ['title', function (title) {
+				title.projectSub("Sprints")
+			}],
 			resolve: {
-				sprints: ['title', 'resources', function(title, resources) {
+				sprints: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/sprints')
-						.then(sprints => {
-							title.title(resources.project().name + " - Sprints")
-							return sprints
-						})
-				}]
-			}
-		})
-		.state({
-			name: 'project.stories.tasks',
-			url: '/{storyId}/tasks',
-			component: 'tasks',
-			resolve: {
-				tasks: ['$stateParams', 'title', 'resources', function ($stateParams, title, resources) {
-					return resources.get(resources.projectUrl() + "/stories/" + $stateParams.storyId + "/tasks")
-						.then(tasks => {
-							title.title(resources.project().name + " Stories(" + $stateParams.storyId + ")")
-						})
 				}]
 			}
 		})
