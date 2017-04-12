@@ -1,6 +1,6 @@
 "use strict"
 
-const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'edit', 'projects', 'project', 'login', 'users', 'meetings', 'tasks', 'stories', 'sprints'])
+const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'edit', 'projects', 'project', 'login', 'users', 'meetings', 'stories', 'sprints'])
 
 app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
 	$urlRouterProvider.otherwise("/")
