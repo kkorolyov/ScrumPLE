@@ -2,10 +2,13 @@ package org.scrumple.scrumplecore.scrum;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Represents a task
  */
+@JsonInclude(Include.NON_NULL)
 public class Task {
 	private String description;
 	private UserStory story;
