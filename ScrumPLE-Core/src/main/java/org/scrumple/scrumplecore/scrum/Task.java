@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Task {
 	private String description;
 	private UserStory story;
+	private User user;
 	private boolean done;
 
 	/**
@@ -27,6 +28,20 @@ public class Task {
 		setStory(story);
 		setDescription(description);
 		this.done = false;
+	}
+
+	/**
+	 * Sets the user for the task.
+	 */
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	/**
+	 * @return the task's user.
+	 */
+	public User getUser() {
+		return this.user;
 	}
 	
 	/**
