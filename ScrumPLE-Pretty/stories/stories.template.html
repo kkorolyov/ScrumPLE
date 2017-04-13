@@ -9,6 +9,7 @@
         <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
         <section ng-repeat="task in $ctrl.taskList">
             {{task.description}}
+            <label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>
         </section>
         <input type="text" name="description" placeholder="Task Description" ng-model="$ctrl.taskDescription">
         <label class="btn btn-success" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>

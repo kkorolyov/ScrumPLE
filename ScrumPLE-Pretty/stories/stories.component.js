@@ -52,6 +52,25 @@ angular
 				resources.set(taskUrl, task)
 					.then(() => this.taskList = refreshTasks(taskUrl, story))
 			}
+
+			this.editTask = function(story, task) {
+				const taskUrl = url + "/" + story.id + "/tasks"
+				$uibModal.open({
+					component: "edit",
+					resolve: {
+						meta: {
+							title: "Edit Task"
+						},
+						fields: {
+							description: ['text', 'Task Description', task.description]
+						}
+					}
+				}).result.then(result => {
+					task.description = result.data.description
+					resources.set(taskUrl, task)
+						.then(() => refreshTasks(taskUrl, story))
+				})
+			}
 			this.create = function() {
 				$uibModal.open({
 					component: 'edit',
