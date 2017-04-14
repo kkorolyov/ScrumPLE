@@ -45,12 +45,23 @@ angular
 
 			this.createTask = function(story) {
 				const taskUrl = url + "/" + story.id + "/tasks"
-				const task = {
-					story: story,
-					description: this.taskDescription
-				}
-				resources.set(taskUrl, task)
-					.then(() => this.taskList = refreshTasks(taskUrl, story))
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: "Create Task for " + story.story
+						},
+						fields: {
+							description: ['text', 'Task Description']
+						}
+					}
+				}).result.then(result => {
+					const task = {
+						story: story,
+						description: result.data.description
+					}
+					resources.set(taskUrl, task).then(() => this.taskList = refreshTasks(taskUrl, story))
+				})
 			}
 
 			this.editTask = function(story, task) {
@@ -63,12 +74,15 @@ angular
 						},
 						fields: {
 							description: ['text', 'Task Description', task.description]
-						}
+						},
+						data: task
 					}
 				}).result.then(result => {
-					task.description = result.data.description
-					resources.set(taskUrl, task)
-						.then(() => refreshTasks(taskUrl, story))
+					if(!result.del){
+						task.description = result.data.description
+					}
+					(result.del ? resources.delete(taskUrl, task) : resources.set(taskUrl, task))
+						.then(() => this.taskList = refreshTasks(taskUrl, story))
 				})
 			}
 			this.create = function() {
