@@ -37,6 +37,7 @@ public class UsersResource extends CRUDResource<User> {
 	public void invite(Invitation invitation, @Context HttpHeaders headers) {
 		getAuthorizer("POST").process(extractUser(headers));
 
+		invitation.send();
 	}
 
 	@Override
