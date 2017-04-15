@@ -1,5 +1,8 @@
 package org.scrumple.scrumplecore.mail;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * An invitation to join a project.
  */
@@ -14,7 +17,8 @@ public class Invitation {
 	 * @param message invitation message
 	 * @param url invitation URL
 	 */
-	public Invitation(String email, String message, String url) {
+	@JsonCreator
+	public Invitation(@JsonProperty("email") String email, @JsonProperty("message") String message, @JsonProperty("url") String url) {
 		this.email = email;
 		this.message = message;
 		this.url = url;
