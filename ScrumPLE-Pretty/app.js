@@ -17,7 +17,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 
 		.state({
 			name: 'project',
-			url: '/project/{projectName}',
+			url: '/{projectName}',
 			component: 'project',
 			resolve: {	// Stupid hack to defer loading page until project resolves
 				project: ['$stateParams', 'title', 'resources', function ($stateParams, title, resources) {
