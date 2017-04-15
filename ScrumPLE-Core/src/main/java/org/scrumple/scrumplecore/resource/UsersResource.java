@@ -1,5 +1,7 @@
 package org.scrumple.scrumplecore.resource;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.scrumple.scrumplecore.auth.Authorizer;
@@ -22,9 +24,15 @@ public class UsersResource extends CRUDResource<User> {
 	public UsersResource(Project project) {
 		super(SqlobDAOFactory.getDAOUnderProject(User.class, project));
 
-		Authorizer onlyOwner = Authorizers.onlyOwner(project);
+		Authorizer onlyUsers = Authorizers.onlyUsers(project);
 
-		setAuthorizers(onlyOwner, Authorizers.ALL, onlyOwner, onlyOwner, SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
+		setAuthorizers(Authorizers.ALL, Authorizers.ALL, onlyUsers, onlyUsers, SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
+	}
+
+	@Path("invite")
+	@POST
+	public void invite(String email, String message, String url) {
+
 	}
 
 	@Override
