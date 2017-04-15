@@ -120,7 +120,7 @@ public abstract class CRUDResource<T> {
 		return dao.remove(id);
 	}
 
-	private Authorizer getAuthorizer(String identifier) {
+	Authorizer getAuthorizer(String identifier) {
 		Authorizer authorizer = authorizers.get(identifier);
 		if (authorizer == null)	authorizer = Authorizers.ALL;
 
@@ -157,7 +157,7 @@ public abstract class CRUDResource<T> {
 	}
 
 
-	private User extractUser(HttpHeaders headers) {
+	User extractUser(HttpHeaders headers) {
 		if (sessionDAO == null) return null;
 
 		UserSession session = UserSession.fromHeaders(headers, sessionDAO);
