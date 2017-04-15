@@ -49,7 +49,7 @@ public class Invitation {
 		props.put("mail.smtp.host" , "smtp.gmail.com");
 		props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.starttls.enable", "true");
+		props.put("mail.smtp.starttls.enable", "true");
 
 		Session s = Session.getInstance(props, new Authenticator() {
 			@Override
