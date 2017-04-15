@@ -40,7 +40,7 @@ dependencies {
 		compile 'mysql:mysql-connector-java:6.0.5'
 			
 		// Extra stuff
-		compile 'javax.mail:mail:1.+',
+		compile 'com.sun.mail:javax.mail:1.+',
 			':simple-logs:2.+',
 			':simple-props:4.+',
 			':sqlob:2.+'
