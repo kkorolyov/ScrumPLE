@@ -19,16 +19,54 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			name: 'project',
 			url: '/project/{projectName}',
 			component: 'project',
-			onEnter: ['$stateParams', 'title', 'resources', function ($stateParams, title, resources) {	// Enter project in resources service
-				resources.get('projects', { name: $stateParams.projectName })
-					.then(projects => {
-						resources.enter(projects[0])
+			resolve: {	// Stupid hack to defer loading page until project resolves
+				project: ['$stateParams', 'title', 'resources', function ($stateParams, title, resources) {
+					return resources.get('projects', { name: $stateParams.projectName })
+						.then(projects => {
+							resources.enter(projects[0])
 
-						title.projectSub()
-					})
-			}],
+							title.projectSub()
+						})
+				}]
+			},
 			onExit: ['resources', function (resources) {
 				resources.logout()
+			}]
+		})
+
+		.state({
+			name: 'project.register',
+			url: '/register',
+			onEnter: ['$state', '$uibModal', 'resources', function ($state, $uibModal, resources) {
+				$uibModal.open({
+					component: 'edit',
+					resolve: {
+						meta: {
+							title: 'Contribute to ' + resources.project().name
+						},
+						fields: {
+							handle: ['email', "Login email"],
+							password: ['password', "Login password"],
+							displayName: ['text', "Display name"],
+							role: ['text', "Project role"]
+						}
+					}
+				}).result.then(result => {
+					const user = {
+						credentials: {
+							handle: result.data.handle,
+							password: result.data.password
+						},
+						displayName: result.data.displayName,
+						role: result.data.role
+					}
+					resources.set(resources.projectUrl() + "/users", user)
+						.then(() => {
+							resources.login(user.credentials.handle, user.credentials.password)
+						})
+				}, () => {
+					$state.go('projects')
+				})
 			}]
 		})
 

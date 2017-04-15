@@ -8,7 +8,7 @@ angular
 		bindings: {
 			users: '<'
 		},
-		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
+		controller: ['$state', '$uibModal', 'resources', 'rest', function ($state, $uibModal, resources, rest) {
 			this.messageLog = () => "This is a dummy message log"
 			this.send = function () {
 				console.log(this.message)
@@ -23,12 +23,16 @@ angular
 							title: "Invite New Teammate"
 						},
 						fields: {
-							email: ['email', 'Email Address'],
-							text: ['textarea', "Invitation Message", "Hey dude/dudette!\nCome work with me on my awesome project '" + resources.project().name + "'!"]
+							email: ['email', "Email Address"],
+							message: ['textarea', "Invitation Message", "Hey dude/dudette!\nCome work with me on my awesome project '" + resources.project().name + "'!"]
 						}
 					}
-				}).result.then(message => {
-					console.log(message)	// TODO Make/Call email API
+				}).result.then(result => {
+					result.data.project = resources.project().name
+					result.data.url = $state.href('project.register', {}, { absolute: true })
+
+					rest.ajax("POST", resources.projectUrl() + "/users/invite", result.data)
+						.then(() => console.log("Invitation sent"))
 				})
 			}
 		}]
