@@ -57,7 +57,7 @@
 ### GET
 `/rest/projects/{projectID}/users` retrieves all users local to the project referenced by `projectID`  
 `?displayName` filters users with a certain display name  
-`?role` filters users with a certain role  
+`?role` filters users with a certain role - _Pending_  
 
 ### POST
 `/rest/projects/{projectID}/users` with a user object creates a new user under the project referenced by `projectID`
@@ -117,7 +117,18 @@
 ### DELETE - Same User / Project Owner
 `/rest/projects/{projectID}/stories/{storyID}` deletes the user story referenced by `storyID`
 
-	
+---
+# Auth
+Credentials
+```
+{
+	"handle": (string),
+	"password": (string)
+}
+```
+`POST` to `/rest/projects/{projectID}/auth` with a credentials object returns a string token on successful authentication  
+This token should be passed in the `Authorization` header of subsequent REST calls requiring authorization
+
 </xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 </body>
