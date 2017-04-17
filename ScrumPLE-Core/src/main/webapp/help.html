@@ -118,6 +118,64 @@
 `/rest/projects/{projectID}/stories/{storyID}` deletes the user story referenced by `storyID`
 
 ---
+# Sprints
+```
+{
+	"sprintNumber": (int),
+	"start": (long),
+	"end": (long)
+}
+```
+### GET
+`/rest/projects/{projectID}/sprints` retrieves all the sprints local to the project referenced by `projectID`
+
+### POST
+`/rest/projects/{projectID}/sprints` with a sprint object will create a new sprint under the project referenced by `projectID`
+
+### PUT
+`/rest/projects/{projectID}/sprints/{sprintID}` with a sprint object will update the sprint referenced by `sprintID`
+
+### DELETE
+`/rest/projects/{projectID}/sprints/{sprintID}` deletes the sprint referenced by `sprintID`
+
+---
+# Tasks
+```
+{
+	"story": {
+		"story": (string),
+		"storyPoint": (int),
+		"sprint": {
+			"sprintNumber": (int),
+			"start": (long),
+			"end": (long)
+		}
+	},
+	"description": (string),
+	"done": (boolean),
+	"user": {
+		"credentials": {	// Send-only
+			"handle": (string),
+			"password": (string)
+		},
+		"displayName": (string),
+		"role": (string)
+	}
+}
+```
+### GET
+`/rest/projects/{projectID}/stories/{storyID}/tasks` retrieves all the tasks belonging to the story referenced by `storyID`
+
+### POST
+`/rest/projects/{projectID}/stories/{storyID}/tasks` with a task object will create a new task under the story referenced by `storyID`
+
+### PUT
+`/rest/projects/{projectID}/stories/{storyID}/tasks/{taskID}` with a task object will update the task referenced by `taskID`
+
+### DELETE
+`/rest/projects/{projectID}/stories/{storyID}/tasks/{taskID}` deletes the task referenced by `taskID`
+
+---
 # Auth
 Credentials
 ```
