@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('project', ['resources', 'login', 'users', 'stories', 'sprints'])
+	.module('project', ['resources', 'login', 'dashboard', 'users', 'stories', 'sprints'])
 	.component('project', {
 		templateUrl: "project/project.template.html",
 

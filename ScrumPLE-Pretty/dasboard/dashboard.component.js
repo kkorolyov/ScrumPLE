@@ -10,6 +10,10 @@ angular
 		},
 
         controller:['$uibModal', 'resources', 'myCtrl', function ($uibModal, $scope, resources) {
-            $scope.names = ["InProgress", "Not Started","Completed"];
+            $scope.names = [
+                {model : "InProgress"},
+                {model : "Not Started"},
+                {modelq : "Completed"}
+                ];
         }]
     })

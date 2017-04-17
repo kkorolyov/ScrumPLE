@@ -1,1 +1,27 @@
-<h3>this is a test to see ewhere you show up</h3>
+
+<hr>
+    <div class="dash-display">
+        <span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().displayName}}
+        <span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().role}}
+    </div>
+<hr>
+    <div class="dash-display">
+        <h3>Todays, meeting agenda can be found here</h3>
+            <section ng-show="meeting in $ctrl.meetings" >
+                <p>{{meeting.type}}</p>
+                <h5>DURATION:</h5>
+            </section>
+    </div>
+<hr>
+    <div class="dash-display">
+        <h3>Current Task In Progress</h3>
+            <div ng-app="dashboard" ng-controller="myCtrl">
+                <select ng-model="progress"><option ng-repeat="x in names" value="{{x}}">{{x}}</option></select>
+                 <section ng-repeat="task in $ctrl.taskList">{{task.description}} <p>status:{{progress}}</p><section>
+            </div>
+    </div>
+<hr>
+    <div class="dash-display">
+        <h3>Current Sprint Circle</h3>
+    
+    </div>
