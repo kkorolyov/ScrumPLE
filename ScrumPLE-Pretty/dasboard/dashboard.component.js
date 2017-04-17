@@ -9,7 +9,7 @@ angular
 			dashboard: '<'
 		},
 
-        controller:['$uibModal', 'resources', function ($uibModal, resources) {
-            
+        controller:['$uibModal', 'resources', 'myCtrl', function ($uibModal, $scope, resources) {
+            $scope.names = ["InProgress", "Not Started","Completed"];
         }]
     })
