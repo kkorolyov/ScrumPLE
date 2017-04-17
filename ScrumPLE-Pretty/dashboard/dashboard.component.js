@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('dashboard', [])
+	.module('dashboard', ['resources','users','stories', 'sprints', 'meetings'])
 	.component('dashboard', {
 		templateUrl: "dashboard/dashboard.template.html",
 
@@ -10,10 +10,6 @@ angular
 		},
 
         controller:['$uibModal', 'resources', function ($uibModal, resources) {
-            this.names = [
-                {model : "InProgress"},
-                {model : "Not Started"},
-                {model : "Completed"}
-                ];
+            this.names = [ "InProgress", "Not Started","Completed"];
         }]
     })

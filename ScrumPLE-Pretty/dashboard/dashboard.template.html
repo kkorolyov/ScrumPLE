@@ -15,7 +15,7 @@
 <hr>
     <div class="dash-display">
         <h3>Current Task In Progress</h3>
-            <div ng-app="dashboard" ng-controller="myCtrl">
+            <div ng-app="dashboard">
                 <select ng-model="progress"><option ng-repeat="x in $ctrl.names" value="{{x}}">{{x}}</option></select>
                  <section ng-repeat="task in $ctrl.taskList">{{task.description}} <p>status:{{progress}}</p><section>
             </div>
