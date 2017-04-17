@@ -8,9 +8,8 @@ angular
 		bindings: {
 			stories: '<'
 		},
-		controller: ['$scope', '$uibModal', 'resources' , function ($scope, $uibModal, resources) {
+		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
 			this.taskList = []
-			$scope.isCollapsed = true
 			const url = resources.projectUrl() + "/stories"
 			const fields = {
 				story: ['text', 'Story'],

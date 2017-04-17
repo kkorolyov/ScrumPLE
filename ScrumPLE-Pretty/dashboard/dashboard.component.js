@@ -9,11 +9,11 @@ angular
 			dashboard: '<'
 		},
 
-        controller:['$uibModal', 'resources', 'myCtrl', function ($uibModal, $scope, resources) {
-            $scope.names = [
+        controller:['$uibModal', 'resources', function ($uibModal, resources) {
+            this.names = [
                 {model : "InProgress"},
                 {model : "Not Started"},
-                {modelq : "Completed"}
+                {model : "Completed"}
                 ];
         }]
     })
