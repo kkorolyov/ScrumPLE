@@ -7,7 +7,7 @@
 <hr>
     <div class="dash-display">
         <h3>Todays, meeting agenda can be found here</h3>
-            <section ng-show="meeting in $ctrl.meetings" >
+            <section ng-if="meeting in $ctrl.meetings" >
                 <p>{{meeting.type}}</p>
                 <h5>DURATION:</h5>
             </section>
