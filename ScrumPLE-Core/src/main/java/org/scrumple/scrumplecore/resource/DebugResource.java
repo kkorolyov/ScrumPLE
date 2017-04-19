@@ -54,7 +54,7 @@ public class DebugResource {
 			projectDAO.remove(id);
 		}
 		for (int i = 0; i < numProjects; i++) {
-			Project project = new Project("Project" + i, "description" + i, (i % 3 != 0), new User(new Credentials("owner", "owner")));
+			Project project = new Project("Project" + i, "description" + i, new User(new Credentials("owner", "owner")));
 			projectDAO.add(project);
 
 			generateUsers(project, numUsers);

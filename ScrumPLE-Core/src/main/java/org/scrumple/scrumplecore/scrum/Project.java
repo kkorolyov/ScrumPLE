@@ -11,7 +11,6 @@ import dev.kkorolyov.sqlob.annotation.Transient;
 public class Project {
 	private String name;
 	private String description;
-	private boolean visible;
 	@Transient
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private User owner;
@@ -21,22 +20,19 @@ public class Project {
 	 * Constructs a new project without an owner.
 	 * @param name project name
 	 * @param description project description
-	 * @param visible public visibility
 	 */
-	public Project(String name, String description, boolean visible) {
-		this(name, description, visible, null);
+	public Project(String name, String description) {
+		this(name, description, null);
 	}
 	/**
 	 * Constructs a new project.
 	 * @param name project name
 	 * @param description project description
-	 * @param visible public visibility
 	 * @param owner project owner
 	 */
-	public Project(String name, String description, boolean visible, User owner) {
+	public Project(String name, String description, User owner) {
 		setName(name);
 		setDescription(description);
-		setVisible(visible);
 		setOwner(owner);
 	}
 
@@ -57,18 +53,6 @@ public class Project {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	/** @return {@code true} if this project is private */
-	public boolean isVisible() {
-		return visible;
-	}
-	/**
-	 * Sets this project's {@code private} status.
-	 * @param visible whether this project is publicly visible
-	 */
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
 
 	/** @return project owner */
 	public User getOwner() {
@@ -84,6 +68,6 @@ public class Project {
 
 	@Override
 	public String toString() {
-		return name + ", " + description + ", " + visible;
+		return name + ", " + description;
 	}
 }

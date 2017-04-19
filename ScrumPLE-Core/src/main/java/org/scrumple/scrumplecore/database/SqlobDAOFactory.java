@@ -7,11 +7,11 @@ import java.util.UUID;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
-import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.assets.Assets;
+import org.scrumple.scrumplecore.scrum.Project;
+import org.scrumple.scrumplecore.scrum.User;
 
 import dev.kkorolyov.sqlob.persistence.Condition;
-import org.scrumple.scrumplecore.scrum.User;
 
 /**
  * Provides custom {@link SqlobDAO} implementations.
@@ -29,7 +29,7 @@ public final class SqlobDAOFactory {
 
 			@Override
 			public UUID add(Project obj) {
-				String projectName = obj.getName().replaceAll("\\s+", "_");
+				String projectName = "`" + obj.getName().replaceAll("\\s+", "_") + "`";
 				obj.setName(projectName);
 				
 				if (contains(new Condition("name", "=", projectName)))
