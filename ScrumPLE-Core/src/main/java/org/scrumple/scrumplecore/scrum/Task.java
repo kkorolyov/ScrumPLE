@@ -82,7 +82,7 @@ public class Task {
 		return done;
 	}
 
-	public boolean setDone(Boolean done) {
+	public void setDone(Boolean done) {
 		this.done = done;
 
 	}
