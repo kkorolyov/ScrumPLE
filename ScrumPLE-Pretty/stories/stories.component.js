@@ -72,12 +72,16 @@ angular
 							title: "Edit Task"
 						},
 						fields: {
-							description: ['text', 'Task Description', task.description]
+							description: ['text', 'Task Description', task.description],
+							finished: ['checkbox', 'Done', task.finished]
 						},
 						data: task
 					}
 				}).result.then(result => {
 					if(!result.del){
+						console.log(result.data.finished)
+						task.finished = result.data.finished
+						console.log(task.finished)
 						task.description = result.data.description
 					}
 					(result.del ? resources.delete(taskUrl, task) : resources.set(taskUrl, task))

@@ -8,7 +8,7 @@
         Story Point: {{story.storyPoint}}
         <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
         <section ng-repeat="task in $ctrl.taskList">
-            {{task.description}}
+            <span>{{task.description}}</span>
             <label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>
         </section>
         <label class="btn btn-success" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>

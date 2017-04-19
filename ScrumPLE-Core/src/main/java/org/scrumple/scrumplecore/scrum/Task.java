@@ -78,7 +78,12 @@ public class Task {
 	/**
 	 * @return task's done boolean
 	 */
-	public boolean isFinished() {
+	public boolean isDone() {
 		return done;
+	}
+
+	public void setDone(Boolean done) {
+		this.done = done;
+
 	}
 }
