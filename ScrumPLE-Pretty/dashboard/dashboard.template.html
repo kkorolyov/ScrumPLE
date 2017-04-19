@@ -7,7 +7,7 @@
 <hr>
     <div class="dash-display">
         <h3>Todays, meeting agenda can be found here</h3>
-            <section ng-if="meeting in $ctrl.meetings" >
+            <section ng-repeat="meeting in $ctrl.dashboard" >
                 <p>{{meeting.type}}</p>
                 <h5>DURATION:</h5>
             </section>
@@ -23,5 +23,7 @@
 <hr>
     <div class="dash-display">
         <h3>Current Sprint Circle</h3>
-    
+            <section ng-repeat="sprint in $ctrl.dashboard" >
+                <p>Sprint: {{sprint.sprintNumber}}</p>
+            </section>
     </div>
