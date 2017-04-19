@@ -73,15 +73,15 @@ angular
 						},
 						fields: {
 							description: ['text', 'Task Description', task.description],
-							finished: ['checkbox', 'Done', task.finished]
+							done: ['checkbox', 'Done', task.done]
 						},
 						data: task
 					}
 				}).result.then(result => {
 					if(!result.del){
-						console.log(result.data.finished)
-						task.finished = result.data.finished
-						console.log(task.finished)
+						console.log(result.data.done)
+						task.done = result.data.done
+						console.log(task.done)
 						task.description = result.data.description
 					}
 					(result.del ? resources.delete(taskUrl, task) : resources.set(taskUrl, task))
