@@ -12,7 +12,8 @@ app.get('/', function (req, res) {
 var connectedSockets={};
 var allUsers=[];
 io.on('connection',function(socket){
-    socket.on('addUser',function(data){ 
+    socket.on('addUser',function(data){
+        console.log(data.displayName+'');
         socket.emit('userAddingResult',{result:true});
         socket.displayName=data.displayName;
         connectedSockets[socket.displayName]=socket;

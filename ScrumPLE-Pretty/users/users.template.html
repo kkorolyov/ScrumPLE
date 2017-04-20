@@ -23,15 +23,48 @@
 </section>
 <input class="btn btn-primary" type="button" value="Invite Teammate" ng-click="$ctrl.add()">
 
-<section class="form-group">
-	<input class="chat btn" ng-class="{'btn-success': !$ctrl.chat, 'btn-danger': $ctrl.chat}" type="button" value="{{$ctrl.chat ? 'Close Chat' : 'Open Chat'}}"
-	 ng-click="$ctrl.chat = !$ctrl.chat">
-	<form class="chat" ng-submit="$ctrl.send()" ng-if="$ctrl.chat">
-		<textarea class="form-control" disabled>{{$ctrl.messageLog()}}</textarea>
+<div class="fixed-body">
+	<div class="chat-room-wrapper" >
+		<div class="chat-room panel-success" ng-show="$ctrl.chat">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{$ctrl.receiver?$ctrl.receiver:"All Taking"}}</h3>
+			</div>
+			<div class="message-wrapper panel-body" id="messageWrapper">
+				<div ng-repeat="message in $ctrl.messages track by $index">
+					<div class="normal-message">
+						<div class="name-wrapper" ><span>{{message.from}} @ </span><span>{{message.time |  date: 'HH:mm:ss' }}</span></div>
+						<div class="content-wrapper" ><span class="content">{{message.text}}</span><span class="avatar"></span></div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<form class="post-form form-inline" novalidate name="postform" ng-submit="$ctrl.postMessage()">
+					<input type="text" class="form-control" ng-model="$ctrl.words" placeholder="say something..." >
+					<button type="submit" class="btn btn-success" ng-disabled="$ctrl.postform.$invalid">send</button>
+				</form>
+			</div>
+		</div>
+		<div class="online panel-success" ng-show="$ctrl.showFriends">
+			<div class="panel-heading">
+				<h3 class="panel-title">My friends<span class="user-number">{{$ctrl.users.length}}</span></h3>
+				<a ng-click="$ctrl.openChat() ">X</a>
+			</div>
+			<div class="user-wrapper panel-body">
+				<div class="users" ng-click="$ctrl.setReceiver(user.displayName)" ng-repeat="user in $ctrl.users track by $index">
+					<span class="avatar" ></span>
+					<span class="nickname">{{user.displayName}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fixed-btn" ng-click="$ctrl.openChat() " ng-show="!$ctrl.showFriends">
+		chatting now
+	</div>
+</div>
 
-		<section class="form-inline">
-			<textarea class="form-control" ng-model="$ctrl.message" required></textarea>
-			<input class="btn btn-success" type="submit" value="Send">
-		</section>
-	</form>
-</section>
+
+
+
+
+
+

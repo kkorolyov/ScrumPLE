@@ -5,10 +5,12 @@ angular
 	.component('login', {
 		templateUrl: "login/login.template.html",
 
-		controller: ['$state', 'resources', function ($state, resources) {
+		controller: ['$state', 'resources', 'socket',function ($state, resources,socket) {
 			this.login = function () {
 				resources.login(this.handle, this.password)
 					.then(() => {
+                    socket.emit("addUser",{displayName:this.handle});
+
 						delete this.failed
 						delete this.handle
 						delete this.password
@@ -17,6 +19,7 @@ angular
 					})
 			}
 			this.logout = function () {
+                socket.emit('disconnect',{	});
 				resources.logout()
 				$state.go('projects')
 			}
