@@ -55,13 +55,28 @@ angular
                 }
             }
             this.postMessage=function(){
+                var msg={text:this.words,from:this.displayName,to:this.receiver,time:new Date()};
+                var rec=this.receiver;
+                if(rec){
+                    if(!this.privateMessages[rec]){
+                        this.privateMessages[rec]=[];
+                    }
+                    this.privateMessages[rec].push(msg);
+                }
+                this.words="";
+                if(rec!==this.displayName) {
+                    socket.emit("addMessage", msg);
+                }
+            }
+            this.setReceiver=function(receiver){
                 this.chat=true;
                 this.receiver=receiver;
                 if(!this.privateMessages[receiver]){
                     this.privateMessages[receiver]=[];
                 }
                 this.messages=this.privateMessages[receiver];
-            }
+            };
+
             var _this=this;
             socket.on('userAdded', function(data) {
                 _this.users.push(data);
