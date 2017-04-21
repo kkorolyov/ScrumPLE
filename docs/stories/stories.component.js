@@ -11,35 +11,42 @@ angular
 		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
 			this.taskList = []
 			this.sprintList = []
+			this.userList = []
 			const url = resources.projectUrl() + "/stories"
 			const fields = {
 				story: ['text', 'Story'],
 				storyPoint: ['number', 'Story Point']
 			}
 
-			this.getSprints =  function() {
-				const sprintUrl = resources.projectUrl() + "/sprints"
-				console.log("get sprints")
-				this.sprintList = resources.get(sprintUrl)
-				for(let i = 0; i < this.sprintList.length; i++){
-					console.log(this.sprintList[i])
-				}
+			this.users = function() {
+				const userUrl = resources.projectUrl() +"/users"
+				this.userList = refreshList(userUrl)
+			}
+
+			this.setUser = function(task, story, user) {
+				const taskUrl = url + "/" + story.id + "/tasks"
+				task.user = user.id
+				console.log(task.description)
+				console.log(task.user)
+				console.log(taskUrl)
+				resources.set(taskUrl, task)
+
 			}
 
 			this.sprints = function() {
 				const sprintUrl = resources.projectUrl() + "/sprints"
-				this.sprintList = refreshSprints(sprintUrl);
+				this.sprintList = refreshList(sprintUrl);
 			}
 
-			function refreshSprints(url) {
-				const sprintList = []
+			function refreshList(url) {
+				const list = []
 				resources.get(url)
-					.then(sprints => {
-						for(let i = 0; i < sprints.length; i++) {
-							sprintList.push(sprints[i])
+					.then(aList => {
+						for(let i = 0; i < aList.length; i++) {
+							list.push(aList[i])
 						}
 					})
-					return sprintList
+					return list
 			}
 
 			this.setSprint = function(story, sprint) {

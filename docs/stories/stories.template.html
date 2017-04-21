@@ -3,10 +3,11 @@
 <uib-accordion close-others=true>
     <section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
         <uib-accordion-heading>
-            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''; $ctrl.sprints()">{{story.story}}</label>
+            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''; $ctrl.sprints(); $ctrl.users()">{{story.story}}</label>
         </uib-accordion-heading>
         <section>
             Story Point: {{story.storyPoint}}
+            {{story.id}}
             Sprint: {{story.sprint.sprintNumber}}
             <select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
             <label class="btn btn-success" ng-click="$ctrl.setSprint(story, $ctrl.sprint)">Set Sprint</label>
@@ -16,6 +17,10 @@
         <section ng-repeat="task in $ctrl.taskList">
             <span ng-if="task.done" style="color: forestgreen">{{task.description}}</span>
             <span ng-if="!task.done" style="color: red">{{task.description}}</span>
+            <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">Assigned to: {{user.displayName}}</span>
+            <span ng-if="!task.user">Assigned to: None</span>
+            <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
+            <label class="btn btn-primary" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
             <label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>
         </section>
         <label class="btn btn-success" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>
