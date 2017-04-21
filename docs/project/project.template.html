@@ -1,99 +1,24 @@
+<style>
+	.btn-group {
+		display: flex;
+		flex-flow: column nowrap;
+		float: left;
+	}
+</style>
+
 <login></login>
-<style type="text/css">
 
-	/*
-	 * Off Canvas
-	 * --------------------------------------------------
-	 */
-	@media screen and (max-width: 767px) {
-	  .row-offcanvas {
-		position: relative;
-		-webkit-transition: all .25s ease-out;
-			 -o-transition: all .25s ease-out;
-				transition: all .25s ease-out;
-	  }
-	  
+<div ng-if="$ctrl.auth()">
+	<h4> {{$ctrl.project().name}}</h4>
+	<h5>{{$ctrl.project().description}}</h5>
+	
+	<div class="list btn-group">
+		<label class="btn btn-primary" ng-model="$ctrl.nav" uib-btn-radio="'Dashboard'" ui-sref="project.dashboard">Dashboard</label>
+		<label class="btn btn-primary" ng-model="$ctrl.nav" uib-btn-radio="'Team'" ui-sref="project.users">Team</label>
+		<label class="btn btn-primary" ng-model="$ctrl.nav" uib-btn-radio="'Meetings'" ui-sref="project.meetings">Meetings</label>
+		<label class="btn btn-primary" ng-model="$ctrl.nav" uib-btn-radio="'Stories'" ui-sref="project.stories">Stories</label>
+		<label class="btn btn-primary" ng-model="$ctrl.nav" uib-btn-radio="'Sprints'" ui-sref="project.sprints">Sprints</label>
+	</div>
 
-
-	  .row-offcanvas-right {
-		right: 0;
-	  }
-
-	  .row-offcanvas-left {
-		left: 0;
-	  }
-
-	  .row-offcanvas-right {
-		right: -60%; /* 6 columns */
-	  }
-
-	  .row-offcanvas-left {
-		left: -60%; /* 6 columns */
-	  }
-
-	  .row-offcanvas-right.active {
-		right: 60%; /* 6 columns */
-	  }
-
-	  .row-offcanvas-left.active {
-		left: 60%; /* 6 columns */
-	  }
-	}
-	#sidebar { 
-	}
-	#sidebar a.list-group-item {
-		height:48px;
-		line-height:48px;
-		padding-top:0;
-		font-size:13px;
-		padding-left: 20px;
-	}
-	.list-group {
-		width:80%;
-	}
-	.list-group .active {
-		background-color:#92CCFF;
-	}
-	.list-group a:hover {
-		background-color:#92CCFF;
-	}
-    .page{
-        text-align: center;
-    }
-	</style>
-<body ng-app>
-  <div ng-if="$ctrl.auth()">
-		<br><br>
-	<h4 > {{$ctrl.project().name}}</h4>
-	<h5 >{{$ctrl.project().description}}</h5>
-    <div class="container-fluid">
-      <div class="row row-offcanvas row-offcanvas-right">
-
-	        <div class="sidebar-offcanvas col-sm-3" id="sidebar">
-	          <div class="list-group">
-	              <div class"page">
-	            <a href="javascript:void(0);" data-index="1" class="list-group-item "ui-sref="project"><strong>Project</strong></a>
-	            <a href="javascript:void(0);" data-index="2" class="list-group-item" ui-sref="project.users">Team</a>
-	            <a href="javascript:void(0);" data-index="3" class="list-group-item" ui-sref="project.meetings">Meetings</a>
-	            <a href="javascript:void(0);" data-index="4" class="list-group-item" ui-sref="project.stories">Stories</a>
-	            <a href="javascript:void(0);" data-index="6" class="list-group-item" ui-sref="project.sprints">Sprints</a>
-	              </div>
-	          </div>
-	        </div>
-					<dashboard></dashboard>
-	        <div class="col-sm-9">
-	        	<div ng-view></div>
-							<ui-view></ui-view>
-	        	</div>
-      </div>
-
-    </div>
+	<ui-view></ui-view>
 </div>
-<script type="text/javascript">
-$(document).ready(function () {
-  $('[data-toggle="offcanvas"]').click(function () {
-    $('.row-offcanvas').toggleClass('active')
-  });
-});
-</script>
-</body>
