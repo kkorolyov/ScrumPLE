@@ -37,8 +37,8 @@ public class Task {
 	/**
 	 * Sets the user for the task.
 	 */
-	public void setUser(UUID user) {
-		this.user = user;
+	public void setUser(String user) {
+		this.user = UUID.fromString(user);
 	}
 
 	/**
