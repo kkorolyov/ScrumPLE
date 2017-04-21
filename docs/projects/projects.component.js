@@ -24,7 +24,6 @@ angular
 						fields: {
 							name: ["text", "Project Name"],
 							description: ["text", "Project Description"],
-							visible: ["checkbox", "Visible"],
 							handle: ["text", "Project Owner Email Address"],
 							password: ["password", "Project Owner Password"]
 						}
@@ -33,7 +32,6 @@ angular
 					const data = {
 						name: result.data.name,
 						description: result.data.description,
-						visible: result.data.visible,
 						owner: {
 							credentials: {
 								handle: result.data.handle,
