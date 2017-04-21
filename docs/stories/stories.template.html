@@ -3,9 +3,15 @@
 <uib-accordion close-others=true>
     <section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
         <uib-accordion-heading>
-            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''">{{story.story}}</label>
+            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''; $ctrl.sprints()">{{story.story}}</label>
         </uib-accordion-heading>
-        Story Point: {{story.storyPoint}}
+        <section>
+            Story Point: {{story.storyPoint}}
+            Sprint: {{story.sprint.sprintNumber}}
+            <select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
+            <label class="btn btn-success" ng-click="$ctrl.setSprint(story, $ctrl.sprint)">Set Sprint</label>
+            
+        </section>
         <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
         <section ng-repeat="task in $ctrl.taskList">
             <span ng-if="task.done" style="color: forestgreen">{{task.description}}</span>

@@ -10,12 +10,43 @@ angular
 		},
 		controller: ['$uibModal', 'resources' , function ($uibModal, resources) {
 			this.taskList = []
+			this.sprintList = []
 			const url = resources.projectUrl() + "/stories"
 			const fields = {
 				story: ['text', 'Story'],
 				storyPoint: ['number', 'Story Point']
 			}
 
+			this.getSprints =  function() {
+				const sprintUrl = resources.projectUrl() + "/sprints"
+				console.log("get sprints")
+				this.sprintList = resources.get(sprintUrl)
+				for(let i = 0; i < this.sprintList.length; i++){
+					console.log(this.sprintList[i])
+				}
+			}
+
+			this.sprints = function() {
+				const sprintUrl = resources.projectUrl() + "/sprints"
+				this.sprintList = refreshSprints(sprintUrl);
+			}
+
+			function refreshSprints(url) {
+				const sprintList = []
+				resources.get(url)
+					.then(sprints => {
+						for(let i = 0; i < sprints.length; i++) {
+							sprintList.push(sprints[i])
+						}
+					})
+					return sprintList
+			}
+
+			this.setSprint = function(story, sprint) {
+				console.log(sprint.sprintNumber)
+				story.sprint = sprint
+				resources.set(url, story)
+			}
 			function refresh(scope) {
 				resources.get(url)
 					.then(stories => scope.stories = stories)
