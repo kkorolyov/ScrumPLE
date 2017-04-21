@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.util.UUID;
 
 /**
  * Represents a task
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class Task {
 	private String description;
 	private UserStory story;
-	private User user;
+	private UUID user;
 	private boolean done;
 
 	/**
@@ -36,14 +37,14 @@ public class Task {
 	/**
 	 * Sets the user for the task.
 	 */
-	public void setUser(User user) {
+	public void setUser(UUID user) {
 		this.user = user;
 	}
 
 	/**
 	 * @return the task's user.
 	 */
-	public User getUser() {
+	public UUID getUser() {
 		return this.user;
 	}
 	
