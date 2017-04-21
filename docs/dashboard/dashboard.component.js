@@ -14,7 +14,7 @@ angular
             this.names = [ "InProgress", "Not Started","Completed"];
 
             const meetingurl = resources.projectUrl() + "/meetings"
-            const taskurl = resources.projectUrl() + "/stories" + "/" + story.id + "/tasks"
+            const storyurl = resources.projectUrl() + "/stories"
             const sprinturl = resources.projectUrl() + "/sprints"
 
             const meetings = []
@@ -49,7 +49,7 @@ angular
                     return sprints
             }
 
-            this.showtask = function (taskurl, stories){
+            this.showstories = function (storyurl, stories){
                 
             }
         }]

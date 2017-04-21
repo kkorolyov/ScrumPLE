@@ -1,6 +1,6 @@
 "use strict"
 
-const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'edit', 'projects', 'project', 'login', 'users', 'meetings', 'stories', 'sprints'])
+const app = angular.module('scrumple', ['ui.router', 'title', 'resources', 'edit', 'projects', 'project', 'login', 'users', 'dashboard', 'meetings', 'stories', 'sprints'])
 
 app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider, $stateProvider) {
 	$urlRouterProvider.otherwise("/")
@@ -94,6 +94,19 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				meetings: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/meetings')
+				}]
+			}
+		})
+		.state({
+			name: 'project.dashboard',
+			url: '/dashboard',
+			component: 'dashboard',
+			onEnter: ['title', function(title){
+				title.projectSub("Dashboard")
+			}],
+			resolve: {
+				dashboard:['title', 'resources', function(title, resources){
+					return resources.get(resources.projectUrl() + '/dashboard')
 				}]
 			}
 		})
