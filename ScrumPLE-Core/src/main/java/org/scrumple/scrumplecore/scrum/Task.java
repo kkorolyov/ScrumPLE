@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Task {
 	private String description;
 	private UserStory story;
-	private UUID user;
+	private String user;
 	private boolean done;
 
 	/**
@@ -38,13 +38,13 @@ public class Task {
 	 * Sets the user for the task.
 	 */
 	public void setUser(String user) {
-		this.user = UUID.fromString(user);
+		this.user = user;
 	}
 
 	/**
 	 * @return the task's user.
 	 */
-	public UUID getUser() {
+	public String getUser() {
 		return this.user;
 	}
 	
