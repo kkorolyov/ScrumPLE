@@ -62,6 +62,6 @@ io.on('connection',function(socket){
     );
 }); 
 
-https.listen(3002, function () {
+httpsServer.listen(3002, function () {
     console.log('listening on *:3002');
 });
