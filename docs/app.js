@@ -139,7 +139,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 }])
 
 app.factory('socket', function($rootScope) {
-		var socket = io('http://localhost:3000');
+		var socket = io('https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:3000');
 		//console.log(socket);
 		return {
 			on: function(eventName, callback) {

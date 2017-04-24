@@ -46,7 +46,7 @@
 }
 .fixed-btn{
     width: 238px;
-    background-color: #00547E;
+    background-color: #5cb85c;
     height: 45px;
     position: fixed;
     bottom: 0;
@@ -76,7 +76,7 @@
     background: lightgray;
     display: inline-block;
     border-radius: 50%;
-    color: crimson;
+    color: #3c763d;
     vertical-align: text-top;
     line-height: 20px;
     font-size: 13px;

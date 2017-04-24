@@ -1,13 +1,13 @@
 var express = require('express');
 var app = require('express')();
 var fs = require('fs');
-var http = require('http').createServer(app);
-//var privateKey = fs.readFileSync('/etc/ssl/private/node-self.key');
-//var certificate = fs.readFileSync('/etc/ssl/certs/node-self.crt');
-//var credentials = {key: privateKey, cert: certificate};
+var https = require('https');
+var privateKey = fs.readFileSync('/etc/ssl/private/node-self.key');
+var certificate = fs.readFileSync('/etc/ssl/certs/node-self.crt');
+var credentials = {key: privateKey, cert: certificate};
 
-//var httpsServer = https.createServer(credentials, app);
-var io = require('socket.io')(http);
+var httpsServer = https.createServer(credentials, app);
+var io = require('socket.io')(httpsServer);
 
 app.use(express.static(__dirname + '/public'));
 
@@ -80,6 +80,6 @@ io.on('connection',function(socket){
     );
 });
 
-http.listen(3000, function () {
+httpsServer.listen(3000, function () {
     console.log('listening on *:3000');
 });
