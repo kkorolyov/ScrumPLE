@@ -9,8 +9,8 @@
 	nav {
 		float: right;
 
-		background-color: #00547E;
-		border-bottom: 4px solid #04A3ED;
+		background-color: #b3b3b3;
+		border-bottom: 4px solid #0d0d0d;
 		width:100%;
 		height: auto;
 		padding: 0 10px;
@@ -37,9 +37,9 @@
 	<div>
 		<h6 id="logo">SCRUMPLE</h6>
 		<div class="right">
-			<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().displayName}}
-			<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().role}}
-			<input class="btn btn-primary" type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()">
+			<!--<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().displayName}}
+			<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().role}}-->
+			<input class="btn " type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()">
 		</div>
 	</div>
 </nav>
