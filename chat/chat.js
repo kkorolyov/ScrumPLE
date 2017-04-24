@@ -11,57 +11,75 @@ var io = require('socket.io')(httpsServer);
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) {
-    //res.sendfile('index.html');
-});
-
 var connectedSockets={};
 var allUsers=[];
 io.on('connection',function(socket){
     socket.on('addUser',function(data){
-        console.log(data.displayName+'');
-        socket.emit('userAddingResult',{result:true});
-        socket.displayName=data.displayName;
-        connectedSockets[socket.displayName]=socket;
-        allUsers.push(data);
-        socket.broadcast.emit('userAdded',data);
-        socket.emit('allUser',allUsers);
+        let displayName=data.displayName;
+        let projectName=data.projectName;
+        console.log(projectName);
+        if(connectedSockets[displayName]){
+            return false;
+        }else{
+            socket.displayName=displayName;
+            connectedSockets[displayName]=socket;
+            if(!allUsers[projectName]){
+                allUsers[projectName]=[{displayName:""}];
+            }
+            allUsers[projectName].push({displayName:displayName});
+            socket.broadcast.emit('userAdded',{displayName:displayName,projectName:projectName});
+        }
     });
 
-    socket.on('addMessage',function(data){ 
+    socket.on('addMessage',function(data){
         if(data.to){
             connectedSockets[data.to].emit('messageAdded',data);
+        }else{
+            socket.broadcast.emit('messageAdded',data);
         }
     });
 
     socket.on('getAllUsers',function(data){
-        console.log('getAllUsers');
-        var allUsersExceptMe=[];
-        for (var i = 0; i < allUsers.length; i++) {
-            if (allUsers[i].displayName != data.displayName) {
-                allUsersExceptMe.push(allUsers[i]);
+        let allUsersExceptMe=[];
+        let projectName=data.projectName;
+        let displayName=data.displayName;
+        if(!allUsers[projectName]){
+            allUsers[projectName] =[];
+        }
+        var projectUsers=allUsers[projectName];
+        for (var i = 0; i < projectUsers.length; i++) {
+            if (projectUsers[i].displayName != displayName) {
+                allUsersExceptMe.push(projectUsers[i]);
             }
         }
-        console.log(allUsersExceptMe);
+        console.log("getAllUsers:"+allUsersExceptMe);
         socket.emit('allUser',allUsersExceptMe);
     });
 
-    socket.on('disconnect', function () {  
+    socket.on('disconnect', function () {
             console.log(new Date().toLocaleString()+'out');
-            socket.broadcast.emit('userRemoved', { 
-                displayName: socket.displayName
+            let projectName= socket.projectName;
+            let displayName=socket.displayName;
+
+            socket.broadcast.emit('userRemoved', {
+                displayName: displayName
+                ,projectName:projectName
             });
-            for(var i=0;i<allUsers.length;i++){
-                if(allUsers[i].displayName==socket.displayName){
-                    allUsers.splice(i,1);
+            if(!allUsers[projectName]){
+                allUsers[projectName]=[];
+            }
+            let projectUsers=allUsers[projectName];
+            for(var i=0;i<projectUsers.length;i++){
+                if(projectUsers[i].displayName==displayName){
+                    projectUsers.splice(i,1);
                 }
             }
-            delete connectedSockets[socket.displayName];
+            delete connectedSockets[displayName];
 
         }
     );
-}); 
+});
 
-httpsServer.listen(3002, function () {
-    console.log('listening on *:3002');
+httpsServer.listen(3000, function () {
+    console.log('listening on *:3000');
 });

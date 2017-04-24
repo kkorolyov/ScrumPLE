@@ -2,7 +2,7 @@
 	.clickable {
 		cursor: pointer;
 	}
-	
+
 	.chat {
 		float: right;
 		clear: both;
@@ -27,11 +27,11 @@
 	<div class="chat-room-wrapper" >
 		<div class="chat-room panel-success" ng-show="$ctrl.chat">
 			<div class="panel-heading">
-				<h3 class="panel-title">{{$ctrl.receiver?$ctrl.receiver:"All Taking"}}</h3>
+				<h3 class="panel-title">{{$ctrl.receiver?$ctrl.receiver:"Team Taking"}}</h3><a ng-click="$ctrl.closeMsg()">X</a>
 			</div>
 			<div class="message-wrapper panel-body" id="messageWrapper">
 				<div ng-repeat="message in $ctrl.messages track by $index">
-					<div class="normal-message">
+					<div class="normal-message" ng-class="{others:displayName!==message.from,self:displayName===message.from}">
 						<div class="name-wrapper" ><span>{{message.from}} @ </span><span>{{message.time |  date: 'HH:mm:ss' }}</span></div>
 						<div class="content-wrapper" ><span class="content">{{message.text}}</span><span class="avatar"></span></div>
 					</div>
@@ -46,13 +46,13 @@
 		</div>
 		<div class="online panel-success" ng-show="$ctrl.showFriends">
 			<div class="panel-heading">
-				<h3 class="panel-title">My friends<span class="user-number">{{$ctrl.users.length}}</span></h3>
+				<h3 class="panel-title">My friends<span class="user-number">{{$ctrl.usersOnline.length-1}}</span></h3>
 				<a ng-click="$ctrl.openChat() ">X</a>
 			</div>
 			<div class="user-wrapper panel-body">
-				<div class="users" ng-click="$ctrl.setReceiver(user.displayName)" ng-repeat="user in $ctrl.users track by $index">
+				<div class="users" ng-click="$ctrl.setReceiver(user.displayName)" ng-repeat="user in $ctrl.usersOnline track by $index">
 					<span class="avatar" ></span>
-					<span class="nickname">{{user.displayName}}</span>
+					<span class="nickname">{{user.displayName?user.displayName:"群聊"}}</span>
 				</div>
 			</div>
 		</div>
@@ -61,6 +61,16 @@
 		chatting now
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
 
 
 
