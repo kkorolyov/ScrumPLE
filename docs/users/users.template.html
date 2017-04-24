@@ -15,15 +15,23 @@
 	<a class="clickable" ng-click="$ctrl.add()">You should fix that!</a>
 </h3>
 
-<section ng-if="$ctrl.users.length > 0" class="wide-list">
-	<section ng-repeat="user in $ctrl.users">
+<section ng-if="$ctrl.users.length > 0" class="wide-list" style="display: block;">
+	<!--<section ng-repeat="user in $ctrl.users">
 		<h3>{{user.displayName}}</h3>
 		<h5>{{user.role}}</h5>
 	</section>
+	-->
+	<table class="table" style="width: 800px;">
+		<tr ng-repeat="user in $ctrl.users ">
+			<td>{{user.displayName}}</td>
+			<td>{{user.role}}</td>
+		</tr>
+	</table>
+
 </section>
 <input class="btn btn-primary" type="button" value="Invite Teammate" ng-click="$ctrl.add()">
 
-<div class="fixed-body">
+<div class="fixed-body" style="position: fixed;bottom: 0px; right: 0px;">
 	<div class="chat-room-wrapper" >
 		<div class="chat-room panel-success" ng-show="$ctrl.chat">
 			<div class="panel-heading">

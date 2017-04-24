@@ -23,7 +23,7 @@
             <label class="btn btn-primary" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
             <label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>
         </section>
-        <label class="btn btn-success" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>
+        <label class="btn btn-primary" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>
     </section>
 </uib-accordion>
 
