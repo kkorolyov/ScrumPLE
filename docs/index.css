@@ -22,10 +22,9 @@ img {
 }
 
 .splash-screen {
-	background: grey url("http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg") fixed no-repeat;
-	background-size: cover;
+	background: grey url("http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jpg") fixed no-repeat;
+	background-size: cover;	
 }
-
 .list {
 	display: flex;
 	flex-flow: column wrap;
@@ -100,7 +99,7 @@ img {
 	top: 300px;
 	left: 50%;
 	margin-left: -300px;
-	background: white;
+	background: #D3D3D3;
 	display: none;
 }
 

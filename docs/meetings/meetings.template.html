@@ -1,14 +1,23 @@
-<h1>Meetings</h1>
+<style>
+	.central-display{
+		
+	}
+</style>
 
-<section class="list">
-	<section ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
-		<p>{{meeting.type}}</p>
 
-		<div>
-			<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
-			<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
-		</div>
+<div class= "central-display">
+	<h1>Meetings</h1>
+
+	<section class="list">
+		<section ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
+			<p>{{meeting.type}}</p>
+
+			<div>
+				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
+				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
+			</div>
+		</section>
 	</section>
-</section>
 
-<label class="btn btn-success" ng-click="$ctrl.add()">+</label>
+	<label class="btn btn-success" ng-click="$ctrl.add()">+</label>
+</div>

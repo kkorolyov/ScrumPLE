@@ -1,5 +1,5 @@
 <login></login>
-<style type="text/css">
+<style>
 
 	#sidebar a.list-group-item {
 		height:58px;
@@ -7,20 +7,30 @@
 		font-size:20px;
 		padding-left: 20px;
 		padding-top: 0px;
+		width: 13em;
 	}
-
-
 	.list-group {
 		width:60%;
 	}
-
+		.central-display{
+		background-color: rgb(238, 238, 238)	
+	}
+	.name-display{
+		font-size: 18px;
+		 font-family: italic; 
+		 font-variant: small-caps;
+		 color: 1px 1px #b3b3b3;
+		 text-align: center;
+	}
 </style>
 
 <body ng-app>
 <div ng-if="$ctrl.auth()">
 	<br><br>
-	<h4 > {{$ctrl.project().name}}</h4>
-	<h5 >{{$ctrl.project().description}}</h5>
+	<hr>
+	<h5 class="name-display">PROJECT OWNER: {{$ctrl.project().name}}</h5>
+	<h5 class="name-display">LIGHT DESCRIPTION: {{$ctrl.project().description}}</h5>
+	<legend></legend>
 
 	<div class="col-sm-3" id="sidebar">
 		<div class="list-group">
@@ -34,7 +44,7 @@
 		</div>
 	</div>
 
-	<div class="col-sm-9">
+	<div class="col-sm-9 central-display">
 		<ui-view></ui-view>
 	</div>
 
