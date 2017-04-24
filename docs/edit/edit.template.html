@@ -2,11 +2,27 @@
 	.btn-danger {
 		float: right;
 	}
+	#h1_center{
+		text-align: center;
+	}
+	#pop_form {
+		padding:15px;
+	}
+	#pop_form .form-control{
+		margin: 20px auto;
+	}
+	#mydelete{
+		background: rgb(245, 101, 57) !important;
+	}
+	#mydelete:hover {
+		background: rgb(185, 56, 16) !important;
+	}
+
 </style>
 
-<h1>{{$ctrl.title}}</h1>
+<h1 id="h1_center"><strong>{{$ctrl.title}}</strong></h1>
 
-<form ng-submit="$ctrl.ok()">
+<form id="pop_form" ng-submit="$ctrl.ok()">
 	<!-- Select appropriate input type -->
 	<input ng-if="['text', 'password', 'email'].indexOf(type[0]) >= 0" class="form-control" type="{{type[0]}}" placeholder="{{type[1]}}" uib-tooltip="{{type[1]}}" ng-model="$ctrl.data[property]" required ng-repeat-start="(property, type) in $ctrl.fields">
 	<textarea ng-if="type[0] === 'textarea'" class="form-control" placeholder="{{type[1]}}" uib-tooltip="{{type[1]}}" ng-model="$ctrl.data[property]" required></textarea>
@@ -14,7 +30,7 @@
 	<input ng-if="type[0] === 'number'" class="form-control" type="number" placeholder="{{type[1]}}" uib-tooltip="{{type[1]}}" ng-model="$ctrl.data[property]" required>
 	<input ng-if="type[0] === 'date'" class="form-control" type="text" placeholder="{{type[1]}}" uib-tooltip="{{type[1]}}" datetime-picker is-open="$ctrl.editting[property]" ng-click="$ctrl.editting[property] = true" ng-model="$ctrl.data[property]" required ng-repeat-end>
 
-	<input class="btn btn-success" type="submit" value="Apply">
-	<input class="btn btn-primary" type="button" value="Cancel" ng-click="$ctrl.dismiss()">
-	<input class="btn btn-danger" type="button" value="Delete" ng-click="$ctrl.delete()" ng-if="$ctrl.edit">
+	<input class="btn btn-primary" type="submit" value="Apply">
+	<input class="btn btn-default" type="button" value="Cancel" ng-click="$ctrl.dismiss()">
+	<input class="btn btn-danger" id="mydelete" type="button" value="Delete" ng-click="$ctrl.delete()" ng-if="$ctrl.edit">
 </form>
