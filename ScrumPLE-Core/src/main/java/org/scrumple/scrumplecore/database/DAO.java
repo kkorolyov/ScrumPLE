@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityNotFoundException;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * Provides access to object stored as persistent data.

@@ -9,7 +9,7 @@ import org.scrumple.scrumplecore.scrum.User;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * Authenticates users.

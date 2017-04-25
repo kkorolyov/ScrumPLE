@@ -10,7 +10,7 @@ import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.UserStory;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * TODO Document

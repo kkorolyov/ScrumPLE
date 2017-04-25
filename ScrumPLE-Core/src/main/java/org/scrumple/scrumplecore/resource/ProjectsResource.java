@@ -17,7 +17,7 @@ import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
 import org.scrumple.scrumplecore.auth.UserSession;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * Provides endpoints for accessing projects.

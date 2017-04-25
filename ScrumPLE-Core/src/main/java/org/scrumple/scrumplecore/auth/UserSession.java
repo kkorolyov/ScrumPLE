@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * An application session consisting of a single user, start time, lifetime, and access token.

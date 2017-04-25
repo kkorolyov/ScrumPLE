@@ -8,9 +8,9 @@ def lib = 'lib/'
 
 task downloadExtra(type: de.undercouch.gradle.tasks.download.Download) {
 	src([
-		'https://github.com/kkorolyov/SQLOb/releases/download/v2.1.1/sqlob-2.1.1.jar',
-		'https://github.com/kkorolyov/SimpleProps/releases/download/v4.0/simple-props-4.0.jar',
-		'https://github.com/kkorolyov/SimpleLogs/releases/download/v2.3/simple-logs-2.3.jar'
+			'https://github.com/kkorolyov/SimpleProps/releases/download/v4.0/simple-props-4.0.jar',
+			'https://github.com/kkorolyov/SQLOb/releases/download/3.0a/sqlob-3.0-SNAPSHOT.jar',
+			'https://github.com/kkorolyov/SimpleLogs/releases/download/v2.3/simple-logs-2.3.jar'
 	])
 	dest lib
 	onlyIfNewer true
@@ -26,26 +26,26 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
-		flatDir { dirs lib }
+	mavenCentral()
+	flatDir { dirs lib }
 }
 dependencies {
-		// REST stuff
-    compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.25.1',
+	// REST stuff
+	compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.25.1',
 			'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1',
 			'javax.persistence:persistence-api:1.0.2',
 			'javax.servlet:javax.servlet-api:4.0.0-b01'
-			
-		// DB stuff
-		compile 'mysql:mysql-connector-java:6.0.5'
-			
-		// Extra stuff
-		compile 'com.sun.mail:javax.mail:1.+',
+
+	// DB stuff
+	compile 'mysql:mysql-connector-java:6.0.5'
+
+	// Extra stuff
+	compile 'com.sun.mail:javax.mail:1.+',
 			':simple-logs:2.+',
-			':simple-props:4.+',
-			':sqlob:2.+'
-	
-		// Test stuff
-    testCompile 'junit:junit:4.+',
+			':sqlob:3.0-SNAPSHOT',
+			':simple-props:4.+'
+
+	// Test stuff
+	testCompile 'junit:junit:4.+',
 			'org.hamcrest:hamcrest-all:1.3'
 }

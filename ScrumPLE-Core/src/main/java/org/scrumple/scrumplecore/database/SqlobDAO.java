@@ -4,7 +4,6 @@ import static org.scrumple.scrumplecore.assets.Assets.SYSTEM_DB;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,8 +14,8 @@ import org.scrumple.scrumplecore.assets.Assets;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
-import dev.kkorolyov.sqlob.persistence.Condition;
-import dev.kkorolyov.sqlob.persistence.Session;
+import dev.kkorolyov.sqlob.Session;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * {@code DAO} implementation for generic objects using {@code SQLOb} for persistence.
@@ -83,40 +82,21 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 
 	@Override
 	public boolean contains(T obj) {
-		try {
-			return s.getId(obj) != null;
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		return s.getId(obj) != null;
 	}
 
 	@Override
 	public T get(UUID id){
-		try {
-			T result = s.get(c, id);
-			
-			if (result == null)
-				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
-			
-			return result;
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		T result = s.get(c, id);
+
+		if (result == null)
+			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+
+		return result;
 	}
 	@Override
 	public Map<UUID, T> get(Condition cond){
-		try {
-			Map<UUID, T> results = new HashMap<>();
-			for (T result : s.get(c, cond))
-				results.put(s.getId(result), result);
-			
-			return results;
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		return s.get(c, cond);
 	}
 	@Override
 	public Map<UUID, T> getAll(){
@@ -125,44 +105,29 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	
 	@Override
 	public void update(UUID id, T newObj){
-		try {
-			if (s.get(c, id) == null)
-				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
-			
-			s.put(id, newObj);
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		if (s.get(c, id) == null)
+			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+
+		s.put(id, newObj);
 	}
 
 	@Override
 	public UUID add(T obj){
-		try {
-			return s.put(obj);
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		return s.put(obj);
 	}
 	@Override
 	public T remove(UUID id){
-		try {
-			T result = s.get(c, id);
-			if (result == null)
-				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
-			
-			s.drop(c, id);
-			
-			return result;
-		} catch (SQLException e) {
-			log.exception(e);
-			throw new DataAccessException(e);
-		}
+		T result = s.get(c, id);
+		if (result == null)
+			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+
+		s.drop(c, id);
+
+		return result;
 	}
 
 	@Override
-	public void close() throws SQLException {
+	public void close() throws Exception {
 		s.close();
 	}
 }

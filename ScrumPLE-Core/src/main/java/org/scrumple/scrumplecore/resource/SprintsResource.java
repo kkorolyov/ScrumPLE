@@ -8,7 +8,7 @@ import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.Sprint;
 import org.scrumple.scrumplecore.auth.UserSession;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * TODO Document

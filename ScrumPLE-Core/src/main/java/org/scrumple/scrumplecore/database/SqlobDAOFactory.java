@@ -11,7 +11,7 @@ import org.scrumple.scrumplecore.assets.Assets;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.User;
 
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * Provides custom {@link SqlobDAO} implementations.

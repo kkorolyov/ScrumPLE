@@ -15,7 +15,7 @@ import org.scrumple.scrumplecore.auth.UserSession;
 
 import dev.kkorolyov.simplelogs.Logger;
 import dev.kkorolyov.simplelogs.Logger.Level;
-import dev.kkorolyov.sqlob.persistence.Condition;
+import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
  * Provides for creation, retrieval, update, and deletion of resources via HTML requests.
