@@ -44,7 +44,7 @@ public class DataSourcePool {
 							Assets.get(DB_HOST) +
 							":" + Assets.get(DB_PORT) +
 							"/" + databaseName +
-							"/sqlobtest?useLegacyDatetimeCode=false&serverTimezone=America/Los_Angeles");
+							"?useLegacyDatetimeCode=false&serverTimezone=America/Los_Angeles");
 
 		ds.setUser(Assets.get(DB_USER));
 		ds.setPassword(Assets.get(DB_PASSWORD));
