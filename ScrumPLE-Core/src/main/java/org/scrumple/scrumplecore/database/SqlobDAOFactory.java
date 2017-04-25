@@ -29,7 +29,7 @@ public final class SqlobDAOFactory {
 
 			@Override
 			public UUID add(Project obj) {
-				String projectName = obj.getName().replaceAll("\\s+", "_");
+				String projectName = obj.getName().replaceAll("\\s+", "_").replaceAll(";", "");
 				obj.setName(projectName);
 				
 				if (contains(new Condition("name", "=", projectName)))
