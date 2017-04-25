@@ -1,4 +1,13 @@
 <style>
+	.mylist {
+		width: 60%;
+		margin-bottom: 40px;
+	}
+	.mylist input {
+		margin: 8px 0px;
+
+	}
+
 	/*.central-display{
 		
 	}*/
@@ -12,7 +21,7 @@
 		<section ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
 			<p>{{meeting.type}}</p>
 
-			<div>
+			<div class="mylist">
 				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
 				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
 			</div>

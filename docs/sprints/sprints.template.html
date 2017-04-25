@@ -1,9 +1,21 @@
 <h1>Sprints</h1>
+<style>
+    .mylist {
+        margin-bottom: 40px;
+        width: 60%;
+    }
+    .mylist input {
+        margin: 8px 0px ;
+    }
+</style>
+
 
 <section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
     <p>Sprint: {{sprint.sprintNumber}}</p>
+    <div class="mylist">
     <input class="form-control" type="text" ng-model="sprint.start">
 	<input class="form-control" type="text" ng-model="sprint.end">
+    </div>
 </section>
 
 <label class="btn btn-primary" ng-click="$ctrl.add()">+</label>
