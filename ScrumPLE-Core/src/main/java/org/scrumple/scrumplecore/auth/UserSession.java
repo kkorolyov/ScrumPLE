@@ -22,7 +22,8 @@ import dev.kkorolyov.sqlob.utility.Condition;
  * An application session consisting of a single user, start time, lifetime, and access token.
  */
 public class UserSession {
-	private static final long DEFAULT_DURATION = 15 * 60 * 1000;
+	// private static final long DEFAULT_DURATION = 15 * 60 * 1000;
+	private static final long DEFAULT_DURATION = 15 * 1000;
 	private static final Logger log = Logger.getLogger(UserSession.class.getName(), Level.DEBUG);
 
 	private User user;

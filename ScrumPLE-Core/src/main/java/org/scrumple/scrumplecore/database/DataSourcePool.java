@@ -40,14 +40,17 @@ public class DataSourcePool {
 	}
 	private static void addDataSource(String databaseName) {
 		MysqlDataSource ds = new MysqlDataSource();
-		ds.setServerName(Assets.get(DB_HOST));
-		ds.setPort(Assets.getInt(DB_PORT));
-		ds.setDatabaseName(databaseName);
+		ds.setUrl("jdbc:mysql://" +
+							Assets.get(DB_HOST) +
+							":" + Assets.get(DB_PORT) +
+							"/" + databaseName +
+							"?useLegacyDatetimeCode=false&serverTimezone=America/Los_Angeles");
+
 		ds.setUser(Assets.get(DB_USER));
 		ds.setPassword(Assets.get(DB_PASSWORD));
-		
+
 		dataSources.put(databaseName, ds);
-		
+
 		log.info("Added new DataSource: name=" + databaseName + ", DataSource=" + ds);
 	}
 }

@@ -26,7 +26,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+	jcenter()
 	flatDir { dirs lib }
 }
 dependencies {
@@ -37,7 +37,7 @@ dependencies {
 			'javax.servlet:javax.servlet-api:4.0.0-b01'
 
 	// DB stuff
-	compile 'mysql:mysql-connector-java:6.0.5'
+	compile 'mysql:mysql-connector-java:6.0.6'
 
 	// Extra stuff
 	compile 'com.sun.mail:javax.mail:1.+',
