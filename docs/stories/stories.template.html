@@ -16,12 +16,12 @@
         <input type="button" name="Edit" value="Edit" ng-if="!story.editting" ng-click="$ctrl.update(story)">
         <section ng-repeat="task in $ctrl.taskList">
             <span ng-if="task.done" style="color: forestgreen">{{task.description}}</span>
-            <span ng-if="!task.done" style="color: red">{{task.description}}</span>
+            <span ng-if="!task.done" style="color: red" ng-click='$ctrl.editTask(story, task)'>{{task.description}}</span>
             <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">Assigned to: {{user.displayName}}</span>
             <span ng-if="!task.user">Assigned to: None</span>
             <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
             <label class="btn btn-primary" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
-            <label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>
+            <!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
         </section>
         <label class="btn btn-primary" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">+</label>
     </section>
