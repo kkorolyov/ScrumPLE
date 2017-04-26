@@ -1,7 +1,7 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	background: #7fccf6;
+	background-color: #C4161C;
 }
 
 ul {
@@ -20,7 +20,10 @@ a {
 img {
 	border: none;
 }
-
+.content-display{
+	/*background-color: #f2f2f2;	*/
+	background: grey url("http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jpg") fixed no-repeat;
+}
 .splash-screen {
 	background: grey url("http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jpg") fixed no-repeat;
 	background-size: cover;	
