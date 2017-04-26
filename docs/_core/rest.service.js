@@ -97,7 +97,7 @@ angular
 				 * @param {Object} [content] request content
 				 * @returns {Object} promise resolving to response data
 				 */
-				ajax: function (method, url, content) {	// TODO Handle re-auth
+				ajax: function (method, url, content) {
 					const httpConf = {
 						method: method,
 						url: this.getUrl(url),
