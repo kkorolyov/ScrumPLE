@@ -6,7 +6,10 @@ angular
 		templateUrl: "dashboard/dashboard.template.html",
 
         bindings: {
-			dashboard: '<'
+			meetings: '<',
+            stories: '<',
+            sprints: '<',
+            users: '<'
 		},
 
         controller:['$uibModal', 'resources', function ($uibModal, resources) {

@@ -16,6 +16,29 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		})
 
 		.state({
+			name: 'project.dashboard',
+			url: '/dashboard',
+			component: 'dashboard',
+			onEnter: ['title', function (title) {
+				title.projectSub("Dashboard")
+			}],
+			resolve: {
+				meetings: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/meetings')
+				}],
+				users: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/users')
+				}],
+				sprints: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/sprints')
+				}],
+				stories: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/stories')
+				}]
+			}
+		})
+
+		.state({
 			name: 'project',
 			url: '/{projectName}',
 			component: 'project',
@@ -98,19 +121,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			}
 		})
 		.state({
-			name: 'project.dashboard',
-			url: '/dashboard',
-			component: 'dashboard',
-			onEnter: ['title', function(title){
-				title.projectSub("Dashboard")
-			}],
-			resolve: {
-				dashboard:['title', 'resources', function(title, resources){
-					return resources.get(resources.projectUrl() + '/dashboard')
-				}]
-			}
-		})
-		.state({
 			name: 'project.stories',
 			url: '/stories',
 			component: 'stories',
@@ -138,32 +148,32 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		})
 }])
 
-app.factory('socket', function($rootScope) {
-		var socket = io('https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:3000');
-		//console.log(socket);
-		return {
-			on: function(eventName, callback) {
-				socket.on(eventName, function() {
-					var args = arguments;
-					//console.log(args);
-					$rootScope.$apply(function() { 
+app.factory('socket', function ($rootScope) {
+	var socket = io('https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:3000');
+	//console.log(socket);
+	return {
+		on: function (eventName, callback) {
+			socket.on(eventName, function () {
+				var args = arguments;
+				//console.log(args);
+				$rootScope.$apply(function () {
+					callback.apply(socket, args);
+				});
+			});
+		},
+		emit: function (eventName, data, callback) {
+			socket.emit(eventName, data, function () {
+				var args = arguments;
+				//console.log(args);
+				$rootScope.$apply(function () {
+					if (callback) {
 						callback.apply(socket, args);
-					});
+					}
 				});
-			},
-			emit: function(eventName, data, callback) {
-				socket.emit(eventName, data, function() {
-					var args = arguments;
-					//console.log(args);
-					$rootScope.$apply(function() {
-						if(callback) {
-							callback.apply(socket, args);
-						}
-					});
-				});
-			}
-		};
-	})
+			});
+		}
+	};
+})
 
 app.controller('scrumple', ['$scope', 'title', function ($scope, title) {
 	$scope.title = () => title.title()
