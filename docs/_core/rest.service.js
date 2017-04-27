@@ -118,7 +118,7 @@ angular
 							if (response.status === 401 && _retry()) {
 								console.log("Unauthorized, attempting to re-auth...")
 
-								this.login()	// Login with stored auth
+								return this.login()	// Login with stored auth
 									.then(() => {
 										console.log("Re-auth successful, retrying ajax...")
 										
