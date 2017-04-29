@@ -31,15 +31,25 @@
 		float: right;
 		display: flex;
 	}
+
+	#logout_link {
+		color: #333;
+		font-size: 1.3em;
+	}
+
+	#logout_link:hover {
+		color: #636060;
+	}
 </style>
 
 <nav>
 	<div>
 		<h6 id="logo">SCRUMPLE</h6>
-		<div class="right">
+		<div class="right" style="padding-top: 5px;">
 			<!--<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().displayName}}
 			<span class="glyphicon glyphicon-user"></span>{{$ctrl.resources.user().role}}-->
-			<input class="btn " type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()">
+			<!--<input class="btn " type="button" value="Log Out" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()">-->
+			<a id="logout_link" href="javascript:;" ng-click="$ctrl.logout()" ng-if="$ctrl.resources.auth()"><strong>Log Out</strong></a>
 		</div>
 	</div>
 </nav>

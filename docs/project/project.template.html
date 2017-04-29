@@ -7,10 +7,12 @@
 		font-size:20px;
 		padding-left: 20px;
 		padding-top: 0px;
-		width: 13em;
+		/*width: 13em;*/
 	}
 	.list-group {
-		width:60%;
+		width:80%;
+		margin-left:20%;
+
 	}
 
 	.name-display{
@@ -30,7 +32,7 @@
 	<h5 class="name-display">LIGHT DESCRIPTION: {{$ctrl.project().description}}</h5>
 	<legend></legend>
 
-	<div class="col-sm-3" id="sidebar">
+	<div class="col-sm-3" id="sidebar" style="background: white;">
 		<div class="list-group">
 			<div>
 				<a id="my_dash" onclick="this.style.background='#92ccfe';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item "ui-sref="project.dashboard"><strong>Dashboard</strong></a>
@@ -38,12 +40,14 @@
 				<a id="my_meetings" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.meetings"><strong>Meetings</strong></a>
 				<a id="my_stories" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.stories"><strong>Stories</strong></a>
 				<a id="my_sprints" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';" class="list-group-item" ui-sref="project.sprints"><strong>Sprints</strong></a>
+				<a class="list-group-item" style="height: 400px;"></a>
+
 			</div>
 		</div>
 	</div>
 
 	
-		<ui-view class="col-sm-9 "></ui-view>
+		<ui-view class="col-sm-9 " style="background: rgba(232, 232, 232, 0.47); min-height: 800px;"></ui-view>
 
 
 </div>

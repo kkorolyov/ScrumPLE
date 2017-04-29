@@ -3,13 +3,16 @@
 		cursor: pointer;
 	}
 
+	.table>tbody>tr>th {
+		border-top:none;
+	}
 	.chat {
 		float: right;
 		clear: both;
 	}
 </style>
 
-<h1>Team</h1>
+<h1 style="margin-top: 3px;padding-bottom: 10px;">Team</h1>
 
 <h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends)!
 	<a class="clickable" ng-click="$ctrl.add()">You should fix that!</a>
@@ -21,7 +24,11 @@
 		<h5>{{user.role}}</h5>
 	</section>
 	-->
-	<table class="table" style="width: 800px;">
+	<table class="table" style="width: 75%; border-bottom: 1px solid #ddd;">
+		<tr>
+			<th><strong>DisplayName:</strong></th>
+			<th><strong>Role:</strong></th>
+		</tr>
 		<tr ng-repeat="user in $ctrl.users ">
 			<td>{{user.displayName}}</td>
 			<td>{{user.role}}</td>
