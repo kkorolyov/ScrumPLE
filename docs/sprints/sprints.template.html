@@ -12,8 +12,9 @@
 <section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
     <p>Sprint: {{sprint.sprintNumber}}</p>
     <div class="mylist">
-    <input class="form-control" type="text" ng-model="sprint.start">
-	<input class="form-control" type="text" ng-model="sprint.end">
+        <!--WTF Date format-->
+    <input class="form-control" uib-datepicker-popup="EEE, MM/dd/yyyy" type="text" ng-model="sprint.start">
+	<input class="form-control" uib-datepicker-popup="EEE, MM/dd/yyyy" type="text" ng-model="sprint.end">
     </div>
 </section>
 
