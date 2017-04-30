@@ -1,32 +1,12 @@
-<style>
-	.mylist {
-		width: 60%;
-		margin-bottom: 40px;
-	}
-	.mylist input {
-		margin: 8px 0px;
+<h1>Meetings</h1>
 
-	}
+<div class="list">
+	<div ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
+		<h3>{{meeting.type}}</h3>
 
-	/*.central-display{
-		
-	}*/
-</style>
-
-
-<div class= "central-display">
-	<h1 style="margin-top: 3px;padding-bottom: 10px;">Meetings</h1>
-
-	<section class="list">
-		<section ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
-			<p>{{meeting.type}}</p>
-
-			<div class="mylist">
-				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
-				<input class="form-control" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
-			</div>
-		</section>
-	</section>
-
-	<label class="btn btn-primary" ng-click="$ctrl.add()">+</label>
+		<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
+		<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
+	</div>
 </div>
+
+<label class="btn btn-primary" ng-click="$ctrl.add()">+</label>

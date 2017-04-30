@@ -1,7 +1,7 @@
 body {
 	margin: 0px;
 	padding: 0px;
-	background-color: #C4161C;
+	/*background-color: #C4161C;*/
 }
 
 ul {
@@ -14,13 +14,50 @@ li {
 }
 
 a {
-	text-decoration: none;
+	text-decoration: none;	/* WTF */
+	cursor: pointer;
 }
 
 img {
 	border: none;
 }
-.content-display{
+
+/* WTF Mine, agree on global font, style from there instead */
+h1 {
+	font-weight: 600;
+}
+
+.modal-content {
+	padding: 0 1em 1em;
+}
+.modal-content h1:first-of-type {
+	text-align: center;
+	margin-bottom: .6em;
+}
+.modal-content .btn-danger {
+	float: right;
+}
+
+.viewport {
+	float: right;
+
+	width: 75%;
+	min-height: 48em; /* WTF - Necessary? */
+	padding: 1em;
+
+	background-color: rgba(232, 232, 232, 0.26);
+	border: 2px solid #d3d3d3;
+	border-radius: 16px;
+}
+.viewport h1:first-of-type {
+	margin: -.4em -.4em 0; /* WTF Mine - why is .4 magic number instead of 1? */
+	padding: 8px;
+
+	background-color: #d3d3d3;
+	border-radius: 12px 12px 0 0;
+}
+
+.content-display{	/* WTF */
 	/*background-color: #f2f2f2;	*/
 	/*background: grey url("http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jpg") fixed no-repeat;*/
 }
@@ -43,6 +80,7 @@ img {
 	align-content: stretch;
 }
 
+/*WTF MyX - seems extraneous */
 #mywrapper {
 	width: 1000px;
 	margin: 0 auto;

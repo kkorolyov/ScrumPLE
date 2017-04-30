@@ -1,43 +1,34 @@
 <style>
-	.clickable {
-		cursor: pointer;
-	}
-
-	.table>tbody>tr>th {
-		border-top:none;
-	}
 	.chat {
 		float: right;
 		clear: both;
 	}
 </style>
 
-<h1 style="margin-top: 3px;padding-bottom: 10px; ">Team</h1>
+<h1>Team</h1>
 
 <h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends)!
 	<a class="clickable" ng-click="$ctrl.add()">You should fix that!</a>
 </h3>
 
-<section ng-if="$ctrl.users.length > 0" class="wide-list" style="display: block;">
-	<!--<section ng-repeat="user in $ctrl.users">
-		<h3>{{user.displayName}}</h3>
-		<h5>{{user.role}}</h5>
-	</section>
-	-->
-	<table class="table" style="width: 75%; border-bottom: 1px solid #ddd;">
+<table class="table" ng-if="$ctrl.users.length > 0">
+	<thead>
 		<tr>
-			<th><strong>DisplayName:</strong></th>
-			<th><strong>Role:</strong></th>
+			<th>Member</th>
+			<th>Role</th>
 		</tr>
+	</thead>
+	<tbody>
 		<tr ng-repeat="user in $ctrl.users ">
 			<td>{{user.displayName}}</td>
 			<td>{{user.role}}</td>
 		</tr>
-	</table>
+	</tbody>
+</table>
 
-</section>
 <input class="btn btn-primary" type="button" value="Invite Teammate" ng-click="$ctrl.add()">
 
+<!--OMG WTF BBQ-->
 <div class="fixed-body" style="position: fixed;bottom: 0px; right: 0px;">
 	<div class="chat-room-wrapper" >
 		<div class="chat-room panel-success" ng-show="$ctrl.chat">
