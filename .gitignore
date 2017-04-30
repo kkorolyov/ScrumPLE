@@ -11,12 +11,8 @@ bower_components/
 node_modules/
 
 # Build
-bin/
 build/
-target/
 .gradle/
-*.jar
-*.war
 
 # Runtime
 *.ini

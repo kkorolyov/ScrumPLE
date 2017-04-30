@@ -1,21 +1,7 @@
 plugins {
 	id 'java'
 	id 'war'
-	id 'de.undercouch.download' version '3.2.0'
 }
-
-def lib = 'lib/'
-
-task downloadExtra(type: de.undercouch.gradle.tasks.download.Download) {
-	src([
-			'https://github.com/kkorolyov/SimpleProps/releases/download/v4.0/simple-props-4.0.jar',
-			'https://github.com/kkorolyov/SQLOb/releases/download/3.0a/sqlob-3.0-SNAPSHOT.jar',
-			'https://github.com/kkorolyov/SimpleLogs/releases/download/v2.3/simple-logs-2.3.jar'
-	])
-	dest lib
-	onlyIfNewer true
-}
-tasks.compileJava.dependsOn(downloadExtra)
 
 // Product info
 group = 'org.scrumple'
@@ -27,7 +13,9 @@ targetCompatibility = 1.8
 
 repositories {
 	jcenter()
-	flatDir { dirs lib }
+	maven {
+		url 'https://jitpack.io'
+	}
 }
 dependencies {
 	// REST stuff
@@ -41,9 +29,9 @@ dependencies {
 
 	// Extra stuff
 	compile 'com.sun.mail:javax.mail:1.+',
-			':simple-logs:2.+',
-			':sqlob:3.0-SNAPSHOT',
-			':simple-props:4.+'
+			'com.github.kkorolyov:SimpleLogs:master-SNAPSHOT',
+			'com.github.kkorolyov:SQLOb:master-SNAPSHOT',
+			'com.github.kkorolyov:SimpleProps:master-SNAPSHOT'
 
 	// Test stuff
 	testCompile 'junit:junit:4.+',
