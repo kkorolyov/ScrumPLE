@@ -39,22 +39,21 @@ h1 {
 }
 
 .viewport {
-	float: right;
-
-	width: 75%;
-	min-height: 48em; /* WTF - Necessary? */
+	float: left;
+	width: 68%;
+	min-height: 58em; /* WTF - Necessary? */
 	padding: 1em;
 
 	background-color: rgba(232, 232, 232, 0.26);
 	border: 2px solid #d3d3d3;
-	border-radius: 16px;
+	border-radius: 5px;
 }
 .viewport h1:first-of-type {
 	margin: -.4em -.4em 0; /* WTF Mine - why is .4 magic number instead of 1? */
 	padding: 8px;
 
 	background-color: #d3d3d3;
-	border-radius: 12px 12px 0 0;
+	border-radius: 5px px 0 0;
 }
 
 .content-display{	/* WTF */
