@@ -21,12 +21,11 @@ import dev.kkorolyov.sqlob.utility.Condition;
  * {@code DAO} implementation for generic objects using {@code SQLOb} for persistence.
  * @param <T> persisted object type
  */
-public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
+public class SqlobDAO<T> implements DAO<T> {
 	private static final Logger log = Logger.getLogger(SqlobDAO.class.getName(), Level.DEBUG);
 	private final Class<T> c;
 	private final DataSource ds;
-	private final Session s;
-	
+
 	/**
 	 * Constructs a new instance with a datasource to the default {@code SYSTEM_DB}.
 	 * @param c type of objects this DAO manages
@@ -42,8 +41,6 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	public SqlobDAO(Class<T> c, DataSource ds) {
 		this.c = c;
 		this.ds = ds;
-		
-		s = new Session(this.ds, 0);	// TODO Move closing to Resource class
 	}
 	
 	/**
@@ -82,21 +79,33 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 
 	@Override
 	public boolean contains(T obj) {
-		return s.getId(obj) != null;
+		try (Session s = new Session(ds)) {
+			return s.getId(obj) != null;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public T get(UUID id){
-		T result = s.get(c, id);
+		try (Session s = new Session(ds)) {
+			T result = s.get(c, id);
 
-		if (result == null)
-			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+			if (result == null)
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 
-		return result;
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	@Override
 	public Map<UUID, T> get(Condition cond){
-		return s.get(c, cond);
+		try (Session s = new Session(ds)) {
+			return s.get(c, cond);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	@Override
 	public Map<UUID, T> getAll(){
@@ -105,29 +114,36 @@ public class SqlobDAO<T> implements DAO<T>, AutoCloseable {
 	
 	@Override
 	public void update(UUID id, T newObj){
-		if (s.get(c, id) == null)
-			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+		try (Session s = new Session(ds)) {
+			if (s.get(c, id) == null)
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 
-		s.put(id, newObj);
+			s.put(id, newObj);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public UUID add(T obj){
-		return s.put(obj);
+		try (Session s = new Session(ds)) {
+			return s.put(obj);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	@Override
 	public T remove(UUID id){
-		T result = s.get(c, id);
-		if (result == null)
-			throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
+		try (Session s = new Session(ds)) {
+			T result = s.get(c, id);
+			if (result == null)
+				throw new EntityNotFoundException("Entity not found: " + c.getSimpleName() + " " + id);
 
-		s.drop(c, id);
+			s.drop(c, id);
 
-		return result;
-	}
-
-	@Override
-	public void close() throws Exception {
-		s.close();
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

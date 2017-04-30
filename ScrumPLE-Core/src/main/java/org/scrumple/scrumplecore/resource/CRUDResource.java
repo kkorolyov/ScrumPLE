@@ -50,6 +50,7 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("POST").process(extractUser(headers));
 
 		log.debug(() -> "Received POST with content=" + obj);
+
 		return dao.add(obj);
 	}
 
@@ -65,7 +66,7 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("GET").process(extractUser(headers));
 
 		log.debug(() -> "Received GET for id=" + id);
-		log.severe(() -> String.valueOf(headers));
+
 		return dao.get(id);
 	}
 	/**
@@ -79,8 +80,8 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("GET").process(extractUser(headers));
 
 		Condition query = parseQuery(uriInfo.getQueryParameters());
-
 		log.debug(() -> "Received GET with query=" + query);
+
 		return dao.get(query);
 	}
 	/**
@@ -102,6 +103,7 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("PUT").process(extractUser(headers));
 
 		log.debug(() -> "Received PUT with id=" + id + " content=" + replacement);
+
 		dao.update(id, replacement);
 	}
 
@@ -117,6 +119,7 @@ public abstract class CRUDResource<T> {
 		getAuthorizer("DELETE").process(extractUser(headers));
 
 		log.debug(() -> "Received DELETE with id=" + id);
+
 		return dao.remove(id);
 	}
 
