@@ -1,7 +1,7 @@
 "use strict"
 
 angular
-	.module('stories', ['resources', 'edit'])
+	.module('stories', ['resources', 'edit', 'ngAnimate'])
 	.component('stories', {
 		templateUrl: "stories/stories.template.html",
 
