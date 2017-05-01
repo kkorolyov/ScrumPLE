@@ -11,6 +11,8 @@ import org.scrumple.scrumplecore.auth.UserSession;
 
 import dev.kkorolyov.sqlob.utility.Condition;
 
+import java.util.UUID;
+
 /**
  * TODO DOCUMENT
  */
@@ -27,9 +29,10 @@ public class TaskResource extends CRUDResource<Task> {
 
 	@Override
 	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
-		String storyId = queryParams.getFirst("storyId");
-		if (storyId != null) {
-			return new Condition("storyId", "=", +Integer.valueOf(storyId));
+		String userIdString = queryParams.getFirst("user");
+		UUID userId = UUID.fromString(userIdString);
+		if (userId != null) {
+			return new Condition("user", "=", userId);
 		} else return null;
 	}
 }

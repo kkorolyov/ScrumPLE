@@ -6,10 +6,11 @@
     </div>
 <hr>
     <div class="dash-display">
-        <h3>Todays, meeting agenda can be found here</h3>
-            <section ng-repeat="meeting in $ctrl.dashboard" >
+        <h3>Today's Meetings</h3>
+            <section ng-repeat="meeting in $ctrl.meetings" >
                 <p>{{meeting.type}}</p>
-                <h5>DURATION:</h5>
+                <input class="form-control" uib-datepicker-popup="EEE, MM/dd/yyyy - h:mm a" type="text" ng-model="meeting.start" readonly>
+                <input class="form-control" uib-datepicker-popup="EEE, MM/dd/yyyy - h:mm a" type="text" ng-model="meeting.end" readonly>
             </section>
     </div>
 <hr>

@@ -24,7 +24,11 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			}],
 			resolve: {
 				meetings: ['resources', function (resources) {
-					return resources.get(resources.projectUrl() + '/meetings')
+					const currentDate = Date.now()
+					var endDate = new Date()
+					endDate.setHours(23,59,59,999)
+					var endMillis = endDate.getTime()
+					return resources.get(resources.projectUrl() + '/meetings', {start: currentDate, end: endMillis})
 				}],
 				users: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/users')
