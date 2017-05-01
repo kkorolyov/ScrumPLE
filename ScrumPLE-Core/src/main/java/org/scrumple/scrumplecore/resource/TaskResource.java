@@ -30,8 +30,8 @@ public class TaskResource extends CRUDResource<Task> {
 	@Override
 	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 		String userIdString = queryParams.getFirst("user");
-		UUID userId = UUID.fromString(userIdString);
-		if (userId != null) {
+		if(userIdString != null){
+			UUID userId = UUID.fromString(userIdString);
 			return new Condition("user", "=", userId);
 		} else return null;
 	}
