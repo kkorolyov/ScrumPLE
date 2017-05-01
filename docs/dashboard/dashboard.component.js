@@ -23,6 +23,7 @@ angular
             const meetings = []
             const tasks = []
             const sprint = []
+            this.user = resources.user()
 
             this.showmeeting = function (meetingurl, meetings) {
                 const currentDate = new Date ();
