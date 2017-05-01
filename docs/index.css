@@ -24,6 +24,8 @@ img {
 
 /* WTF Mine, agree on global font, style from there instead */
 h1 {
+	text-align: center;
+	margin-bottom: 15px;
 	font-weight: 600;
 }
 
