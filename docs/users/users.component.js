@@ -94,6 +94,7 @@ angular
 
             });
             socket.on('allUser', function(data) {
+                console.log(data);
                 _this.usersOnline=data;
             });
             socket.on('userRemoved', function(data) {

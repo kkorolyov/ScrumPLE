@@ -1,11 +1,11 @@
 <style>
 	.project {
-		border: 1px solid cadetblue;
+		/*border: 1px solid cadetblue;*/
 	}
 	.background {
 		position: fixed;
 		z-index: -1;
-		display: inline-block;	
+		display: inline-block;
 	}
 
 	.img {
@@ -17,8 +17,8 @@
 	}
 	.SearchBar {
 		position: relative;
-		width: 500px;
-		margin: auto;	
+		width: 200px;
+		margin: auto;
 	}
 	/*.submit{
 		margin: auto;
@@ -36,7 +36,7 @@
 		margin: auto;
 		width: 60%;
 		border: 1px solid #73AD21;
-   	    padding: 50px;
+		padding: 50px;
 		opacity: 0.9;
 
 	}
@@ -47,31 +47,31 @@
 		flex-direction: column;
 	}
 	.text2{
-		 font-size: 30px;
-		 font-family: italic; 
-		 color: 1px 1px #d9d9d9;
-		 text-align: center;
-		 font-variant: small-caps;
+		font-size: 30px;
+		font-family: italic;
+		color: 1px 1px #d9d9d9;
+		text-align: center;
+		font-variant: small-caps;
 	}
 	.text1{
-		 font-size: 40px;
-		 font-family: italic; 
-		 color: 1px 1px #d9d9d9;
+		font-size: 40px;
+		font-family: italic;
+		color: 1px 1px #d9d9d9;
 		text-align: center;
 	}
 	.text4{
-		 font-size: 25px;
-		 font-family: italic; 
-		 font-variant: small-caps;
-		 color: 1px 1px #b3b3b3;
-		 text-align: center;
+		font-size: 25px;
+		font-family: italic;
+		font-variant: small-caps;
+		color: 1px 1px #b3b3b3;
+		text-align: center;
 	}
 	.text6{
-		 font-size: 18px;
-		 font-family: italic; 
-		 font-variant: small-caps;
-		 color: 1px 1px #b3b3b3;
-		 text-align: center;
+		font-size: 18px;
+		font-family: italic;
+		font-variant: small-caps;
+		color: 1px 1px #b3b3b3;
+		text-align: center;
 	}
 	p.textp{
 		font-size: 25px;
@@ -79,33 +79,56 @@
 		font-variant: small-caps;
 		color:1px 1px #b3b3b3;
 		text-align: center;
-		
+
 	}
+
+	/*qy*/
+	.search{position:relative;}
+	.search #projects-box{
+		position: absolute;
+		left: 50%;
+		width: 200px;
+		margin-left: -100px;
+		background-color: #fff;
+		max-height:150px;
+		overflow-y: auto;
+	}
+	#projects-box p{margin:0;
+		line-height: 28px;
+		height:28px;
+		text-align: center;
+	}
+	.strip{background-color: rgba(0, 0, 0, 0.08);
+		color:#000;}
+
 </style>
 
-	<div class = "jumbo" >
+<div class = "jumbo" >
 	<div class="jumbo-some">
 		<h2 class="text2">Welcome to</h2><br>
 		<h1 class="text1">SCRUMPLE!</h1><br>
 		<h4 class="text4">The World's First Tailored Scrum Development Enviroment</h4><br>
-		<h6 class="text6">Already have an exixting Project? Search below </h>
+		<h6 class="text6">Already have an exixting Project? Search below </h6>
 		<form name="project-search" ng-submit="$ctrl.searchProjects()">
 			<section class="search">
-			<input type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search for..." ng-model="$ctrl.name">
-			</section><br>
+				<input type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search An Existing Project" ng-model="$ctrl.name">
+				<div id="projects-box" >
+					<section class="project" ng-repeat="project in $ctrl.projects" ng-class-even="'strip'">
+						<a ui-sref="project({projectName: project.name})">
+							<section>
+								<p>{{project.name}}</p>
+							</section>
+						</a>
+					</section>
+				</div>
+			</section>
+			<br>
+
 			<!--<section class= "submit"><input class="btn btn-primary" type="submit"></section>		-->
 		</form>
 
-		<section id="projects-box">
-			<section class="project" ng-repeat="project in $ctrl.projects">
-				<a ui-sref="project({projectName: project.name})">
-					<section>
-						<h3>{{project.name}}</h3>
-						<h4>{{project.description}}</h4>
-					</section>
-				</a>
-		</section>
+
 	</div><br>
-		<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
-		<p class="textp">Click here <label class="btn btn-success" ng-click="$ctrl.add()">Create Project</label></p>
+	<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
+	<p class="textp">Click here <label class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
 </div>

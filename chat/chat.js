@@ -17,17 +17,27 @@ io.on('connection',function(socket){
     socket.on('addUser',function(data){
         let displayName=data.displayName;
         let projectName=data.projectName;
-        console.log(projectName);
+        console.log(connectedSockets[displayName]);
         if(connectedSockets[displayName]){
             return false;
         }else{
+            console.log(displayName);
             socket.displayName=displayName;
+            socket.projectName=projectName;
             connectedSockets[displayName]=socket;
             if(!allUsers[projectName]){
                 allUsers[projectName]=[{displayName:""}];
             }
             allUsers[projectName].push({displayName:displayName});
             socket.broadcast.emit('userAdded',{displayName:displayName,projectName:projectName});
+            let allUsersExceptMe=[];
+            var projectUsers=allUsers[projectName];
+            for (var i = 0; i < projectUsers.length; i++) {
+                if (projectUsers[i].displayName != displayName) {
+                    allUsersExceptMe.push(projectUsers[i]);
+                }
+            }
+            socket.emit('allUser',allUsersExceptMe);
         }
     });
 
@@ -65,11 +75,14 @@ io.on('connection',function(socket){
                 displayName: displayName
                 ,projectName:projectName
             });
+            console.log(projectName);
             if(!allUsers[projectName]){
                 allUsers[projectName]=[];
             }
             let projectUsers=allUsers[projectName];
+            console.log('projectUsers:'+projectUsers)
             for(var i=0;i<projectUsers.length;i++){
+                console.log('projectUser'+projectUsers[i]);
                 if(projectUsers[i].displayName==displayName){
                     projectUsers.splice(i,1);
                 }

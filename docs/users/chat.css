@@ -111,19 +111,7 @@
     vertical-align: middle;
     color: rgba(0,0,0,.7);
 }
-.chat-room-wrapper .online .user-wrapper .users .unread{
-    vertical-align: middle;
-    margin-right: 5px;
-    color: red;
-}
-.chat-room-wrapper .system-notification{
-    background-color: lightsalmon;
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 5px;
-    color: #FFF;
-    margin-bottom: 10px;
-}
+
 
 .chat-room-wrapper .normal-message{
     text-align: right;
@@ -142,7 +130,7 @@
     position: relative;
     margin-top: 5px;
     max-width: 60%;
-    min-height: 40px;
+    word-wrap:break-word;
     text-align: left;
 }
 
@@ -175,7 +163,7 @@
     position: relative;
 }
 .chat-room-wrapper .normal-message.others .content{
-    position: absolute;
+
     margin-left: 50px;
     background-color: #fff;
 }

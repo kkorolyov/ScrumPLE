@@ -5,7 +5,7 @@
 	}
 </style>
 
-<h1 style="text-align: center; margin-bottom: 15px">Team</h1>
+<h1 >Team</h1>
 
 <h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends)!
 	<a class="clickable" ng-click="$ctrl.add()">You should fix that!</a>
@@ -13,16 +13,16 @@
 
 <table class="table" ng-if="$ctrl.users.length > 0">
 	<thead>
-		<tr>
-			<th>Member</th>
-			<th>Role</th>
-		</tr>
+	<tr>
+		<th>Member</th>
+		<th>Role</th>
+	</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="user in $ctrl.users ">
-			<td>{{user.displayName}}</td>
-			<td>{{user.role}}</td>
-		</tr>
+	<tr ng-repeat="user in $ctrl.users ">
+		<td>{{user.displayName}}</td>
+		<td>{{user.role}}</td>
+	</tr>
 	</tbody>
 </table>
 
@@ -67,20 +67,3 @@
 		chatting now
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
