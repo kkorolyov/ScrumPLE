@@ -27,6 +27,12 @@ public class TaskResource extends CRUDResource<Task> {
 		setAuthorizers(Authorizers.onlyUsers(project), SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
 	}
 
+	public TaskResource(Project project) {
+		super(SqlobDAOFactory.getDAOUnderProject(Task.class, project));
+
+		setAuthorizers(Authorizers.onlyUsers(project), SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
+	}
+
 	@Override
 	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 		String userIdString = queryParams.getFirst("user");

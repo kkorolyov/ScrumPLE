@@ -96,4 +96,9 @@ public class ProjectsResource extends CRUDResource<Project> {
 	public MeetingsResource getMeetings(@PathParam("uuid") UUID id) {
 		return new MeetingsResource(retrieve(id, null));
 	}
+
+	@Path("{uuid}/tasks")
+	public TaskResource getTasks(@PathParam("uuid") UUID id) {
+		return new TaskResource(retrieve(id, null));
+	}
 }
