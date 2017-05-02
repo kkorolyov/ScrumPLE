@@ -1,4 +1,3 @@
-<login></login>
 <style>
 
 	#sidebar a.list-group-item {
@@ -28,26 +27,26 @@
 	}
 </style>
 
-<body ng-app>
-	<div ng-if="$ctrl.auth()">
-		<br><br>
-		<hr>
-		<h5 class="name-display">PROJECT OWNER: {{$ctrl.project().name}}</h5>
-		<h5 class="name-display">LIGHT DESCRIPTION: {{$ctrl.project().description}}</h5>
+<login></login>
 
-		<!--WTF Kirill fix-->
-		<div class="col-sm-3" id="sidebar" style="background: white;">
-			<div class="list-group">
-				<div>
-					<a id="my_dash" onclick="this.style.background='#92ccfe';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item "ui-sref="project.dashboard"><strong>Dashboard</strong></a>
-					<a id="my_team" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.users"><strong>Team</strong></a>
-					<a id="my_meetings" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.meetings"><strong>Meetings</strong></a>
-					<a id="my_stories" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.stories"><strong>Stories</strong></a>
-					<a id="my_sprints" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';" class="list-group-item" ui-sref="project.sprints"><strong>Sprints</strong></a>
-					<a class="list-group-item" style="height: 400px;"></a>
+<div ng-if="$ctrl.auth()">
+	<br><br>
+	<hr>
+	<h5 class="name-display">PROJECT OWNER: {{$ctrl.project().name}}</h5>
+	<h5 class="name-display">LIGHT DESCRIPTION: {{$ctrl.project().description}}</h5>
 
-				</div>
+	<!--WTF Kirill fix-->
+	<div class="col-sm-3" id="sidebar" style="background: white;">
+		<div class="list-group">
+			<div>
+				<a id="my_dash" onclick="this.style.background='#92ccfe';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item "ui-sref="project.dashboard"><strong>Dashboard</strong></a>
+				<a id="my_team" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.users"><strong>Team</strong></a>
+				<a id="my_meetings" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.meetings"><strong>Meetings</strong></a>
+				<a id="my_stories" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';" class="list-group-item" ui-sref="project.stories"><strong>Stories</strong></a>
+				<a id="my_sprints" onclick="this.style.background='#92ccfe';document.getElementById('my_dash').style.background='#fff';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';" class="list-group-item" ui-sref="project.sprints"><strong>Sprints</strong></a>
+				<a class="list-group-item" style="height: 400px;"></a>
+
 			</div>
 		</div>
-		<ui-view class="viewport"></ui-view>
-</body>
+	</div>
+	<ui-view class="viewport"></ui-view>
