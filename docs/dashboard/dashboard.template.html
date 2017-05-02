@@ -1,9 +1,3 @@
-<!--OMG WTF BBQ-->
-<hr>
-    <div class="dash-display">
-        <span class="glyphicon glyphicon-user"></span>{{$ctrl.user.displayName}}
-        <span class="glyphicon glyphicon-user"></span>{{$ctrl.user.role}}
-    </div>
 <hr>
     <div class="dash-display">
         <h3>Today's Meetings</h3>
@@ -15,7 +9,7 @@
     </div>
 <hr>
     <div class="dash-display">
-        <h3>Current Task In Progress</h3>
+        <h3>My Tasks</h3>
             <div ng-app="dashboard">
                 <select ng-model="progress"><option ng-repeat="x in $ctrl.names" value="{{x}}">{{x}}</option></select>
                  <section ng-repeat="task in $ctrl.taskList">{{task.description}} <p>status:{{progress}}</p><section>
@@ -23,7 +17,7 @@
     </div>
 <hr>
     <div class="dash-display">
-        <h3>Current Sprint Circle</h3>
+        <h3>Current Sprint</h3>
             <section ng-repeat="sprint in $ctrl.dashboard" >
                 <p>Sprint: {{sprint.sprintNumber}}</p>
             </section>
