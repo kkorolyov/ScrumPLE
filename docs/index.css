@@ -1,12 +1,8 @@
 body {
 	margin: 0px;
-	padding: 0px;
-	/*background-color: #C4161C;*/
-}
-
-p h1 h2 h3 h4 h5 h6 {
-	font-family: italic; 
+	padding: 0px;	
 	font-variant: small-caps;
+	/*background-color: #C4161C;*/
 }
 
 ul {
@@ -19,19 +15,11 @@ li {
 }
 
 a {
-	text-decoration: none;	/* WTF */
 	cursor: pointer;
 }
 
 img {
 	border: none;
-}
-
-/* WTF Mine, agree on global font, style from there instead */
-h1 {
-	text-align: center;
-	margin-bottom: 15px;
-	font-weight: 600;
 }
 
 .modal-content {
@@ -48,31 +36,31 @@ h1 {
 .viewport {
 	float: left;
 	width: 68%;
-	min-height: 58em; /* WTF - Necessary? */
 	padding: 1em;
-
 	background-color: rgba(232, 232, 232, 0.26);
 	border: 2px solid #d3d3d3;
 	border-radius: 5px;
 }
 .viewport h1:first-of-type {
-	margin: -.4em -.4em 0; /* WTF Mine - why is .4 magic number instead of 1? */
+	margin: -.4em -.4em 0;
 	padding: 8px;
 
 	background-color: #d3d3d3;
 	border-radius: 5px px 0 0;
+
+	text-align: center;
+	font-variant: small-caps;
+	font-weight: 600;
 }
 
-.content-display{	/* WTF */
-	/*background-color: #f2f2f2;	*/
-	/*background: grey url("http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jpg") fixed no-repeat;*/
 /*http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg*/
 /*http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jp*/
-}
+
 .splash-screen {
 	background: grey url("http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg") fixed no-repeat;
 	background-size: cover;	
 }
+
 .list {
 	display: flex;
 	flex-flow: column wrap;
@@ -86,129 +74,4 @@ h1 {
 	justify-content: space-around;
 	align-items: center;
 	align-content: stretch;
-}
-
-/*WTF MyX - seems extraneous */
-#mywrapper {
-	width: 1000px;
-	margin: 0 auto;
-	padding-top: 30px;
-}
-
-#myhome {
-	position: relative;
-}
-
-#myhome .myheader {
-	overflow: hidden;
-	text-align: right;
-}
-
-#myhome .myheader .logo {
-	float: left;
-	color: #d0d502;
-	font-size: 50px;
-	font-weight: bold;
-	text-shadow: 3px 3px 2px white, 5px 3px 2px #000;
-}
-
-#myhome .myheader .signbutton {
-	border: 2px solid black;
-	background: none;
-	padding: 10px 20px;
-	cursor: pointer;
-	margin-top: 10px;
-}
-
-#myhome .form {
-	margin-top: 300px;
-	text-align: center;
-}
-
-#myhome .form input {
-	height: 35px;
-	border: 2px solid black;
-	width: 250px;
-	box-sizing: border-box;
-	padding-left: 5px;
-}
-
-#myhome .form button {
-	height: 35px;
-	border: 2px solid black;
-	box-sizing: border-box;
-	cursor: pointer;
-	background: none;
-}
-
-#myhome .mypop {
-	position: absolute;
-	width: 600px;
-	border: 2px solid black;
-	top: 300px;
-	left: 50%;
-	margin-left: -300px;
-	background: #D3D3D3;
-	display: none;
-}
-
-#myhome .mypop .mycontent {
-	width: 400px;
-	margin: 0 auto;
-	padding-bottom: 20px;
-}
-
-#myhome .mypop .mycontent .item {
-	margin-top: 20px;
-}
-
-#myhome .mypop .mycontent .item.center {
-	text-align: center;
-}
-
-#myhome .mypop .mycontent .item .title {
-	font-size: 20px;
-	font-weight: bold;
-}
-
-#myhome .mypop .mycontent .item input {
-	width: 100%;
-	text-align: center;
-	height: 30px;
-	border: 2px solid #aed0de;
-	border-radius: 5px;
-	box-sizing:border-box;
-}
-
-#myhome .mypop .mycontent .item select {
-	width: 100%;
-	text-align: center;
-	height: 30px;
-	border: 2px solid #aed0de;
-	border-radius: 5px;
-}
-
-#myhome .mypop .mycontent .item button {
-	border: 2px solid black;
-	background: none;
-	padding: 5px 20px;
-	cursor: pointer;
-	margin-top: 10px;
-}
-.SearchIcon
-{
-    color:#fff;
-   
-}
-.SearchButton
-{
-    background-color:#ED1C24;
-    border-radius:1px;
-}
-.SearchButton:hover{
-    background-color:#C4161C;
-}
-
-.SearchBar{
-
 }
