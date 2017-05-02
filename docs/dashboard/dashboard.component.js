@@ -19,7 +19,7 @@ angular
             const meetingurl = resources.projectUrl() + "/meetings"
             const storyurl = resources.projectUrl() + "/stories"
             const sprinturl = resources.projectUrl() + "/sprints"
-            const tasks = []
+            const tasksList = []
             const sprint = []
             this.user = resources.user()
             function toDate(meeting) {
@@ -33,10 +33,27 @@ angular
                 }
                 return meetings
             }
+
+            function taskList(stories) {
+                var user = resources.user()
+                for(let i = 0; i < stories.length; i++) {
+                    resources.get(storyurl + "/" + stories[i].id + "/tasks")
+                        .then(tasks => {
+                            for(let i = 0; i < tasks.length; i++) {
+                                if(tasks[i].user === user.id) {
+                                    console.log(tasks[i].user)
+                                    tasksList.push(tasks[i])
+                                }
+                            }
+                        })
+                }
+                console.log(tasksList)
+            }
             this.$onInit = function() {
                 presentify(this.meetings)
                 console.log("DEBUGGING: " + this.meetings)
                 console.log("STORIES: " + this.stories)
+                taskList(this.stories)
             }
             this.showsprint = function (sprinturl, sprints) {
                 const currentDate = new Date ();
