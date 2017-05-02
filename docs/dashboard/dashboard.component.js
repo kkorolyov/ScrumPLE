@@ -9,7 +9,8 @@ angular
 			meetings: '<',
             stories: '<',
             sprints: '<',
-            users: '<'
+            users: '<',
+            tasks: '<'
 		},
 
         controller:['$uibModal', 'resources', function ($uibModal, resources) {
@@ -34,26 +35,13 @@ angular
                 return meetings
             }
 
-            function taskList(stories) {
-                var user = resources.user()
-                for(let i = 0; i < stories.length; i++) {
-                    resources.get(storyurl + "/" + stories[i].id + "/tasks")
-                        .then(tasks => {
-                            for(let i = 0; i < tasks.length; i++) {
-                                if(tasks[i].user === user.id) {
-                                    console.log(tasks[i].user)
-                                    tasksList.push(tasks[i])
-                                }
-                            }
-                        })
-                }
-                console.log(tasksList)
-            }
             this.$onInit = function() {
                 presentify(this.meetings)
                 console.log("DEBUGGING: " + this.meetings)
                 console.log("STORIES: " + this.stories)
-                taskList(this.stories)
+                for(let i = 0; i < this.tasks.length; i++) {
+                    console.log(this.tasks[i].description)
+                }
             }
             this.showsprint = function (sprinturl, sprints) {
                 const currentDate = new Date ();

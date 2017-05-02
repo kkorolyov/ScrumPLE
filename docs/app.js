@@ -38,6 +38,10 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				}],
 				stories: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/stories')
+				}],
+				tasks: ['resources', function (resources) {
+					var user = resources.user()
+					return resources.get(resources.projectUrl() + '/tasks', {user: user.id})
 				}]
 			}
 		})
