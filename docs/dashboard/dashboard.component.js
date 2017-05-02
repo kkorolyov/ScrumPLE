@@ -36,6 +36,7 @@ angular
             this.$onInit = function() {
                 presentify(this.meetings)
                 console.log("DEBUGGING: " + this.meetings)
+                console.log("STORIES: " +this.stories)
             }
             this.showsprint = function (sprinturl, sprints) {
                 const currentDate = new Date ();
