@@ -29,9 +29,9 @@ dependencies {
 
 	// Extra stuff
 	compile 'com.sun.mail:javax.mail:1.+',
-			'com.github.kkorolyov:SimpleLogs:master-SNAPSHOT',
-			'com.github.kkorolyov:SQLOb:master-SNAPSHOT',
-			'com.github.kkorolyov:SimpleProps:master-SNAPSHOT'
+			'com.github.kkorolyov:SimpleLogs:-SNAPSHOT',
+			'com.github.kkorolyov:SQLOb:-SNAPSHOT',
+			'com.github.kkorolyov:SimpleProps:-SNAPSHOT'
 
 	// Test stuff
 	testCompile 'junit:junit:4.+',

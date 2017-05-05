@@ -1,12 +1,11 @@
 package org.scrumple.scrumplecore.assets;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 import dev.kkorolyov.simpleprops.Properties;
 
 /**
@@ -21,7 +20,7 @@ public final class Assets {
 	@SuppressWarnings("javadoc")
 	public static final String 	SYSTEM_DB = "systemDatabase";
 
-	private static final Logger log = Logger.getLogger(Assets.class.getName(), Level.DEBUG);
+	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
 	private static final String LOG_PROPS = "logProps";
 	private static final Properties config = new Properties();
 	

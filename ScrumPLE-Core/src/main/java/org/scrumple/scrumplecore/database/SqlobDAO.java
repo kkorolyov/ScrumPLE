@@ -12,8 +12,9 @@ import javax.sql.DataSource;
 
 import org.scrumple.scrumplecore.assets.Assets;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 import dev.kkorolyov.sqlob.Session;
 import dev.kkorolyov.sqlob.utility.Condition;
 
@@ -22,7 +23,8 @@ import dev.kkorolyov.sqlob.utility.Condition;
  * @param <T> persisted object type
  */
 public class SqlobDAO<T> implements DAO<T> {
-	private static final Logger log = Logger.getLogger(SqlobDAO.class.getName(), Level.DEBUG);
+	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
+
 	private final Class<T> c;
 	private final DataSource ds;
 

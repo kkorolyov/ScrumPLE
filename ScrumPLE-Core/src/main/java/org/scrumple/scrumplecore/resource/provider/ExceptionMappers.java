@@ -13,8 +13,9 @@ import org.scrumple.scrumplecore.auth.AuthorizationException;
 import org.scrumple.scrumplecore.auth.SessionExpiredException;
 import org.scrumple.scrumplecore.database.DataAccessException;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 
 /**
  * Contains all exception mappers.
@@ -83,7 +84,7 @@ final class ExceptionMappers {
 	}
 
 	static class ExceptionMapperLogger<T extends Throwable> implements ExceptionMapper<T> {
-		private static final Logger log = Logger.getLogger(ExceptionMappers.class.getName(), Level.DEBUG);
+		private static final Logger log = Logger.getLogger(ExceptionMappers.class.getName(), Level.DEBUG, Formatters.simple());
 
 		private final int errorCode;
 
@@ -93,7 +94,7 @@ final class ExceptionMappers {
 
 		@Override
 		public Response toResponse(T e) {
-			log.exception((Exception) e, Level.WARNING);
+			log.exception(Level.WARNING, e);
 			return Response.status(errorCode).entity(e.getMessage()).type(MediaType.TEXT_PLAIN).build();
 		}
 	}

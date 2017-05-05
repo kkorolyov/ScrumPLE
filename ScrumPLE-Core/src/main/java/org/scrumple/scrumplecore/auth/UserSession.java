@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.ws.rs.core.HttpHeaders;
 
@@ -14,8 +15,9 @@ import org.scrumple.scrumplecore.scrum.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 import dev.kkorolyov.sqlob.utility.Condition;
 
 /**
@@ -23,7 +25,7 @@ import dev.kkorolyov.sqlob.utility.Condition;
  */
 public class UserSession {
 	private static final long DEFAULT_DURATION = 15 * 60 * 1000;
-	private static final Logger log = Logger.getLogger(UserSession.class.getName(), Level.DEBUG);
+	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
 
 	private User user;
 	private String token;
@@ -44,16 +46,16 @@ public class UserSession {
 			Map<UUID, UserSession> matchingSessions = dao.get(new Condition("token", "=", token));
 
 			if (!matchingSessions.isEmpty()) {
-				if (matchingSessions.size() > 1) log.severe(() -> dao + " has multiple sessions for token=" + token);	// Should not happen
+				if (matchingSessions.size() > 1) log.severe("{} has multiple sessions for token={}", dao, token);	// Should not happen
 
 				Entry<UUID, UserSession> sessionEntry = matchingSessions.entrySet().iterator().next();
 				UserSession session = sessionEntry.getValue();
 
 				if (session.isExpired()) {
-					log.warning(() -> session + " expired " + (System.currentTimeMillis() - session.getEnd()) + "ms ago, removing...");
+					log.warning("{} expired {}ms ago, removing...", session, (Supplier) () -> System.currentTimeMillis() - session.getEnd());
 					throw new SessionExpiredException(session);
 				} else {
-					log.debug(() -> "Found a valid session for token=" + token + ": " + session);
+					log.debug("Found a valid session for token={}; {}", token, session);
 					return session;
 				}
 			}

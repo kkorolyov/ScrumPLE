@@ -10,8 +10,9 @@ import javax.mail.internet.MimeMessage;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 
 /**
  * An invitation to join a project.
@@ -19,7 +20,7 @@ import dev.kkorolyov.simplelogs.Logger.Level;
 public class Invitation {
 	private static final String USERNAME = "scrumple.cde@gmail.com";
 	private static final String PASSWORD = "scrumplepass";
-	private static final Logger log = Logger.getLogger(Invitation.class.getName(), Level.DEBUG);
+	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
 
 	private final String email;
 	private final String message;

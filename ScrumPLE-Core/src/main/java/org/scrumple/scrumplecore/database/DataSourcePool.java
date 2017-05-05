@@ -2,7 +2,6 @@ package org.scrumple.scrumplecore.database;
 
 import static org.scrumple.scrumplecore.assets.Assets.*;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,18 +11,17 @@ import org.scrumple.scrumplecore.assets.Assets;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
+import dev.kkorolyov.simplelogs.Level;
 import dev.kkorolyov.simplelogs.Logger;
-import dev.kkorolyov.simplelogs.Logger.Level;
+import dev.kkorolyov.simplelogs.format.Formatters;
 
 /**
  * Provides {@code DataSource} objects to various databases.
  * @see DataSource
  */
 public class DataSourcePool {
-	/** JNDI name prefix for bound {@code DataSource} objects */
-	public static final String LOOKUP_PREFIX = "jdbc/";
-	
-	private static final Logger log = Logger.getLogger(DataSourcePool.class.getName(), Level.DEBUG, (PrintWriter[]) null);
+	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
+
 	private static Map<String, DataSource> dataSources = new HashMap<>();
 	
 	/**
