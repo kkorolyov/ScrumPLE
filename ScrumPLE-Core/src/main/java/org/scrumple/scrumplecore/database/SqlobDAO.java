@@ -129,6 +129,7 @@ public class SqlobDAO<T> implements DAO<T> {
 	@Override
 	public UUID add(T obj){
 		try (Session s = new Session(ds)) {
+			log.severe("{}", s);
 			return s.put(obj);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
