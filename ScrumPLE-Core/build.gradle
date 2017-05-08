@@ -14,7 +14,7 @@ targetCompatibility = 1.8
 repositories {
 	jcenter()
 	maven {
-		url 'https://jitpack.io'
+		url 'https://dl.bintray.com/kkorolyov/java'
 	}
 }
 dependencies {
@@ -29,9 +29,9 @@ dependencies {
 
 	// Extra stuff
 	compile 'com.sun.mail:javax.mail:1.+',
-			'com.github.kkorolyov:SimpleLogs:-SNAPSHOT',
-			'com.github.kkorolyov:SQLOb:-SNAPSHOT',
-			'com.github.kkorolyov:SimpleProps:-SNAPSHOT'
+			'dev.kkorolyov:simple-logs:3.+',
+			'dev.kkorolyov:sqlob:v2.+',
+			'dev.kkorolyov:simple-props:v4.+'
 
 	// Test stuff
 	testCompile 'junit:junit:4.+',
