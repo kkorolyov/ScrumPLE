@@ -1,4 +1,4 @@
-<h1>Sprints</h1>
+<h1 style="margin-bottom: 0.5em;">Sprints</h1>
 
 <style>
     .mylist {
@@ -10,7 +10,7 @@
 </style>
 
 <section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
-    <p>Sprint: {{sprint.sprintNumber}}</p>
+    <p><strong>Sprint: {{sprint.sprintNumber}}</strong></p>
     <div class="mylist">
         <!--WTF Date format-->
     <input class="form-control" uib-datepicker-popup="EEEE, MM/dd/yyyy" type="text" ng-model="sprint.start">

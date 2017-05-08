@@ -14,8 +14,8 @@
 	}
 	.SearchBar {
 		position: relative;
-		width: 200px;
-		margin: auto;
+		width: 100%;
+
 	}
 	.jumbo{
 		margin: auto;
@@ -67,24 +67,45 @@
 
 	}
 
-	/*qy*/
-	.search{position:relative;}
+	.search{
+		position: relative;
+		width: 200px;
+		margin: auto;
+
+	}
 	.search #projects-box{
 		position: absolute;
-		left: 50%;
-		width: 200px;
-		margin-left: -100px;
+		left: 0;
+		width: 100%;
 		background-color: #fff;
 		max-height:150px;
 		overflow-y: auto;
+		border-radius: 4px;
 	}
-	#projects-box p{margin:0;
-		line-height: 28px;
-		height:28px;
-		text-align: center;
+	section.project p{
+		display: block;
+		padding: 3px 20px;
+		clear: both;
+		font-weight: 400;
+		line-height: 1.42857143;
+		color: #333;
+		white-space: nowrap;
+
+		margin: 0;
+		height: 26px;
+
 	}
-	.strip{background-color: rgba(0, 0, 0, 0.08);
-		color:#000;}
+	section.project p:hover{
+		color: #fff;
+		text-decoration: none;
+		background-color: #337ab7;
+		outline: 0;
+		line-height: 1.42857143;
+	}
+	.project a:hover{
+		color:#fff;
+
+	}
 
 </style>
 
@@ -96,7 +117,7 @@
 		<h6 class="text6">Already have an exixting Project? Search below </h6>
 		<form name="project-search" ng-submit="$ctrl.searchProjects()">
 			<section class="search">
-				<input type="text" name="nameQuery" class="form-control SearchBar" placeholder="Search An Existing Project" ng-model="$ctrl.name">
+				<input type="text" name="nameQuery" class="form-control SearchBar" ng-change="$ctrl.searchProjects()" placeholder="Search An Existing Project" ng-model="$ctrl.name">
 				<div id="projects-box" >
 					<section class="project" ng-repeat="project in $ctrl.projects" ng-class-even="'strip'">
 						<a ui-sref="project({projectName: project.name})">
@@ -112,5 +133,5 @@
 
 	</div><br>
 	<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
-	<p class="textp">Click here <label class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
+	<p class="textp">Click here <label style="width: 200px;" class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
 </div>

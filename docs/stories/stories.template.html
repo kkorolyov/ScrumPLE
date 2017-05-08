@@ -5,22 +5,35 @@
         <uib-accordion-heading>
             <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''; $ctrl.sprints(); $ctrl.users()">{{story.story}}</label>
         </uib-accordion-heading>
-        <section style="margin-bottom: 20px;">
+
+        <table class="table table-bordered" >
+            <tr>
+                <td colspan="2" style="text-align: center">
             <label style="margin-bottom: 20px;" class="editable" ng-click="$ctrl.update(story)">{{story.story}}</label><br>
             Story Point: {{story.storyPoint}}
             Sprint: {{story.sprint.sprintNumber}}
             <select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
             <label class="btn btn-info btn-xs" ng-click="$ctrl.setSprint(story, $ctrl.sprint)">Set Sprint</label>
-        </section>
-        <section style="margin-bottom: 20px;" ng-repeat="task in $ctrl.taskList">
+                </td>
+            </tr>
+        <tr>
+            <td align="center">Task Description</td>
+            <td align="center">Assignee</td>
+        </tr>
+        <tr ng-repeat="task in $ctrl.taskList">
+            <td width="50%">
             <span class="editable" ng-if="task.done" style="color: forestgreen" ng-click='$ctrl.editTask(story, task)'>{{task.description}}</span>
             <span class="editable" ng-if="!task.done" style="color: red" ng-click='$ctrl.editTask(story, task)'>{{task.description}}</span>
+            </td>
+            <td>
             <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">Assigned to: {{user.displayName}}</span>
             <span ng-if="!task.user">Assigned to: None</span>
             <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
             <label class="btn btn-info btn-xs" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
+            </td>
             <!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
-        </section>
+        </tr>
+        </table>
         <label class="btn btn-primary" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">New Task</label>
     </section>
 </uib-accordion>
