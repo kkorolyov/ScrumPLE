@@ -7,7 +7,6 @@ angular
 
 		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
 			this.searchProjects = function () {
-				console.log(this.name)
 				resources.get('projects', { name: this.name })
 					.then(projects => {
 						this.projects = projects.sort(
@@ -24,12 +23,12 @@ angular
 						fields: {
 							name: ["text", "Project Name"],
 							description: ["text", "Project Description"],
-							handle: ["text", "Project Owner Email Address"],
+							handle: ["email", "Project Owner Email Address"],
 							password: ["password", "Project Owner Password"]
 						}
 					}
 				}).result.then(result => {
-					const data = {
+					resources.set('projects', {
 						name: result.data.name,
 						description: result.data.description,
 						owner: {
@@ -40,8 +39,7 @@ angular
 							displayName: result.data.handle,
 							role: "owner"
 						}
-					}
-					resources.set('projects', data)
+					})
 				})
 			}
 		}]
