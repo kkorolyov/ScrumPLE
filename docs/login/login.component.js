@@ -14,8 +14,6 @@ angular
 						delete this.failed
 						delete this.handle
 						delete this.password
-
-						$state.go('project.dashboard')
 					}, () => {
 						this.failed = true
 					})
