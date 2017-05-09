@@ -2,8 +2,8 @@ var express = require('express');
 var app = require('express')();
 var fs = require('fs');
 var https = require('https');
-var privateKey = fs.readFileSync('/etc/ssl/private/node-self.key');
-var certificate = fs.readFileSync('/etc/ssl/certs/node-self.crt');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/scrumple.win/cert.pem');
+var privateKey = fs.readFileSync('/etc/letsencrypt/live/scrumple.win/privkey.pem');
 var credentials = {key: privateKey, cert: certificate};
 
 var httpsServer = https.createServer(credentials, app);
