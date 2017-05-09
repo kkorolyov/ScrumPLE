@@ -121,7 +121,7 @@
 	<h6 class="text6">Already have an exixting Project? Search below </h6>
 
 	<form class="form-group" ng-submit="$ctrl.go()">
-		<input class="form-control" ng-model="$ctrl.name" placeholder="Search ScrumPLE" uib-typeahead="project for project in $ctrl.search($ctrl.name)" typeahead-loading="$ctrl.searching" typeahead-no-results="$ctrl.noResults">
+		<input class="form-control" ng-model="$ctrl.name" placeholder="Search ScrumPLE" uib-typeahead="project for project in $ctrl.search($viewValue)" typeahead-loading="$ctrl.searching" typeahead-no-results="$ctrl.noResults">
 		<p ng-if="$ctrl.searching">Searching</p>
 		<p ng-if="$ctrl.noResults">No results</p>
 	</form>
