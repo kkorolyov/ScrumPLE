@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/kkorolyov/ScrumPLE.svg?branch=master)](https://travis-ci.org/kkorolyov/ScrumPLE)
-[![Build Status](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/job/ScrumPLE/badge/icon)](http://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8080/jenkins/job/ScrumPLE/)
+[![Build Status](http://scrumple.win:8080/jenkins/job/ScrumPLE/badge/icon)](https://scrumple.win:8443/jenkins/job/ScrumPLE/)
 # ScrumPLE
 A collaborative development environment tailored to the Scrum framework
 
@@ -61,5 +61,5 @@ Full help can be found [here][ScrumPLE-Core].
 [Node.js]: https://nodejs.org/
 [MySQL]: https://www.mysql.com/
 [NGINX]: https://www.nginx.com/
-[ScrumPLE]: https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com/
-[ScrumPLE-Core]: https://ec2-52-10-231-227.us-west-2.compute.amazonaws.com:8443/scrumple/
+[ScrumPLE]: https://scrumple.win/
+[ScrumPLE-Core]: https://scrumple.win:8443/scrumple/
