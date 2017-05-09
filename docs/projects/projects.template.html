@@ -1,4 +1,5 @@
 <style>
+	/*WTF TOO MUCH CSS*/
 	.background {
 		position: fixed;
 		z-index: -1;
@@ -12,77 +13,78 @@
 		height: 100%;
 		z-index: -1;
 	}
-	.SearchBar {
-		position: relative;
-		width: 100%;
 
-	}
-	.jumbo{
+	.jumbo {
 		margin: auto;
 		width: 60%;
 		border: 1px solid #73AD21;
 		padding: 50px;
 		opacity: 0.9;
-
 	}
+
 	#projects-box {
 		float: left;
 
 		display: flex;
 		flex-direction: column;
 	}
-	.text2{
+
+	.text2 {
 		font-size: 30px;
 		font-family: italic;
 		color: 1px 1px #d9d9d9;
 		text-align: center;
 		font-variant: small-caps;
 	}
-	.text1{
+
+	.text1 {
 		font-size: 40px;
 		font-family: italic;
 		color: 1px 1px #d9d9d9;
 		text-align: center;
 	}
-	.text4{
+
+	.text4 {
 		font-size: 25px;
 		font-family: italic;
 		font-variant: small-caps;
 		color: 1px 1px #b3b3b3;
 		text-align: center;
 	}
-	.text6{
+
+	.text6 {
 		font-size: 18px;
 		font-family: italic;
 		font-variant: small-caps;
 		color: 1px 1px #b3b3b3;
 		text-align: center;
 	}
-	p.textp{
+
+	p.textp {
 		font-size: 25px;
 		font-family: italic;
 		font-variant: small-caps;
-		color:1px 1px #b3b3b3;
+		color: 1px 1px #b3b3b3;
 		text-align: center;
-
 	}
 
-	.search{
+	.search {
 		position: relative;
 		width: 200px;
 		margin: auto;
-
 	}
-	.search #projects-box{
+
+	.search #projects-box {
 		position: absolute;
 		left: 0;
 		width: 100%;
 		background-color: #fff;
-		max-height:150px;
+		max-height: 150px;
 		overflow-y: auto;
 		border-radius: 4px;
 	}
-	section.project p{
+
+	section.project p {
 		display: block;
 		padding: 3px 20px;
 		clear: both;
@@ -93,45 +95,34 @@
 
 		margin: 0;
 		height: 26px;
-
 	}
-	section.project p:hover{
+
+	section.project p:hover {
 		color: #fff;
 		text-decoration: none;
 		background-color: #337ab7;
 		outline: 0;
 		line-height: 1.42857143;
 	}
-	.project a:hover{
-		color:#fff;
 
+	.project a:hover {
+		color: #fff;
 	}
-
 </style>
 
-<div class = "jumbo" >
-	<div class="jumbo-some">
-		<h2 class="text2">Welcome to</h2><br>
-		<h1 class="text1">SCRUMPLE!</h1><br>
-		<h4 class="text4">The World's First Tailored Scrum Development Enviroment</h4><br>
-		<h6 class="text6">Already have an exixting Project? Search below </h6>
-		<form name="project-search" ng-submit="$ctrl.searchProjects()">
-			<section class="search">
-				<input type="text" name="nameQuery" class="form-control SearchBar" ng-change="$ctrl.searchProjects()" placeholder="Search An Existing Project" ng-model="$ctrl.name">
-				<div id="projects-box" >
-					<section class="project" ng-repeat="project in $ctrl.projects" ng-class-even="'strip'">
-						<a ui-sref="project({projectName: project.name})">
-							<section>
-								<p>{{project.name}}</p>
-							</section>
-						</a>
-					</section>
-				</div>
-			</section>
-			<br>
-		</form>
+<div class="jumbo">
+	<!-- WTF Fix phrase-->
+	<h2 class="text2">Welcome to</h2><br>
+	<h1 class="text1">SCRUMPLE!</h1><br>
+	<h4 class="text4">The World's First Tailored Scrum Development Enviroment</h4><br>
+	<h6 class="text6">Already have an exixting Project? Search below </h6>
 
-	</div><br>
+	<form class="form-group" ng-submit="$ctrl.go()">
+		<input class="form-control" ng-model="$ctrl.name" placeholder="Search ScrumPLE" uib-typeahead="project for project in $ctrl.search($ctrl.name)" typeahead-loading="$ctrl.searching" typeahead-no-results="$ctrl.noResults">
+		<p ng-if="$ctrl.searching">Searching</p>
+		<p ng-if="$ctrl.noResults">No results</p>
+	</form>
+
 	<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
 	<p class="textp">Click here <label style="width: 200px;" class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
 </div>

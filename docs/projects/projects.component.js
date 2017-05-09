@@ -5,14 +5,18 @@ angular
 	.component('projects', {
 		templateUrl: "projects/projects.template.html",
 
-		controller: ['$uibModal', 'resources', function ($uibModal, resources) {
-			this.searchProjects = function () {
-				resources.get('projects', { name: this.name })
+		controller: ['$state', '$uibModal', 'resources', function ($state, $uibModal, resources) {
+			this.search = function (name) {
+				return resources.get('projects', { name: name })
 					.then(projects => {
-						this.projects = projects.sort(
-							(a, b) => a.name.localeCompare(b.name))
+						return projects.map(project => project.name)
 					})
 			}
+
+			this.go = function () {
+				$state.go('project', { projectName: this.name })
+			}
+
 			this.add = function () {
 				$uibModal.open({
 					component: 'edit',

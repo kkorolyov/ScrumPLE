@@ -16,37 +16,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		})
 
 		.state({
-			name: 'project.dashboard',
-			url: '/dashboard',
-			component: 'dashboard',
-			onEnter: ['title', function (title) {
-				title.projectSub("Dashboard")
-			}],
-			resolve: {
-				meetings: ['resources', function (resources) {
-					const currentDate = Date.now()
-					var endDate = new Date()
-					endDate.setHours(23,59,59,999)
-					var endMillis = endDate.getTime()
-					return resources.get(resources.projectUrl() + '/meetings', {start: currentDate, end: endMillis})
-				}],
-				users: ['resources', function (resources) {
-					return resources.get(resources.projectUrl() + '/users')
-				}],
-				sprints: ['resources', function (resources) {
-					return resources.get(resources.projectUrl() + '/sprints')
-				}],
-				stories: ['resources', function (resources) {
-					return resources.get(resources.projectUrl() + '/stories')
-				}],
-				tasks: ['resources', function (resources) {
-					var user = resources.user()
-					return resources.get(resources.projectUrl() + '/tasks', {user: user.id})
-				}]
-			}
-		})
-
-		.state({
 			name: 'project',
 			url: '/{projectName}',
 			component: 'project',
@@ -64,7 +33,36 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				resources.logout()
 			}]
 		})
-
+		.state({
+			name: 'project.dashboard',
+			url: '/dashboard',
+			component: 'dashboard',
+			onEnter: ['title', function (title) {
+				title.projectSub("Dashboard")
+			}],
+			resolve: {
+				meetings: ['resources', function (resources) {
+					const currentDate = Date.now()
+					var endDate = new Date()
+					endDate.setHours(23, 59, 59, 999)
+					var endMillis = endDate.getTime()
+					return resources.get(resources.projectUrl() + '/meetings', { start: currentDate, end: endMillis })
+				}],
+				users: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/users')
+				}],
+				sprints: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/sprints')
+				}],
+				stories: ['resources', function (resources) {
+					return resources.get(resources.projectUrl() + '/stories')
+				}],
+				tasks: ['resources', function (resources) {
+					var user = resources.user()
+					return resources.get(resources.projectUrl() + '/tasks', { user: user.id })
+				}]
+			}
+		})
 		.state({
 			name: 'project.register',
 			url: '/register',
