@@ -14,12 +14,16 @@
 		z-index: -1;
 	}
 
-	.jumbo {
+	projects {
+		display: block;
 		margin: auto;
 		width: 60%;
 		border: 1px solid #73AD21;
-		padding: 50px;
-		opacity: 0.9;
+		padding: 1em;
+
+		border-radius: 4px;
+		
+		background-color: rgba(200, 200, 200, .5);
 	}
 
 	#projects-box {
@@ -110,7 +114,6 @@
 	}
 </style>
 
-<div class="jumbo">
 	<!-- WTF Fix phrase-->
 	<h2 class="text2">Welcome to</h2><br>
 	<h1 class="text1">SCRUMPLE!</h1><br>
@@ -125,4 +128,3 @@
 
 	<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
 	<p class="textp">Click here <label style="width: 200px;" class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
-</div>

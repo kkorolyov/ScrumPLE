@@ -42,7 +42,7 @@ angular
 				},
 
 				getUrl: function (url) {
-					return "https://ec2-35-160-31-252.us-west-2.compute.amazonaws.com:8443/scrumple/rest/" + url
+					return "https://scrumple.win:8443/scrumple/rest/" + url
 				},
 
 				/**
