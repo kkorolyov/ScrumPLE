@@ -13,7 +13,7 @@
             Story Point: {{story.storyPoint}}
             Sprint: {{story.sprint.sprintNumber}}
             <select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
-            <label class="btn btn-info btn-xs" ng-click="$ctrl.setSprint(story, $ctrl.sprint)">Set Sprint</label>
+            <label class="btn btn-info btn-xs" ng-click="$ctrl.setSprint(story, $ctrl.sprint)" ng-if="story.sprint.sprintNumber != $ctrl.sprint.sprintNumber && $ctrl.sprint">Set Sprint</label>
                 </td>
             </tr>
         <tr>
@@ -30,12 +30,12 @@
             <span ng-if="!task.user">None</span>
             <br>
             <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
-            <label class="btn btn-info btn-xs" ng-if="!task.done && ((task.user !== task.selected.id) || !task.selected)" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
+            <label class="btn btn-info btn-xs" ng-if="!task.done && ((task.user !== task.selected.id) && task.selected)" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
             </td>
             <!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
         </tr>
         </table>
-        <label class="btn btn-primary" ng-click="$ctrl.createTask(story); $ctrl.taskDescription = ''">New Task</label>
+        <label class="btn btn-primary" ng-click="$ctrl.createTask(story)">New Task</label>
     </section>
 </uib-accordion>
 
