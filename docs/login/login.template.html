@@ -53,7 +53,7 @@
 
 	<div class="form-group" ng-class="{ 'has-error': login.handle.$dirty && login.handle.$error.required }">
 		<label for="handle">Enter your Email Address</label>
-		<input class="form-control" type="text" name="handle" placeholder="Email Address" autofocus required ng-model="$ctrl.handle">
+		<input class="form-control" type="email" name="handle" placeholder="Email Address" autofocus required ng-model="$ctrl.handle">
 		<span class="help-block" ng-if="login.handle.$dirty && login.handle.$error.required">Email is required</span>
 	</div>
 
