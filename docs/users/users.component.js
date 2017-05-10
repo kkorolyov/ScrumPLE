@@ -15,21 +15,23 @@ angular
 					component: 'edit',
 					resolve: {
 						meta: {
-							title: "Invite New Teammate"
+							title: "Invite to Collaborate"
 						},
 						fields: {
-							email: ['text', "Email Addresses separated by ','"],
+							emails: ['text', "Email Addresses separated by ','"],
 							message: ['textarea', "Invitation Message", "Hey dude/dudette!\nCome work with me on my awesome project '" + resources.project().name + "'!"]
 						}
 					}
 				}).result.then(result => {
-					result.data.project = resources.project().name
-
-					const emails = result.data.email.split(/\s*,\s*/)
+					const emails = result.data.emails.split(/\s*,\s*/)
 					for (let i = 0; i < emails.length; i++) {
-						result.data.url = $state.href('project.register', {}, { absolute: true }) + "?email=" + emails[i]
-
-						rest.ajax("POST", resources.projectUrl() + "/users/invite", result.data)
+						const data = {
+							email: emails[i],
+							message: result.data.message,
+							project: resources.project().name,
+							url: $state.href('project.register', {}, { absolute: true }) + "?email=" + emails[i]
+						}
+						rest.ajax("POST", resources.projectUrl() + "/users/invite", data)
 							.then(() => console.log("Invitation sent to " + emails[i]))
 					}
 				})
