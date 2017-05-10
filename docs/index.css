@@ -50,11 +50,10 @@ img {
 	font-weight: 600;
 }
 
-/*http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg*/
 /*http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jp*/
 
 .splash-screen {
-	background: grey url("http://www.thecuriosityworkshop.com/wp-content/uploads/2015/03/01-rubberduck-hongkong.jpg") fixed no-repeat;
+	background: grey url("_core/scrumduck.jpg") fixed no-repeat;
 	background-size: cover;	
 }
 

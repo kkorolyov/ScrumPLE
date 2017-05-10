@@ -156,7 +156,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 
 app.factory('socket', function ($rootScope) {
 	const socket = io('https://scrumple.win:3000');
-	//console.log(socket);
 	return {
 		on: function (eventName, callback) {
 			socket.on(eventName, function () {
