@@ -3,7 +3,7 @@
 <uib-accordion close-others=true>
     <section style="margin:30px 0px;" uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
         <uib-accordion-heading>
-            <label ng-click="$ctrl.tasks(story); $ctrl.taskDescription = ''; $ctrl.sprints(); $ctrl.users()">{{story.story}}</label>
+            <label ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}}</label>
         </uib-accordion-heading>
 
         <table class="table table-bordered" >
@@ -17,8 +17,8 @@
                 </td>
             </tr>
         <tr>
-            <td align="center">Task Description</td>
-            <td align="center">Assignee</td>
+            <td align="center">Task</td>
+            <td align="center">Assigned To</td>
         </tr>
         <tr ng-repeat="task in $ctrl.taskList">
             <td width="50%">
