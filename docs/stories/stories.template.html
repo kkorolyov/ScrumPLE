@@ -26,10 +26,13 @@
             <span class="editable" ng-if="!task.done" style="color: red" ng-click='$ctrl.editTask(story, task)'>{{task.description}}</span>
             </td>
             <td>
-            <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">Assigned to: {{user.displayName}}</span>
-            <span ng-if="!task.user">Assigned to: None</span>
-            <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done" ng-change="$ctrl.setUser(task, story, task.selected)"></select>
-            <label class="btn btn-info btn-xs" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
+            <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">{{user.displayName}}</span>
+            <span ng-if="!task.user">None</span>
+            <br>
+            <span>
+                <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
+                <label class="btn btn-info btn-xs" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
+            </span>
             </td>
             <!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
         </tr>
