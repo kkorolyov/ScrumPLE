@@ -25,7 +25,12 @@ angular
 
 			this.setUser = function(task, story, user) {
 				const taskUrl = url + "/" + story.id + "/tasks"
-				task.user = user.id
+				if(user == null) {
+					task.user = null
+				}
+				else{
+					task.user = user.id
+				}
 				console.log(task.description)
 				console.log(task.user)
 				console.log(taskUrl)

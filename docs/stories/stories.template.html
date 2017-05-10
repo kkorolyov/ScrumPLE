@@ -29,10 +29,8 @@
             <span ng-repeat="user in $ctrl.userList" ng-if="task.user === user.id">{{user.displayName}}</span>
             <span ng-if="!task.user">None</span>
             <br>
-            <span>
-                <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
-                <label class="btn btn-info btn-xs" ng-if="!task.done" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
-            </span>
+            <select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
+            <label class="btn btn-info btn-xs" ng-if="!task.done && ((task.user !== task.selected.id) || !task.selected)" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
             </td>
             <!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
         </tr>
