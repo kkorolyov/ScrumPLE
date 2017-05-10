@@ -33,7 +33,7 @@ public class Assignment {
 	 * Sends this assignment.
 	 */
 	public void send() {
-		Mailer.send(user.getCredentials().getHandle(), "Received assignment in " + project, "Whut up " + name(user) + "?, " + System.lineSeparator() + "You have been assigned to '" + task.getDescription() + "' in " + project.getName());
+		Mailer.send(user.getCredentials().getHandle(), "Received assignment in " + project, "Whut up " + name(user) + "?" + System.lineSeparator() + "You have been assigned to '" + task.getDescription() + "' in " + project.getName());
 	}
 
 	private static String name(User user) {
