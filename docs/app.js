@@ -65,8 +65,8 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 		})
 		.state({
 			name: 'project.register',
-			url: '/register',
-			onEnter: ['$state', '$uibModal', 'resources', function ($state, $uibModal, resources) {
+			url: '/register?email',
+			onEnter: ['$state', '$stateParams', '$uibModal', 'resources', function ($state, $stateParams, $uibModal, resources) {
 				$uibModal.open({
 					component: 'edit',
 					resolve: {
@@ -74,7 +74,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 							title: 'Contribute to ' + resources.project().name
 						},
 						fields: {
-							handle: ['email', "Login email"],
+							handle: ['email', "Login email", $stateParams.email],
 							password: ['password', "Login password"],
 							displayName: ['text', "Display name"],
 							role: ['text', "Project role"]
