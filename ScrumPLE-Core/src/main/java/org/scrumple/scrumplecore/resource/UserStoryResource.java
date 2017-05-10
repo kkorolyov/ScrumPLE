@@ -6,6 +6,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.scrumple.scrumplecore.auth.Authorizers;
+import org.scrumple.scrumplecore.auth.UserSession;
 import org.scrumple.scrumplecore.database.SqlobDAOFactory;
 import org.scrumple.scrumplecore.scrum.Project;
 import org.scrumple.scrumplecore.scrum.UserStory;
@@ -24,7 +26,7 @@ public class UserStoryResource extends CRUDResource<UserStory> {
 	public UserStoryResource(Project project) {
 		super(SqlobDAOFactory.getDAOUnderProject(UserStory.class, project));
 
-//		setAuthorizers(Authorizers.onlyUsers(project), SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
+		setAuthorizers(Authorizers.onlyUsers(project), SqlobDAOFactory.getDAOUnderProject(UserSession.class, project));
 		this.project = project;
 	}
 

@@ -5,7 +5,7 @@ plugins {
 
 // Product info
 group = 'org.scrumple'
-version = '0.0.1'
+version = '1.0-SNAPSHOT'
 description = """Virtual collaboration and development environment following the Scrum SDLC"""
 
 sourceCompatibility = 1.8
@@ -30,7 +30,7 @@ dependencies {
 	// Extra stuff
 	compile 'com.sun.mail:javax.mail:1.+',
 			'dev.kkorolyov:simple-logs:3.+',
-			'dev.kkorolyov:sqlob:v2.+',
+			'dev.kkorolyov:sqlob:3.+',
 			'dev.kkorolyov:simple-props:v4.+'
 
 	// Test stuff

@@ -12,40 +12,26 @@ import dev.kkorolyov.simpleprops.Properties;
  * Global access to all external assets.
  */
 public final class Assets {
-	@SuppressWarnings("javadoc")
-	public static final String 	DB_HOST = "databaseHost",
-															DB_PORT = "databasePort",
-															DB_USER = "databaseUser",
-															DB_PASSWORD = "databasePassword";
-	@SuppressWarnings("javadoc")
-	public static final String 	SYSTEM_DB = "systemDatabase";
+	public static final String DB_HOST = "databaseHost";
+	public static final String DB_PORT = "databasePort";
+	public static final String DB_USER = "databaseUser";
+	public static final String DB_PASSWORD = "databasePassword";
+
+	public static final String SYSTEM_DB = "systemDatabase";
+
+	public static final String MAILER_USERNAME = "mailerUsername";
+	public static final String MAILER_PASSWORD = "mailerPassword";
 
 	private static final Logger log = Logger.getLogger(Level.DEBUG, Formatters.simple());
 	private static final String LOG_PROPS = "logProps";
 	private static final Properties config = new Properties();
-	
+
 	/**
 	 * @param key property identifier
 	 * @return value of property defined by {@code key}
 	 */
 	public static String get(String key) {
 		return config.get(key);
-	}
-	
-	/**
-	 * @param key property identifier
-	 * @return value of property defined by {@code key} parsed into a positive {@code int}, or {@code -1} if value is not a positive {@code int}
-	 */
-	public static int getInt(String key) {
-		String value = get(key);
-		return isInt(value, 10) ? Integer.parseInt(value) : -1;
-	}
-	private static boolean isInt(String s, int radix) {
-		for (char c : s.toCharArray()) {
-			if (Character.digit(c, radix) < 0)
-				return false;
-		}
-		return true;
 	}
 
 	/**
