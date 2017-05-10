@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.scrumple.scrumplecore.auth.Authorizers;
@@ -39,7 +41,7 @@ public class UserStoryResource extends CRUDResource<UserStory> {
 	}
 
 	@Path("{uuid}/tasks")
-	public TaskResource getTasks(@PathParam("uuid") UUID id) {
-		return new TaskResource(retrieve(id, null), project);
+	public TaskResource getTasks(@PathParam("uuid") UUID id, @Context HttpHeaders headers) {
+		return new TaskResource(retrieve(id, headers), project);
 	}
 }
