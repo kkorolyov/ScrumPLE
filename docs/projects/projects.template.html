@@ -1,5 +1,6 @@
 <style>
 	/*WTF TOO MUCH CSS*/
+
 	.background {
 		position: fixed;
 		z-index: -1;
@@ -12,18 +13,6 @@
 		width: 100%;
 		height: 100%;
 		z-index: -1;
-	}
-
-	projects {
-		display: block;
-		margin: auto;
-		width: 60%;
-		border: 1px solid #73AD21;
-		padding: 1em;
-
-		border-radius: 4px;
-		
-		background-color: rgba(200, 200, 200, .5);
 	}
 
 	#projects-box {
@@ -72,59 +61,52 @@
 		text-align: center;
 	}
 
-	.search {
-		position: relative;
-		width: 200px;
+	projects {
+		display: table;
+
+		max-width: 100%;
+		height: auto;
+
 		margin: auto;
-	}
+		padding: 1em 2em 2em;
 
-	.search #projects-box {
-		position: absolute;
-		left: 0;
-		width: 100%;
-		background-color: #fff;
-		max-height: 150px;
-		overflow-y: auto;
+		text-align: center;
+
+		border: 1px solid #73AD21;
 		border-radius: 4px;
+
+		background-color: rgba(200, 200, 200, .6);
 	}
 
-	section.project p {
+	projects img {
 		display: block;
-		padding: 3px 20px;
-		clear: both;
-		font-weight: 400;
-		line-height: 1.42857143;
-		color: #333;
-		white-space: nowrap;
+		margin: auto auto 5%;
 
-		margin: 0;
-		height: 26px;
+		max-width: 100%;
+		height: auto;
 	}
 
-	section.project p:hover {
-		color: #fff;
-		text-decoration: none;
-		background-color: #337ab7;
-		outline: 0;
-		line-height: 1.42857143;
-	}
+	projects form {
+		margin: auto;
 
-	.project a:hover {
-		color: #fff;
+		max-width: 32em;
 	}
 </style>
+<img src="_core/scrumple-512.png" alt="ScrumPLE">
 
-	<!-- WTF Fix phrase-->
+<!--WTF Fix phrase
 	<h2 class="text2">Welcome to</h2><br>
 	<h1 class="text1">SCRUMPLE!</h1><br>
 	<h4 class="text4">The World's First Tailored Scrum Development Enviroment</h4><br>
-	<h6 class="text6">Already have an exixting Project? Search below </h6>
+	<h6 class="text6">Already have an exixting Project? Search below </h6>-->
 
-	<form class="form-group" ng-submit="$ctrl.go()">
-		<input class="form-control" ng-model="$ctrl.name" placeholder="Search ScrumPLE" autofocus uib-typeahead="project for project in $ctrl.search($viewValue)" typeahead-loading="$ctrl.searching" typeahead-no-results="$ctrl.noResults">
-		<p ng-if="$ctrl.searching">Searching</p>
-		<p ng-if="$ctrl.noResults">No results</p>
-	</form>
+<form class="form-group" ng-submit="$ctrl.go()">
+	<input class="form-control" ng-model="$ctrl.name" placeholder="Search ScrumPLE" autofocus uib-typeahead="project for project in $ctrl.search($viewValue)"
+	 typeahead-loading="$ctrl.searching" typeahead-no-results="$ctrl.noResults">
+	<span class="help-block" ng-if="$ctrl.searching">Searching</span>
+	<span class="help-block" ng-if="$ctrl.noResults">No results</span>
+</form>
 
-	<p class="textp">Want to Start a New Project using the Scrum Framework?</p>
-	<p class="textp">Click here <label style="width: 200px;" class="btn btn-success" ng-click="$ctrl.add()">Create A New Project</label></p>
+<!--<p class="textp">Want to Start a New Project using the Scrum Framework?</p>-->
+<h4 class="form-group">Or</h4>
+<input class="btn btn-success" type="button" value="Create a new project" ng-click="$ctrl.add()">
