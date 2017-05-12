@@ -52,7 +52,8 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 					return resources.get(resources.projectUrl() + '/users')
 				}],
 				sprints: ['resources', function (resources) {
-					return resources.get(resources.projectUrl() + '/sprints')
+					const currentDate = Date.now()
+					return resources.get(resources.projectUrl() + '/sprints', {date: currentDate})
 				}],
 				stories: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/stories')
