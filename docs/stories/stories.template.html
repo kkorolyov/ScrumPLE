@@ -4,37 +4,33 @@
 		right: 0;
 		bottom: 0;
 	}
+
+	stories .glyphicon-plus {
+		margin: .5em 0;
+		border-radius: 16px;
+	}
 </style>
 
 <h1>User Stories</h1>
 
-<label class="btn btn-success" uib-tooltip="New story" ng-click="$ctrl.create()">
-	<span class="glyphicon glyphicon-plus"></span>
-</label>
+<label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New story" ng-click="$ctrl.create()"></label>
 
 <uib-accordion>
 	<section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
 		<uib-accordion-heading>
 			<div style="position: relative">
-				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}})</h4>
+				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
 				<input class="btn btn-info btn-xs accordion-edit" type="button" value="Edit" ng-click="$ctrl.update(story)">
 			</div>
 		</uib-accordion-heading>
 
-		<div class="wide-list">
-			<h4>Sprint: {{story.sprint.sprintNumber}}</h4>
-			<div class="btn-group" uib-dropdown>
-				<input class="btn btn-info" uib-dropdown-toggle type="button" value="Sprint: {{story.sprint.sprintNumber}}">
-				<ul class="dropdown-menu" uib-dropdown-menu>
-					<li ng-repeat="sprint in $ctrl.sprintList" ng-click="$ctrl.setSprint(story, sprint)">
-						<a>{{sprint.sprintNumber}}</a>
-					</li>
-				</ul>
-			</div>
-			<div>
-				<select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
-				<label class="btn btn-info btn-xs" ng-click="$ctrl.setSprint(story, $ctrl.sprint)" ng-if="story.sprint.sprintNumber != $ctrl.sprint.sprintNumber && $ctrl.sprint">Set Sprint</label>
-			</div>
+		<div uib-dropdown>
+			<input class="btn btn-default" uib-dropdown-toggle type="button" value="Sprint: {{story.sprint.sprintNumber}}">
+			<ul class="dropdown-menu" uib-dropdown-menu>
+				<li ng-repeat="sprint in $ctrl.sprintList" ng-click="$ctrl.setSprint(story, sprint)">
+					<a>{{sprint.sprintNumber}}</a>
+				</li>
+			</ul>
 		</div>
 
 		<table class="table table-striped">
@@ -45,19 +41,27 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="task in $ctrl.taskList">
-					<td class="editable" ng-class="{'closed': task.done, 'open': !task.done}" ng-click='$ctrl.editTask(story, task)'>{{task.description}}</td>
-					<td class="wide-list">
-						{{$ctrl.getUserName(task)}}
-						<div>
-							<select ng-options="user.displayName for user in $ctrl.userList" ng-model="task.selected" ng-if="!task.done"></select>
-							<label class="btn btn-info btn-xs" ng-if="!task.done && ((task.user !== task.selected.id) && task.selected)" ng-click="$ctrl.setUser(task, story, task.selected)">Assign</label>
-						</div>
+				<tr>
+					<td>
+						<label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New task" ng-click="$ctrl.createTask(story)"></label>
 					</td>
-					<!--<label class="btn btn-success" ng-click='$ctrl.editTask(story, task)'>Edit</label>-->
+					<td></td>	<!-- Just empty -->
+				</tr>
+
+				<tr ng-repeat="task in $ctrl.taskList">
+					<td>
+						<input class="btn" ng-class="{'btn-success': task.done, 'btn-danger': !task.done}" type="button" value="{{task.description}}" ng-click="$ctrl.editTask(story, task)">
+					</td>
+					<td uib-dropdown>
+						<input class="btn btn-default" uib-dropdown-toggle type="button" value="{{$ctrl.getUserName(task)}}" ng-if="!task.done">
+						<ul class="dropdown-menu" uib-dropdown-menu>
+							<li ng-repeat="user in $ctrl.userList" ng-click="$ctrl.setUser(task, story, user)">
+								<a>{{user.displayName}}</a>
+							</li>
+						</ul>
+					</td>
 				</tr>
 			</tbody>
 		</table>
-		<label class="btn btn-primary" ng-click="$ctrl.createTask(story)">New Task</label>
 	</section>
 </uib-accordion>

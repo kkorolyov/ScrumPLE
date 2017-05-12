@@ -76,7 +76,7 @@ angular
 				resources.get(url)
 					.then(tasks => {
 						for(let i = 0; i < tasks.length; i++) {
-							if(tasks[i].story.story === story.story) {
+							if(tasks[i].story && tasks[i].story.story === story.story) {
 								taskList.push(tasks[i])
 							}
 						}
