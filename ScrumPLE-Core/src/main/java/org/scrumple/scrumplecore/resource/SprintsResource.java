@@ -31,7 +31,7 @@ public class SprintsResource extends CRUDResource<Sprint> {
 		
 		Timestamp date = (stringDate == null) ? null : Timestamp.from(Instant.ofEpochMilli(Long.parseLong(stringDate)));
 
-		Condition condition = (date == null) ? null : new Condition("start", ">=", date).and("end", "<=", date);
+		Condition condition = (date == null) ? null : new Condition("start", "<=", date).and("end", ">=", date);
 	
 		return condition;
 		
