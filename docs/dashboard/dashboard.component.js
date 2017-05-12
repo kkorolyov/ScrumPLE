@@ -39,8 +39,12 @@ angular
                 presentify(this.meetings)
                 console.log("DEBUGGING: " + this.meetings)
                 console.log("STORIES: " + this.stories)
+                console.log("SPRINTS" + this.sprints)
                 for(let i = 0; i < this.tasks.length; i++) {
                     console.log(this.tasks[i].description)
+                }
+                for(let i = 0; i < this.sprints.length; i++) {
+                    console.log("DEBUGGING SPRINT" + this.sprints[i].sprintNumber)
                 }
             }
             this.showsprint = function (sprinturl, sprints) {

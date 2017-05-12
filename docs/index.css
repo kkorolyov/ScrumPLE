@@ -1,22 +1,5 @@
-body {
-	margin: 0 auto;
-}
-
-ul {
-	margin: 0px;
-	padding: 0px;
-}
-
-li {
-	list-style-type: none;
-}
-
 a {
 	cursor: pointer;
-}
-
-img {
-	border: none;
 }
 
 .modal-content {
@@ -48,7 +31,7 @@ img {
 	border-radius: 5px;	
 }
 .viewport h1:first-of-type {
-	margin: -.4em -.4em 0;
+	margin: -.4em -.4em .5em;
 	padding: 8px;
 
 	background-color: #d3d3d3;
@@ -91,7 +74,6 @@ img {
 	cursor: pointer;
 }
 .glyphicon-plus {
-	margin: .5em 0;
 	border-radius: 16px;
 
 	cursor: pointer;

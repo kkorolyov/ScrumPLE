@@ -11,7 +11,6 @@
     <div class="dash-display">
         <h3>My Tasks</h3>
             <div ng-app="dashboard">
-                <select ng-model="progress"><option ng-repeat="x in $ctrl.names" value="{{x}}">{{x}}</option></select>
                  <section ng-repeat="task in $ctrl.tasks" ng-if="!task.done">{{task.description}}<section>
             </div>
     </div>
