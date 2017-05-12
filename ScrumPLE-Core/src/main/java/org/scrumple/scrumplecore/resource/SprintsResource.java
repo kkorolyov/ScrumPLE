@@ -29,7 +29,7 @@ public class SprintsResource extends CRUDResource<Sprint> {
 	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
 		String stringDate = queryParams.getFirst("date");
 		
-		Timestamp date = (stringDate == null) ? null : Timestamp.from(ofEpochMilli(Long.parseLong(stringDate)));
+		Timestamp date = (stringDate == null) ? null : Timestamp.from(Instant.ofEpochMilli(Long.parseLong(stringDate)));
 
 		Condition condition = (date == null) ? null : new Condition("start", ">=", date).and("end", "<=", date);
 	
