@@ -20,7 +20,7 @@
 		<uib-accordion-heading>
 			<div style="position: relative">
 				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
-				<input class="btn btn-info btn-xs accordion-edit" type="button" value="Edit" ng-click="$ctrl.update(story)">
+				<label class="accordion-edit glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
 			</div>
 		</uib-accordion-heading>
 

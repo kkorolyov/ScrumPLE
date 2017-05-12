@@ -2,7 +2,7 @@
 
 angular
 	.module('rest', ['storage'])
-	.factory('rest', ['$http', '$q', 'storage', function ($http, $q, storage) {
+	.factory('rest', ['$http', '$q', '$state', 'storage', function ($http, $q, $state, storage) {
 		return function () {	// Closure for private fields
 			/**
 			 * Gets or sets auth.
@@ -63,6 +63,8 @@ angular
 						})
 					}
 					const auth = _auth()
+
+					if (!auth) $state.go('projects')	// Toss to main page if no auth found
 
 					return this.ajax('POST', "projects/" + auth.projectId + "/auth", auth.credentials)
 						.then(response => {

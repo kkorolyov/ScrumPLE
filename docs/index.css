@@ -50,17 +50,8 @@ img {
 	font-weight: 600;
 }
 
-.open {
-	color: red;
-}
-.closed {
-	color: forestgreen;
-}
-
-/*http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jp*/
-
 .splash-screen {
-	background: grey url("_core/scrumduck.jpg") fixed no-repeat;
+	background: grey url("_core/scrumduck.jpg") no-repeat fixed;
 	background-size: cover;	
 }
 
@@ -77,4 +68,12 @@ img {
 	justify-content: space-around;
 	align-items: center;
 	align-content: stretch;
+}
+
+.logo {
+	cursor: pointer;
+}
+
+.glyphicon-pencil {
+	cursor: pointer;
 }
