@@ -1,21 +1,24 @@
-<h1 style="margin-bottom: 0.5em;">Sprints</h1>
+<h1>Sprints</h1>
 
-<style>
-    .mylist {
-        margin-bottom: 25px;
-    }
-    .mylist input {
-        margin: 8px 0px ;
-    }
-</style>
+<label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New sprint" ng-click="$ctrl.add()"></label>
 
-<section name = "sprintList" ng-repeat = "sprint in $ctrl.sprints" ng-click="$ctrl.edit(sprint)">
-    <p><strong>Sprint: {{sprint.sprintNumber}}</strong></p>
-    <div class="mylist">
-        <!--WTF Date format-->
-    <input class="form-control" uib-datepicker-popup="EEEE, MM/dd/yyyy" type="text" ng-model="sprint.start">
-	<input class="form-control" uib-datepicker-popup="EEEE, MM/dd/yyyy" type="text" ng-model="sprint.end">
-    </div>
-</section>
+<uib-accordion>
+	<div class="panel-default" uib-accordion-group ng-repeat="sprint in $ctrl.sprints">
+		<uib-accordion-heading>
+			<h4>Sprint {{sprint.sprintNumber}}</h4>
+		</uib-accordion-heading>
 
-<label class="btn btn-primary" ng-click="$ctrl.add()">+</label>
+		<div uib-dropdown>
+			<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.edit(sprint)"></label>
+
+			<div class="form-group">
+				<label for="sprint.start">Start</label>
+				<input class="form-control" id="sprint.start" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.start" readonly>
+			</div>
+			<div class="form-group">
+				<label for="sprint.end">End</label>
+				<input class="form-control" id="sprint.end" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.end" readonly>
+			</div>
+		</div>
+	</div>
+</uib-accordion>

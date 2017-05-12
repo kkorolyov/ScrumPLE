@@ -3,15 +3,14 @@
 <label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New story" ng-click="$ctrl.create()"></label>
 
 <uib-accordion>
-	<section class="panel-default" uib-accordion-group ng-repeat="story in $ctrl.stories">
+	<div class="panel-default" uib-accordion-group ng-repeat="story in $ctrl.stories">
 		<uib-accordion-heading>
-			<div class="accordion-editable">
-				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
-				<label class="accordion-edit glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
-			</div>
+			<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
 		</uib-accordion-heading>
 
 		<div uib-dropdown>
+			<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
+
 			<input class="btn btn-default" uib-dropdown-toggle type="button" value="Sprint: {{story.sprint.sprintNumber}}">
 			<ul class="dropdown-menu" uib-dropdown-menu>
 				<li ng-repeat="sprint in $ctrl.sprintList" ng-click="$ctrl.setSprint(story, sprint)">
@@ -50,5 +49,5 @@
 				</tr>
 			</tbody>
 		</table>
-	</section>
+	</div>
 </uib-accordion>
