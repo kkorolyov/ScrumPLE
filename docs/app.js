@@ -180,8 +180,8 @@ app.factory('socket', function ($rootScope) {
 	};
 })
 
-app.controller('scrumple', ['$scope', 'title', function ($scope, title) {
+app.controller('scrumple', ['$scope', '$state', 'title', function ($scope, $state, title) {
 	$scope.title = () => title.title()
 
-	$scope.onSplash = () => $scope.title() === "ScrumPLE"	// Lame hack, don't want to make another service just for BG class, though
+	$scope.onSplash = () => $state.includes('projects')
 }])
