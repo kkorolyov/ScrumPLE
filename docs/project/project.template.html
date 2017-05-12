@@ -7,12 +7,12 @@
 		padding-top: 0px;
 		/*width: 13em;*/
 	}
-	
+
 	.list-group {
 		width: 80%;
 		margin-left: 20%;
 	}
-	
+
 	.name-display {
 		font-size: 18px;
 		font-family: italic;
@@ -20,7 +20,7 @@
 		color: 1px 1px #b3b3b3;
 		text-align: center;
 	}
-	
+
 	.editable {
 		cursor: pointer;
 	}
@@ -31,19 +31,24 @@
 <div ng-if="$ctrl.auth()">
 	<br><br>
 	<hr>
-	<h5 class="name-display">PROJECT: {{$ctrl.project().name}}</h5>
-	<h5 class="name-display">LIGHT DESCRIPTION: {{$ctrl.project().description}}</h5>
+	<h5 class="name-display">{{$ctrl.project().name}}</h5>
+	<h5 class="name-display">{{$ctrl.project().description}}</h5>
 
-	<uib-tabset active="active">
-		<uib-tab  heading="Dashboard" ui-sref="project.dashboard"></uib-tab>
-		<uib-tab  heading="Team" ui-sref="project.users"></uib-tab>
-		<uib-tab  heading="Meetings" ui-sref="project.meetings"></uib-tab>
-		<uib-tab  heading="Stories" ui-sref="project.stories"></uib-tab>
-		<uib-tab  heading="Sprints" ui-sref="project.sprints"></uib-tab>
-	</uib-tabset>
+	<div class="nav-box">
+		<uib-tabset active="active">
+			<uib-tab heading="Dashboard" ui-sref="project.dashboard"></uib-tab>
+			<uib-tab heading="Team" ui-sref="project.users"></uib-tab>
+			<uib-tab heading="Meetings" ui-sref="project.meetings"></uib-tab>
+			<uib-tab heading="Stories" ui-sref="project.stories"></uib-tab>
+			<uib-tab heading="Sprints" ui-sref="project.sprints"></uib-tab>
+		</uib-tabset>
 
-	<!--WTF Kirill fix-->
-	<!--<div class="col-sm-3" id="sidebar" style="background: white;">
+		<ui-view class="viewport"></ui-view>
+	</div>
+</div>
+
+		<!--WTF Kirill fix-->
+		<!--<div class="col-sm-3" id="sidebar" style="background: white;">
 		<div class="list-group">
 			<div>
 				<a id="my_dash" onclick="this.style.background='#92ccfe';document.getElementById('my_team').style.background='#fff';document.getElementById('my_meetings').style.background='#fff';document.getElementById('my_stories').style.background='#fff';document.getElementById('my_sprints').style.background='#fff';"
@@ -60,4 +65,3 @@
 			</div>
 		</div>
 	</div>-->
-	<ui-view class="viewport"></ui-view>
