@@ -50,6 +50,13 @@ img {
 	font-weight: 600;
 }
 
+.open {
+	color: red;
+}
+.closed {
+	color: forestgreen;
+}
+
 /*http://img6.qwrt.ru/img6/2015/11/03/white-room-02911.jp*/
 
 .splash-screen {

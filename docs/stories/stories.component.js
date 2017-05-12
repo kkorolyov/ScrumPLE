@@ -23,6 +23,9 @@ angular
 				this.userList = refreshList(userUrl)
 			}
 
+			this.getUserName = function(task) {
+				return task.user ? this.userList.find(it => it.id === task.user).displayName : "None"
+			}
 			this.setUser = function(task, story, user) {
 				const taskUrl = url + "/" + story.id + "/tasks"
 				if(user == null) {
