@@ -1,24 +1,11 @@
-<style>
-	stories .accordion-edit {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-	}
-
-	stories .glyphicon-plus {
-		margin: .5em 0;
-		border-radius: 16px;
-	}
-</style>
-
 <h1>User Stories</h1>
 
 <label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New story" ng-click="$ctrl.create()"></label>
 
 <uib-accordion>
-	<section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
+	<section class="panel-default" uib-accordion-group ng-repeat="story in $ctrl.stories">
 		<uib-accordion-heading>
-			<div style="position: relative">
+			<div class="accordion-editable">
 				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
 				<label class="accordion-edit glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
 			</div>

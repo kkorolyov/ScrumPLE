@@ -1,13 +1,22 @@
-<h1 >Meetings</h1>
+<h1>Meetings</h1>
 
-<div class="list">
-	<div ng-repeat="meeting in $ctrl.meetings" ng-click="$ctrl.edit(meeting)">
-		<h3>{{meeting.type}}</h3>
+<label class="btn btn-success btn-sm glyphicon glyphicon-plus" uib-tooltip="New meeting" ng-click="$ctrl.add()"></label>
 
+<uib-accordion>
+	<div class="panel-default" uib-accordion-group ng-repeat="meeting in $ctrl.meetings">
+		<uib-accordion-heading>
+			<div class="accordion-editable">
+				<h4>{{meeting.type}}</h4>
+				<label class="accordion-edit glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.edit(meeting)"></label>
+			</div>
+		</uib-accordion-heading>
 
-		<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
-		<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
+		<div uib-dropdown>
+			<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.edit(meeting)"></label>
+
+			<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.start">
+			<input class="form-control form-group" type="text" uib-datepicker-popup="EEEE, MMMM d, yyyy - h:mm a" ng-model="meeting.end">
+		</div>
+
 	</div>
-</div>
-
-<label class="btn btn-primary" ng-click="$ctrl.add()">+</label>
+</uib-accordion>
