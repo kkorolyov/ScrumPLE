@@ -25,10 +25,14 @@ public class SprintsResource extends CRUDResource<Sprint> {
 	}
 
 	@Override
-	protected Condition parseQuery(MultivaluedMap<String, String> params) {
-		String sprintNumber = params.getFirst("sprintNumber");
-		if (sprintNumber != null) {
-			return new Condition("sprintNumber", "=", Integer.valueOf(sprintNumber));
-		} else return null;
+	protected Condition parseQuery(MultivaluedMap<String, String> queryParams) {
+		String stringDate = queryParams.getFirst("date");
+		
+		Timestamp date = (stringDate == null) ? null : Timestamp.from(ofEpochMilli(Long.parseLong(stringDate)));
+
+		Condition condition = (date == null) ? null : new Condition("start", ">=", date).and("end", "<=", date);
+	
+		return condition;
+		
 	}
 }

@@ -49,9 +49,11 @@ angular
                     .then(sprint => {
                         for(let i =0; i < sprint.length; i++){
                             // wnated to check for the whole week from start to finish so it keeps on shoinw the same sprint number
-                            if(sprint[i].start === currentDate){
+                            if(currentDate >= sprint[i].start){
                                 sprints.sprintNmber.push(sprint[i])
-                            }
+                            } else if (currentDate <= sprint[i].end){
+                                sprints.sprintNmber.push(sprint[i])
+                            } 
                         }
                     })
                     return sprints
