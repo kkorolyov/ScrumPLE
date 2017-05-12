@@ -1,3 +1,11 @@
+<style>
+	stories .accordion-edit {
+		position: absolute; 
+		right: 0;
+		bottom: 0;
+	}
+</style>
+
 <h1>User Stories</h1>
 
 <label class="btn btn-success" uib-tooltip="New story" ng-click="$ctrl.create()">+</label>
@@ -5,9 +13,11 @@
 <uib-accordion>
 	<section uib-accordion-group class="panel-default" ng-repeat="story in $ctrl.stories">
 		<uib-accordion-heading>
-			<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}})</h4>
+			<div style="position: relative">
+				<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}})</h4>
+				<input class="btn btn-info btn-xs accordion-edit" type="button" value="Edit" ng-click="$ctrl.update(story)">
+			</div>
 		</uib-accordion-heading>
-			<input class="btn btn-info btn-xs" type="button" value="Edit" ng-click="$ctrl.update(story)"><br>
 
 			Sprint: {{story.sprint.sprintNumber}}
 			<select ng-options="sprint.sprintNumber for sprint in $ctrl.sprintList" ng-model="$ctrl.sprint"></select>
@@ -17,7 +27,7 @@
 			<thead>
 				<tr>
 					<td align="center">Task</td>
-					<td align="center">Assigned To</td>
+					<td align="center">Assigned To</td><div style="position: relative">
 				</tr>
 			</thead>
 			<tbody>
