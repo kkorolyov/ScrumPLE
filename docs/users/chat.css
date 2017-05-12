@@ -1,10 +1,4 @@
-/* WTF - this alters other stuff */
-/*.chat-room-wrapper{
-    width:100%;
-    height:100%;
-}
-
-.chat-room-wrapper .chat-room .panel-body{
+.chat-room-wrapper .chat-room .message-wrapper{
     position: absolute;
     top: 38px;
     bottom: 55px;
@@ -28,9 +22,6 @@
     width:400px;
 }
 
-.chat-room .panel-heading,.online .panel-heading{
-    background-color: #04A3ED;
-}
 .chat-room-wrapper .online{
     position: relative;
     width: 238px;
@@ -38,14 +29,17 @@
     height: 450px;
 
 }
-.panel-heading h3{
+.chat-room-wrapper .panel-heading h3{
     display: inline-block;
 }
-.panel-heading a{
+.chat-room-wrapper .panel-heading a{
     display: inline-block;
+    padding-left: 256px;
+}
+#closechat{
     padding-left: 86px;
 }
-.fixed-btn{
+.chat-room .fixed-btn{
     width: 150px;
     background-color: #9ee088;
     height: 45px;
@@ -59,17 +53,10 @@
     padding-left: 20px;
     line-height: 45px;
 }
-.panel-heading a,.fixed-btn{
+.chat-room-wrapper .panel-heading a,.chat-room .fixed-btn{
     cursor: pointer;
 }
-.chat-room-wrapper .online.ng-hide{
-    transition: 3s linear all;
-    opacity: 0;
-}
-.chat-room-wrapper .online.ng-show{
-    transition: 3s linear all;
-    opacity: 1;
-}
+
 .chat-room-wrapper .online .user-number{
     margin-left: 10px;
     width: 20px;
@@ -104,15 +91,11 @@
 .chat-room-wrapper .online .user-wrapper .users:hover{
     background-color: RGB(245, 250, 255);
 }
-.chat-room-wrapper .online .user-wrapper .users .avatar{
-    vertical-align: middle;
-}
 .chat-room-wrapper .online .user-wrapper .users .nickname{
     margin-left: 20px;
     vertical-align: middle;
     color: rgba(0,0,0,.7);
 }
-
 
 .chat-room-wrapper .normal-message{
     text-align: right;
@@ -135,27 +118,6 @@
     text-align: left;
 }
 
-.chat-room-wrapper .normal-message.others .content:before{
-    right: 100%;
-    border-right:4px solid #fff;
-}
-
-.chat-room-wrapper .avatar{
-    display: inline-block;
-    width:40px;
-    height: 40px;
-    margin-top: 5px;
-    margin-left: 10px;
-    vertical-align: top;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
-.chat-room-wrapper .others .avatar{
-    margin-left: 0;
-    margin-right: 10px;
-}
-
 .chat-room-wrapper .normal-message.others{
     text-align: left;
 }
@@ -176,6 +138,7 @@
     top: 10px;
     display: block;
     border:6px solid transparent;
+
 }
 .chat-room-wrapper .normal-message.self .content:after{
     left: 100%;
@@ -185,8 +148,3 @@
     right: 100%;
     border-right:4px solid #fff;
 }
-
-.chat-room-wrapper .others .avatar{
-    margin-left: 0;
-    margin-right: 10px;
-}*/
