@@ -129,6 +129,8 @@ angular
 						task.done = result.data.done
 						console.log(task.done)
 						task.description = result.data.description
+
+						if (task.done) delete task.user
 					}
 					(result.del ? resources.delete(taskUrl, task) : resources.set(taskUrl, task))
 						.then(() => this.taskList = refreshTasks(taskUrl, story))
