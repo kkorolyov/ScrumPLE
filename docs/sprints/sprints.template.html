@@ -8,17 +8,15 @@
 			<h4>Sprint {{sprint.sprintNumber}}</h4>
 		</uib-accordion-heading>
 
-		<div uib-dropdown>
-			<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.edit(sprint)"></label>
+		<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.edit(sprint)"></label>
 
-			<div class="form-group">
-				<label for="sprint.start">Start</label>
-				<input class="form-control" id="sprint.start" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.start" readonly>
-			</div>
-			<div class="form-group">
-				<label for="sprint.end">End</label>
-				<input class="form-control" id="sprint.end" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.end" readonly>
-			</div>
+		<div class="form-group">
+			<label for="sprint.start">Start</label>
+			<input class="form-control" id="sprint.start" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.start" readonly>
+		</div>
+		<div class="form-group">
+			<label for="sprint.end">End</label>
+			<input class="form-control" id="sprint.end" uib-datepicker-popup="EEEE, MMMM d, yyyy" type="text" ng-model="sprint.end" readonly>
 		</div>
 	</div>
 </uib-accordion>

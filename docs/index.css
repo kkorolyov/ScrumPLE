@@ -103,8 +103,9 @@ projects form {
 
 .glyphicon-pencil {
 	float: right;
-
 	margin: 0 0 1em;
+
+	z-index: 1;
 
 	cursor: pointer;
 }

@@ -8,9 +8,9 @@
 			<h4 ng-click="$ctrl.tasks(story); $ctrl.sprints(); $ctrl.users()">{{story.story}} ({{story.storyPoint}}pt)</h4>
 		</uib-accordion-heading>
 
-		<div uib-dropdown>
-			<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
+		<label class="glyphicon glyphicon-pencil" uib-tooltip="Edit" ng-click="$ctrl.update(story)"></label>
 
+		<div uib-dropdown>
 			<input class="btn btn-default" uib-dropdown-toggle type="button" value="Sprint: {{story.sprint.sprintNumber}}">
 			<ul class="dropdown-menu" uib-dropdown-menu>
 				<li ng-repeat="sprint in $ctrl.sprintList" ng-click="$ctrl.setSprint(story, sprint)">
