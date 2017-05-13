@@ -109,7 +109,16 @@ a {
 	color: red;
 }
 
+login form {
+	min-width: 50%; 
+	display:table; 
+	margin: auto;
+}
 login h1 {
+	padding: .4em 0;
+	border-top: 1px solid lightgrey; 
+	border-bottom: 1px solid lightgrey;
+
 	text-align: center;
 }
 

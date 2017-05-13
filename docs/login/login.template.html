@@ -10,10 +10,8 @@
 	</div>
 </nav>
 
-<form class="col-md-4 col-md-offset-4" name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.resources.auth()">
-	<hr>
+<form name="login" ng-submit="$ctrl.login()" ng-if="!$ctrl.resources.auth()">
 	<h1>LOGIN</h1>
-	<hr>
 
 	<p class="error" ng-if="$ctrl.failed">Incorrect email or password</p>
 
