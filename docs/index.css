@@ -74,6 +74,8 @@ a {
 	cursor: pointer;
 }
 .glyphicon-plus {
+	margin: 0 0 1em;
+
 	border-radius: 16px;
 
 	cursor: pointer;

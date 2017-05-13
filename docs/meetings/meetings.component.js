@@ -31,6 +31,7 @@ angular
 
 			function presentify(meetings) {
 				return meetings.map(meeting => dateify(meeting))
+					.sort((a, b) => a.start > b.start ? -1 : a.start < b.start ? 1 : 0)	// Sort by start time descending
 			}
 
 			function refresh(scope) {
