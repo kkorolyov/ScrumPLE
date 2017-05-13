@@ -53,7 +53,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 				}],
 				sprints: ['resources', function (resources) {
 					const currentDate = Date.now()
-					return resources.get(resources.projectUrl() + '/sprints', {date: currentDate})
+					return resources.get(resources.projectUrl() + '/sprints', { date: currentDate })
 				}],
 				stories: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/stories')
@@ -110,7 +110,6 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				users: ['resources', function (resources) {
 					return resources.get(resources.projectUrl() + '/users')
-						.then(users => users.filter(user => user.id !== resources.user().id))	// Only return other users
 				}]
 			}
 		})
@@ -124,6 +123,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				meetings: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/meetings')
+						.then(meetings => meetings.sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0))	// Sort by start time ascending
 				}]
 			}
 		})
@@ -137,6 +137,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				stories: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/stories')
+					.then(stories => stories.sort((a, b) => (!a.sprint || (b.sprint && a.sprint.start < b.sprint.start)) ? -1 : (!b.start || (a.sprint.start > b.sprint.start)) ? 1 : 0))
 				}]
 			}
 		})
@@ -150,6 +151,7 @@ app.config(['$urlRouterProvider', '$stateProvider', function ($urlRouterProvider
 			resolve: {
 				sprints: ['title', 'resources', function (title, resources) {
 					return resources.get(resources.projectUrl() + '/sprints')
+						.then(sprints => sprints.sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0))
 				}]
 			}
 		})

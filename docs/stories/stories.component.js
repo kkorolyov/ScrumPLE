@@ -64,7 +64,7 @@ angular
 			}
 			function refresh(scope) {
 				resources.get(url)
-					.then(stories => scope.stories = stories)
+					.then(stories => scope.stories = stories.sort((a, b) => (!a.sprint || (b.sprint && a.sprint.start < b.sprint.start)) ? -1 : (!b.start || (a.sprint.start > b.sprint.start)) ? 1 : 0))
 			}
 
 			this.debug = function () {

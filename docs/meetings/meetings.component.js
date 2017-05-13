@@ -31,12 +31,11 @@ angular
 
 			function presentify(meetings) {
 				return meetings.map(meeting => dateify(meeting))
-					.sort((a, b) => a.start > b.start ? 1 : a.start < b.start ? -1 : 0)	// Sort by start time descending
 			}
 
 			function refresh(scope) {
 				resources.get(url)
-					.then(meetings => { scope.meetings = presentify(meetings) })
+					.then(meetings => { scope.meetings = presentify(meetings.sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0)) })
 			}
 
 			this.$onInit = function () { this.meetings = presentify(this.meetings) }

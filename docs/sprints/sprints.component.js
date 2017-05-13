@@ -33,14 +33,14 @@ angular
 
 			function presentify(sprints) {
 				for(let i = 0; i < sprints.length; i++) {
-					console.log(toDate(sprints[i]))
+					toDate(sprints[i])
 				}
 				return sprints
 			}
 
 			function refresh(scope) {
 				resources.get(url)
-					.then(sprints => {scope.sprints = presentify(sprints)})
+					.then(sprints => { scope.sprints = presentify(sprints.sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0))})
 			}
 			this.$onInit = function() {
 				presentify(this.sprints)
