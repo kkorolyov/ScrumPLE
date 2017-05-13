@@ -14,6 +14,12 @@ nav {
 	border-bottom: 4px solid #0d0d0d;
 }
 
+h1, h2, h3, h4, h5, h6, p {
+	font-family: italic;
+	font-variant: small-caps;
+	color: 1px 1px #b3b3b3;
+}
+
 a {
 	cursor: pointer;
 }
@@ -91,6 +97,10 @@ ul.nav-tabs li {
 	color: red;
 }
 
+login h1 {
+	text-align: center;
+}
+
 projects {
 	display: table;
 
@@ -120,6 +130,6 @@ projects form {
 	max-width: 32em;
 }
 
-login h1 {
+project h4 {
 	text-align: center;
 }

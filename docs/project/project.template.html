@@ -1,20 +1,10 @@
-<style>
-	.name-display {
-		font-size: 18px;
-		font-family: italic;
-		font-variant: small-caps;
-		color: 1px 1px #b3b3b3;
-		text-align: center;
-	}
-</style>
-
 <login></login>
 
 <div ng-if="$ctrl.auth()">
 	<br><br>
 	<hr>
-	<h5 class="name-display">{{$ctrl.project().name}}</h5>
-	<h5 class="name-display">{{$ctrl.project().description}}</h5>
+	<h4>{{$ctrl.project().name}}</h4>
+	<h4>{{$ctrl.project().description}}</h4>
 
 	<div class="nav-box">
 		<uib-tabset active="active">
