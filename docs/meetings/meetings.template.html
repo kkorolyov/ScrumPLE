@@ -5,7 +5,7 @@
 <uib-accordion>
 	<div class="panel-default" uib-accordion-group ng-repeat="meeting in $ctrl.meetings">
 		<uib-accordion-heading>
-			<h4>{{meeting.type}}</h4>
+			<h4>{{meeting.type}} ({{$ctrl.shortStart(meeting)}})</h4>
 		</uib-accordion-heading>
 
 		<div uib-dropdown>

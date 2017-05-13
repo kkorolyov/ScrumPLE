@@ -31,7 +31,7 @@ angular
 
 			function presentify(meetings) {
 				return meetings.map(meeting => dateify(meeting))
-					.sort((a, b) => a.start > b.start ? -1 : a.start < b.start ? 1 : 0)	// Sort by start time descending
+					.sort((a, b) => a.start > b.start ? 1 : a.start < b.start ? -1 : 0)	// Sort by start time descending
 			}
 
 			function refresh(scope) {
@@ -69,6 +69,13 @@ angular
 					(result.del ? resources.delete(url, result.data) : resources.set(url, longify(result.data)))	// Return a delete or edit promise
 						.then(() => refresh(this))
 				})
+			}
+
+			Date.prototype.pretty = function () {
+				return (this.getMonth() + 1) + "/" + this.getDate() + "/" + this.getFullYear()
+			}
+			this.shortStart = function (meeting) {
+				return meeting.start.pretty()
 			}
 		}]
 	})
