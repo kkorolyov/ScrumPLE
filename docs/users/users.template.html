@@ -1,11 +1,4 @@
-<style>
-	.chat {
-		float: right;
-		clear: both;
-	}
-</style>
-
-<h1 >Team</h1>
+<h1>Team</h1>
 <input class="btn btn-primary" type="button" value="Invite Teammate" ng-click="$ctrl.add()">
 
 <h3 ng-if="$ctrl.users.length <= 0">Looks like you have no teammates (and/or friends)!
@@ -14,38 +7,38 @@
 
 <table class="table" ng-if="$ctrl.users.length > 0">
 	<thead>
-	<tr>
-		<th>Member</th>
-		<th>Role</th>
-	</tr>
+		<tr>
+			<th>Member</th>
+			<th>Role</th>
+		</tr>
 	</thead>
 	<tbody>
-	<tr ng-repeat="user in $ctrl.users ">
-		<td>{{user.displayName}}</td>
-		<td>{{user.role}}</td>
-	</tr>
+		<tr ng-repeat="user in $ctrl.users ">
+			<td>{{user.displayName}}</td>
+			<td>{{user.role}}</td>
+		</tr>
 	</tbody>
 </table>
 
 
 
 <div class="chat-room" style="position: fixed;bottom: 0px; right: 0px;">
-	<div class="chat-room-wrapper" >
+	<div class="chat-room-wrapper">
 		<div class="chat-room panel-success" ng-show="$ctrl.chat">
 			<div class="panel-heading">
-				<h3 class="panel-title">{{$ctrl.receiver?$ctrl.receiver:"Team Taking"}}</h3><a ng-click="$ctrl.closeMsg()">X</a>
+				<h3 class="panel-title">{{$ctrl.receiver?$ctrl.receiver:"Team"}}</h3><a ng-click="$ctrl.closeMsg()">X</a>
 			</div>
 			<div class="message-wrapper " id="messageWrapper">
 				<div ng-repeat="message in $ctrl.messages track by $index">
 					<div class="normal-message others">
-						<div class="name-wrapper" ><span>{{message.from}} @ </span><span>{{message.time |  date: 'HH:mm:ss' }}</span></div>
-						<div class="content-wrapper" ><span class="content">{{message.text}}</span></div>
+						<div class="name-wrapper"><span>{{message.from}} @ </span><span>{{message.time |  date: 'HH:mm:ss' }}</span></div>
+						<div class="content-wrapper"><span class="content">{{message.text}}</span></div>
 					</div>
 				</div>
 			</div>
 			<div class="panel-footer">
 				<form class="form-inline" ng-submit="$ctrl.postMessage()">
-					<input type="text" class="form-control" ng-model="$ctrl.words" placeholder="say something..." >
+					<input type="text" class="form-control" ng-model="$ctrl.words" placeholder="say something...">
 					<button type="submit" class="btn btn-success" ng-disabled="$ctrl.postform.$invalid">send</button>
 				</form>
 			</div>
@@ -57,8 +50,8 @@
 			</div>
 			<div class="user-wrapper ">
 				<div class="users" ng-click="$ctrl.setReceiver(user.displayName)" ng-repeat="user in $ctrl.usersOnline track by $index">
-					<span class="avatar" ></span>
-					<span class="nickname">{{user.displayName?user.displayName:"Team Talking"}}</span>
+					<span class="avatar"></span>
+					<span class="nickname">{{user.displayName?user.displayName:"Team"}}</span>
 				</div>
 			</div>
 		</div>
