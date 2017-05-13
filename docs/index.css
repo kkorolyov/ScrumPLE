@@ -6,37 +6,6 @@ ul.nav-tabs li {
 	font-size: larger;
 }
 
-projects {
-	display: table;
-
-	max-width: 100%;
-	height: auto;
-
-	margin: auto;
-	padding: 1em 2em 2em;
-
-	text-align: center;
-
-	border: 1px solid #73AD21;
-	border-radius: 4px;
-
-	background-color: rgba(200, 200, 200, .6);
-}
-
-projects img {
-	display: block;
-	margin: auto auto 5%;
-
-	max-width: 100%;
-	height: auto;
-}
-
-projects form {
-	margin: auto;
-
-	max-width: 32em;
-}
-
 .modal-content {
 	padding: 0 1em 1em;
 }
@@ -82,22 +51,7 @@ projects form {
 	background-size: cover;	
 }
 
-.list {
-	display: flex;
-	flex-flow: column wrap;
-	justify-content: flex-start;
-	align-items: stretch;
-	align-content: stretch;
-}
-.wide-list {
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-around;
-	align-items: center;
-	align-content: stretch;
-}
-
-.logo {
+.clickable {
 	cursor: pointer;
 }
 
@@ -117,11 +71,31 @@ projects form {
 	cursor: pointer;
 }
 
-.accordion-editable {
-	position: relative;
+projects {
+	display: table;
+
+	max-width: 100%;
+	height: auto;
+
+	margin: auto;
+	padding: 1em 2em 2em;
+
+	text-align: center;
+
+	border: 1px solid #73AD21;
+	border-radius: 4px;
+
+	background-color: rgba(200, 200, 200, .6);
 }
-.accordion-edit {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-	}
+projects img {
+	display: block;
+	margin: auto auto 5%;
+
+	max-width: 100%;
+	height: auto;
+}
+projects form {
+	margin: auto;
+
+	max-width: 32em;
+}
