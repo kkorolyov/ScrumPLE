@@ -14,19 +14,31 @@ nav {
 	border-bottom: 4px solid #0d0d0d;
 }
 
-h1, h2, h3, h4, h5, h6, p {
-	font-family: italic;
-	font-variant: small-caps;
-	color: 1px 1px #b3b3b3;
+body {
+	/*font-family: "Alfa Slab One";*/
+	/*font-family: "Archivo Black";*/
+	/*font-family: "Armata";*/
+	/*font-family: "Audiowide";*/
+	/*font-family: "Bangers";*/
+	font-family: "Boogaloo"; font-size: 22px;
+}
+h4 {
+	font-size: 24px;
+}
+.btn:not(.glyphicon) {
+	font-size: 20px;
+}
+.form-control, ul.dropdown-menu li {
+	font-size: 18px;
 }
 
 a {
 	cursor: pointer;
 }
 
-ul.nav-tabs li {
+/*ul.nav-tabs li {
 	font-size: larger;
-}
+}*/
 
 .modal-content {
 	padding: 0 1em 1em;
