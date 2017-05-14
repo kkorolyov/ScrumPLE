@@ -43,6 +43,18 @@ angular
 							displayName: result.data.handle,
 							role: "owner"
 						}
+					}).then(() => {
+						this.name = result.data.name.replace(/\s+/g, "_")
+						resources.get('projects', { name: this.name })
+							.then(projects => {
+								const project = projects[0]
+
+								resources.enter(project)
+								resources.login(result.data.handle, result.data.password)
+									.then(() => {
+										this.go()
+									})
+							})
 					})
 				})
 			}
