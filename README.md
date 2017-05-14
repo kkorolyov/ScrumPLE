@@ -8,7 +8,7 @@ A collaborative development environment tailored to the Scrum framework
 [Architecture Brief](#architecture-brief)  
 [Development](#development)  
 [Deployment](#deployment)  
-[Usage](#usage)  
+[Screenshots](#screenshots)  
 [REST API](#rest-api)  
 
 ## Features
@@ -47,8 +47,14 @@ ScrumPLE-Core utilizes several parameters defined in a webapp context file found
 * `systemDatabase` main schema name
 * `logProps` properties file defining logging preferences
 
-## Usage
-REDO WITH PRETTY PICTURES
+## Screenshots
+![Home](screenshots/home.png)
+![Team](screenshots/team.png)
+![Invite](screenshots/invite.png)
+![Dashboard](screenshots/dashboard.png)
+![Stories](screenshots/stories.png)
+![Sprints](screenshots/sprints.png)
+![Meetings](screenshots/meetings.png)
 
 ## REST API
 ScrumPLE exposes all business logic via a RESTful web service which can be utilized by any external client.  
